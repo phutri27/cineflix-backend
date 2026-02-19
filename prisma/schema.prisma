@@ -1,0 +1,213 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              String    @id @default(uuid())
+  hashed_password String    @db.VarChar(255)
+  email           String    @unique @db.VarChar(255)
+  first_name      String?   @db.VarChar(255)
+  last_name       String?   @db.VarChar(255)
+
+  profile         Profile?
+  bookings        Booking[]
+}
+
+model Session {
+  id       String   @id @default(uuid())
+  sid      String   @unique
+  data     String   @db.Text
+  expireAt DateTime
+}
+
+model Profile {
+  id             String  @id @default(uuid())
+  spending_total Decimal @default(0) @db.Decimal(10, 2)
+  member_rank    String  @default("copper")
+  
+  userId         String  @unique
+  user           User    @relation(fields: [userId], references: [id])
+}
+
+model Movie {
+  id           String   @id @default(uuid())
+  title        String
+  plot         String   @db.Text
+  posterUrl    String
+  durationMin  Int
+  premiereDate DateTime
+  rated        String
+
+  genres       MovieGenre[]
+  directors    MovieDirector[]
+  actors       MovieActor[]
+  showtimes    Showtime[]
+}
+
+model Genre {
+  id     String       @id @default(uuid())
+  name   String       @unique
+  movies MovieGenre[]
+}
+
+model Director {
+  id     String          @id @default(uuid())
+  name   String
+  movies MovieDirector[]
+}
+
+model Actor {
+  id     String       @id @default(uuid())
+  name   String
+  movies MovieActor[]
+}
+
+model MovieGenre {
+  movieId String
+  movie   Movie  @relation(fields: [movieId], references: [id])
+  genreId String
+  genre   Genre  @relation(fields: [genreId], references: [id])
+
+  @@id([movieId, genreId])
+}
+
+model MovieDirector {
+  movieId    String
+  movie      Movie    @relation(fields: [movieId], references: [id])
+  directorId String
+  director   Director @relation(fields: [directorId], references: [id])
+
+  @@id([movieId, directorId])
+}
+
+model MovieActor {
+  movieId       String
+  movie         Movie  @relation(fields: [movieId], references: [id])
+  actorId       String
+  actor         Actor  @relation(fields: [actorId], references: [id])
+  
+  characterName String
+
+  @@id([movieId, actorId])
+}
+
+model City {
+  id      Int      @id @default(autoincrement())
+  name    String
+  cinemas Cinema[]
+}
+
+model Cinema {
+  id      String   @id @default(uuid())
+  name    String
+  cityId  Int
+  city    City     @relation(fields: [cityId], references: [id])
+  
+  screens Screen[]
+}
+
+model Screen {
+  id        String     @id @default(uuid())
+  name      String
+  cinemaId  String
+  cinema    Cinema     @relation(fields: [cinemaId], references: [id])
+  
+  seats     Seat[]
+  showtimes Showtime[]
+}
+
+model Seat {
+  id        String   @id @default(uuid())
+  row       String
+  seat_type String
+  number    Int
+  screenId  String
+  screen    Screen   @relation(fields: [screenId], references: [id])
+  
+  tickets   Ticket[]
+}
+
+model Showtime {
+  id        String   @id @default(uuid())
+  startTime DateTime
+  
+  movieId   String
+  movie     Movie    @relation(fields: [movieId], references: [id])
+  
+  screenId  String
+  screen    Screen   @relation(fields: [screenId], references: [id])
+
+  bookings  Booking[]
+  tickets   Ticket[]
+}
+
+model Booking {
+  id            String         @id @default(uuid())
+  userId        String
+  user          User           @relation(fields: [userId], references: [id])
+  
+  showtimeId    String
+  showtime      Showtime       @relation(fields: [showtimeId], references: [id])
+  
+  status        BookingStatus  @default(PENDING)
+  totalAmount   Decimal        @db.Decimal(10, 2)
+  bankReference String?        @unique 
+  createdAt     DateTime       @default(now())
+
+  tickets       Ticket[]
+  snacks        BookingSnack[]
+}
+
+model Ticket {
+  id         String   @id @default(uuid())
+  price      Decimal  @db.Decimal(10, 2)
+  
+  bookingId  String
+  booking    Booking  @relation(fields: [bookingId], references: [id])
+  
+  seatId     String
+  seat       Seat     @relation(fields: [seatId], references: [id])
+  
+  showtimeId String
+  showtime   Showtime @relation(fields: [showtimeId], references: [id])
+
+  @@unique([showtimeId, seatId]) 
+}
+
+model Snack {
+  id       String         @id @default(uuid())
+  name     String
+  price    Decimal        @db.Decimal(10, 2)
+  
+  bookings BookingSnack[]
+}
+
+model BookingSnack {
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id])
+  
+  snackId   String
+  snack     Snack   @relation(fields: [snackId], references: [id])
+  
+  quantity  Int     @default(1)
+
+  @@id([bookingId, snackId])
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+  CANCELLED
+}
