@@ -19,16 +19,17 @@ model User {
   email           String    @unique @db.VarChar(255)
   first_name      String?   @db.VarChar(255)
   last_name       String?   @db.VarChar(255)
+  role            Role      @default(USER)
 
   profile         Profile?
   bookings        Booking[]
 }
 
 model Session {
-  id       String   @id @default(uuid())
-  sid      String   @unique
-  data     String   @db.Text
-  expireAt DateTime
+  id        String   @id @default(uuid())
+  sid       String   @unique
+  data      String   @db.Text
+  expiresAt   DateTime
 }
 
 model Profile {
@@ -210,4 +211,9 @@ enum BookingStatus {
   CONFIRMED
   FAILED
   CANCELLED
+}
+
+enum Role{
+  ADMIN
+  USER
 }
