@@ -22,5 +22,5 @@ export const loginPost = (req: Request, res: Response, next: NextFunction) => {
                 user: user
             })
         })
-    })
+    })(req, res, next)
 }

@@ -2,7 +2,6 @@ import passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
 import { prisma } from '../lib/prisma.js';
 import { isValid } from '../utils/password.util.js';
-import { userObj } from '../service/user.service.js';
 
 const customFields = {
     usernameField: 'email',
@@ -34,13 +33,17 @@ const strategy = new LocalStrategy(customFields, verifyCallback)
 passport.use(strategy)
     
 passport.serializeUser((user: any, done) => {
-    done(null, user.id)
+    const payload = {
+        id: user.id,
+        role: user.role,
+        email: user.email
+    }
+    done(null, payload)
 })
 
-passport.deserializeUser(async (userId: string, done) => {
+passport.deserializeUser(async (sessionData: any, done) => {
     try{
-        const user = await userObj.findUserById(userId)
-        done(null, user)
+        done(null, sessionData)
     } catch(err){
         done(err)
     }
