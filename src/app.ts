@@ -3,11 +3,11 @@ import "dotenv/config"
 import cors from "cors"
 import passport from 'passport'
 import expressSession  from 'express-session'
-import { PrismaSessionStore } from "@quixo3/prisma-session-store"
-import { prisma } from "./lib/prisma"
 import "./config/session.js"
 import routes from './routes/index.route.js'
 import { errorHandler } from "./controller/error/error.js"
+import {RedisStore} from "connect-redis"
+import { client } from "./lib/redis"
 
 const app = express()
 app.use(cors())
@@ -18,18 +18,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   expressSession({
     cookie: {
-     maxAge: 7 * 24 * 60 * 60 * 1000 // ms
+     maxAge: 2 * 24 * 60 * 60 * 1000 // ms
     },
     secret: process.env.SECRET_KEY as string,
     resave: false,
     saveUninitialized: false,
-    store: new PrismaSessionStore(
-      prisma,
-      {
-        checkPeriod: 2 * 60 * 1000,  //ms
-        dbRecordIdIsSessionId: true,
-      }
-    )
+    store: new RedisStore({
+      client: client,
+      prefix: "sess:"
+    })
   })
 );
 

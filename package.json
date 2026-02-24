@@ -22,6 +22,7 @@
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
     "@types/pg": "^8.16.0",
+    "@types/redis": "^4.0.10",
     "@types/supertest": "^6.0.3",
     "dotenv": "^17.3.1",
     "prisma": "^7.4.0",
@@ -34,12 +35,14 @@
     "@prisma/adapter-pg": "^7.4.0",
     "@prisma/client": "^7.4.0",
     "@quixo3/prisma-session-store": "^3.1.19",
+    "@types/connect-redis": "^0.0.23",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/express-session": "^1.18.2",
     "@types/passport": "^1.0.17",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
+    "connect-redis": "^9.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.2.4",
     "ejs": "^4.0.1",
@@ -53,6 +56,7 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "pg": "^8.18.0",
+    "redis": "^5.11.0",
     "uuid": "^13.0.0"
   }
 }
