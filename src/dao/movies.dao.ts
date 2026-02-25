@@ -1,5 +1,17 @@
 import { prisma } from "../lib/prisma";
 
+const movieWithDetailsInclude = {
+    genres: {
+        select: { genre: { select: { name: true } } }
+    },
+    actors: {
+        select: { actor: { select: { name: true } } }
+    },
+    directors: {
+        select: { director: { select: { name: true } } }
+    }
+};
+
 class Movies {
     async getAllComingMovies(){
         const currentDate = new Date()
@@ -11,7 +23,8 @@ class Movies {
             },
             orderBy:{
                 premiereDate: 'asc'
-            }
+            },
+            include: movieWithDetailsInclude
         })
         return movies
     }
@@ -24,6 +37,7 @@ class Movies {
                     lte: currentDate
                 }
             },
+            include: movieWithDetailsInclude
         })
         return movies
     }
@@ -38,7 +52,8 @@ class Movies {
                         }
                     }
                 }
-            }
+            },
+            include: movieWithDetailsInclude
         })
     }
 
@@ -46,7 +61,8 @@ class Movies {
         const movie = await prisma.movie.findMany({
             where:{
                 title:title
-            }
+            },
+            include: movieWithDetailsInclude
         })
         return movie
     }
@@ -92,6 +108,7 @@ class Movies {
         })
         return movie
     }
+
 }
 
 export const moviesObj = new Movies()
