@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { matchedData, validationResult, Result} from 'express-validator'
-import { validateSignup } from "./validate/signup.validate";
+import { validateSignup } from "../validate/signup.validate.js";
 import { genPassword } from "../utils/password.util";
 import { userObj } from "../dao/user.dao";
 
