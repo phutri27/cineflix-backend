@@ -1,10 +1,41 @@
 import express from "express"
-import routes from "../src/routes/index.route.js"
+import "dotenv/config"
+import cors from "cors"
+import passport from 'passport'
+import expressSession  from 'express-session'
+import "../src/config/session.js"
+import routes from '../src/routes/index.route.js'
+import { errorHandler } from "../src/error/error.js"
+import { RedisStore } from "connect-redis"
+import { client } from "../src/lib/redis.js"
 
 const app = express()
+app.use(cors())
+app.use(express.json())
 
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true })); 
+
+app.use(
+  expressSession({
+    cookie: {
+     maxAge: 2 * 24 * 60 * 60 * 1000 // ms
+    },
+    secret: process.env.SECRET_KEY as string,
+    resave: false,
+    saveUninitialized: false,
+    store: new RedisStore({
+      client: client,
+      prefix: "sess:"
+    })
+  })
+);
+
+app.use(passport.initialize())
+app.use(passport.session())
+ 
 app.use("/api/login", routes.login)
 app.use("/api/signup", routes.signup)
+app.use("/api/movies", routes.movies)
+app.use(errorHandler)
 
 export default app
