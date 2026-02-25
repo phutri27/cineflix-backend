@@ -5,9 +5,9 @@ import passport from 'passport'
 import expressSession  from 'express-session'
 import "./config/session.js"
 import routes from './routes/index.route.js'
-import { errorHandler } from "./controller/error/error.js"
-import {RedisStore} from "connect-redis"
-import { client } from "./lib/redis"
+import { errorHandler } from "./error/error.js"
+import { RedisStore } from "connect-redis"
+import { client } from "./lib/redis.js"
 
 const app = express()
 app.use(cors())
@@ -35,6 +35,7 @@ app.use(passport.session())
  
 app.use("/api/login", routes.login)
 app.use("/api/signup", routes.signup)
+app.use("/api/movies", routes.movies)
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 3000
