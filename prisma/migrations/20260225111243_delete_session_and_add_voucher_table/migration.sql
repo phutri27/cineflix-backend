@@ -1,6 +1,9 @@
 -- CreateEnum
 CREATE TYPE "BookingStatus" AS ENUM ('PENDING', 'CONFIRMED', 'FAILED', 'CANCELLED');
 
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER', 'GUEST');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -8,18 +11,9 @@ CREATE TABLE "User" (
     "email" VARCHAR(255) NOT NULL,
     "first_name" VARCHAR(255),
     "last_name" VARCHAR(255),
+    "role" "Role" NOT NULL DEFAULT 'USER',
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Session" (
-    "id" TEXT NOT NULL,
-    "sid" TEXT NOT NULL,
-    "data" TEXT NOT NULL,
-    "expireAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -155,6 +149,25 @@ CREATE TABLE "Booking" (
 );
 
 -- CreateTable
+CREATE TABLE "Voucher" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "reduceAmount" DOUBLE PRECISION NOT NULL,
+    "activationCode" TEXT NOT NULL,
+
+    CONSTRAINT "Voucher_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "BookingVoucher" (
+    "bookingId" TEXT NOT NULL,
+    "voucherId" TEXT NOT NULL,
+    "quantity" INTEGER NOT NULL DEFAULT 1,
+
+    CONSTRAINT "BookingVoucher_pkey" PRIMARY KEY ("bookingId","voucherId")
+);
+
+-- CreateTable
 CREATE TABLE "Ticket" (
     "id" TEXT NOT NULL,
     "price" DECIMAL(10,2) NOT NULL,
@@ -185,9 +198,6 @@ CREATE TABLE "BookingSnack" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Session_sid_key" ON "Session"("sid");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
@@ -242,6 +252,12 @@ ALTER TABLE "Booking" ADD CONSTRAINT "Booking_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "Booking" ADD CONSTRAINT "Booking_showtimeId_fkey" FOREIGN KEY ("showtimeId") REFERENCES "Showtime"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BookingVoucher" ADD CONSTRAINT "BookingVoucher_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BookingVoucher" ADD CONSTRAINT "BookingVoucher_voucherId_fkey" FOREIGN KEY ("voucherId") REFERENCES "Voucher"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Ticket" ADD CONSTRAINT "Ticket_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

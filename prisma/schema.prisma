@@ -25,13 +25,6 @@ model User {
   bookings        Booking[]
 }
 
-model Session {
-  id        String   @id @default(uuid())
-  sid       String   @unique
-  data      String   @db.Text
-  expiresAt   DateTime
-}
-
 model Profile {
   id             String  @id @default(uuid())
   spending_total Decimal @default(0) @db.Decimal(10, 2)
@@ -50,57 +43,28 @@ model Movie {
   premiereDate DateTime
   rated        String
 
-  genres       MovieGenre[]
-  directors    MovieDirector[]
-  actors       MovieActor[]
+  genres       Genre[]
+  directors    Director[]
+  actors       Actor[]
   showtimes    Showtime[]
 }
 
 model Genre {
   id     String       @id @default(uuid())
   name   String       @unique
-  movies MovieGenre[]
+  movies Movie[]
 }
 
 model Director {
   id     String          @id @default(uuid())
   name   String
-  movies MovieDirector[]
+  movies Movie[]
 }
 
 model Actor {
   id     String       @id @default(uuid())
   name   String
-  movies MovieActor[]
-}
-
-model MovieGenre {
-  movieId String
-  movie   Movie  @relation(fields: [movieId], references: [id])
-  genreId String
-  genre   Genre  @relation(fields: [genreId], references: [id])
-
-  @@id([movieId, genreId])
-}
-
-model MovieDirector {
-  movieId    String
-  movie      Movie    @relation(fields: [movieId], references: [id])
-  directorId String
-  director   Director @relation(fields: [directorId], references: [id])
-
-  @@id([movieId, directorId])
-}
-
-model MovieActor {
-  movieId       String
-  movie         Movie  @relation(fields: [movieId], references: [id])
-  actorId       String
-  actor         Actor  @relation(fields: [actorId], references: [id])
-  
-  characterName String
-
-  @@id([movieId, actorId])
+  movies Movie[]
 }
 
 model City {
@@ -166,8 +130,30 @@ model Booking {
   bankReference String?        @unique 
   createdAt     DateTime       @default(now())
 
+  vouchers      BookingVoucher[]
   tickets       Ticket[]
   snacks        BookingSnack[]
+}
+
+model Voucher {
+  id             String   @id @default(uuid())
+  name           String
+  reduceAmount   Float     
+  activationCode String
+
+  bookings      BookingVoucher[]
+
+}
+
+model BookingVoucher {
+  bookingId  String 
+  booking   Booking @relation(fields: [bookingId], references: [id])
+
+  voucherId String
+  voucher   Voucher @relation(fields: [voucherId], references: [id])
+
+  quantity  Int     @default(1)
+  @@id([bookingId, voucherId])
 }
 
 model Ticket {
@@ -216,4 +202,5 @@ enum BookingStatus {
 enum Role{
   ADMIN
   USER
+  GUEST
 }
