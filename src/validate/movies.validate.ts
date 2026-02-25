@@ -28,5 +28,14 @@ export const validateMovie = [
 
     body("rated")
     .notEmpty()
-    .withMessage(`Rating ${emptyMsg}`)
+    .withMessage(`Rating ${emptyMsg}`),
+
+    body("genre_option")
+    .notEmpty().withMessage(`Genre option ${emptyMsg}`),
+
+    body("actors")
+    .notEmpty().withMessage(`Actors ${emptyMsg}`),
+
+    body("directors")
+    .notEmpty().withMessage(`Directors ${emptyMsg}`)
 ]
