@@ -9,7 +9,7 @@ router.get("/coming_movies", movies.getAllComingMovies)
 router.get("/showing_movies", movies.getAllShowingMovies)
 router.get("/genre/:genre_name", movies.getMoviesByGenre)
 router.get("/title/:title_name", movies.getMoviesByTitle)
-
+router.get("/movie/:id", movies.getSpecificMovie)
 
 router.post("/movie",upload.single('filename'), validateMovie, handleValidationErrors, movies.insertMovies)
 

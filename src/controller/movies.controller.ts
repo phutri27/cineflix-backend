@@ -30,7 +30,7 @@ export const getMoviesByGenre = async (req: Request, res: Response, next: NextFu
         const movies = await moviesObj.getMoviesByGenre(genre)
         return res.status(200).json(movies)
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return next(error)
     }
 }
@@ -41,7 +41,18 @@ export const getMoviesByTitle = async (req: Request, res: Response, next: NextFu
         const movies = await moviesObj.getMoviesByTitle(title)
         return res.status(200).json(movies)
     } catch (error) {
-        console.log(error)
+        console.error(error)
+        return next(error)
+    }
+}
+
+export const getSpecificMovie = async (req: Request, res: Response, next:NextFunction) => {
+    try {
+        const id = req.params.id as string
+        const movie = await moviesObj.getSpecificMovie(id)
+        return res.status(200).json(movie)
+    } catch (error) {
+        console.error(error)
         return next(error)
     }
 }

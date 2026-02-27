@@ -73,6 +73,15 @@ class Movies {
         return movies
     }
 
+    async getSpecificMovie(movieId: string){
+        const movie = await prisma.movie.findUnique({
+            where:{
+                id: movieId
+            }
+        })
+        return movie
+    }
+
     async insert(title: string, plot: string, posterUrl: string, duration: number, premiereDate: Date, rated: string,
         genre_option: string[], actors: string[], directors: string[]
     ){
