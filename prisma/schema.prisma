@@ -15,22 +15,25 @@ datasource db {
 
 model User {
   id              String    @id @default(uuid())
-  hashed_password String    @db.VarChar(1080)
+  hashed_password String?    @db.VarChar(1080)
   email           String    @unique @db.VarChar(255)
   first_name      String?   @db.VarChar(255)
   last_name       String?   @db.VarChar(255)
   role            Role      @default(USER)
+
+  provider        AuthProvider  @default(LOCAL)
+  googleId        String?       @unique
+
 
   profile         Profile?
   bookings        Booking[]
 }
 
 model Profile {
-  id             String  @id @default(uuid())
   spending_total Decimal @default(0) @db.Decimal(10, 2)
   member_rank    String  @default("copper")
   
-  userId         String  @unique
+  userId         String  @id
   user           User    @relation(fields: [userId], references: [id])
 }
 
@@ -207,4 +210,9 @@ enum Role{
   ADMIN
   USER
   GUEST
+}
+
+enum AuthProvider{
+  LOCAL
+  GOOGLE
 }

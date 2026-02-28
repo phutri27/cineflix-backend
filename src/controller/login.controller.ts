@@ -24,3 +24,7 @@ export const loginPost = (req: Request, res: Response, next: NextFunction) => {
         })
     })(req, res, next)
 }
+
+export const googleRedirectToAppilcation = (req: Request, res: Response, next: NextFunction) => {
+    return res.redirect("http://localhost:5173")
+}
