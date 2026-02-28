@@ -3,7 +3,7 @@ import crypto from 'crypto'
 import { OTPobj } from '../redis-query/otp-query'
 import { generateOTP } from './generteOTP'
 
-export const sendEmail = async(userEmail: string, userId: string) => {
+export const sendEmail = async(userEmail: string, userCred: string) => {
     const testAccount = await nodemailer.createTestAccount()
 
     const transporter = nodemailer.createTransport({
@@ -27,7 +27,7 @@ export const sendEmail = async(userEmail: string, userId: string) => {
         <h2>${otp}</h2>`,
     });
 
-    await OTPobj.saveOTP(otp, userId)
+    await OTPobj.saveOTP(otp, userCred)
 
     console.log("Message sent: %s", info.messageId);
     console.log("Preview: %s", nodemailer.getTestMessageUrl(info));

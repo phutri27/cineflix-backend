@@ -1,3 +1,4 @@
+import type { Prisma } from "../../generated/prisma/client";
 import { prisma } from "../lib/prisma";
 
 class User {
@@ -31,15 +32,13 @@ class User {
         return user
     }
 
-    async updatePassword(userId: string, hashed_password: string){
+    async updatePassword(userCred: Prisma.UserWhereUniqueInput, hashed_password: string){
         await prisma.user.update({
             data:{
                 hashed_password: hashed_password
             },
-            where:{
-                id: userId
-            }
-        })
+            where: userCred
+        })  
     }
 }
 

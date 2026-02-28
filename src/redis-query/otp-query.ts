@@ -1,8 +1,8 @@
 import { redisClient } from "../lib/redis";
 
 class OTP{
-    async saveOTP(otp: string, userId: string){
-        await redisClient.set(`otp:${userId}`, otp, {EX:900})
+    async saveOTP(otp: string, userCred: string){
+        await redisClient.set(`otp:${userCred}`, otp, {EX:900})
     }
 
     async getOTP(userId: string){
