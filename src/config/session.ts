@@ -15,10 +15,10 @@ const verifyCallback = async (username: string, password: string, done: any) => 
                 email: username
             }
         })
-        if (!user) {
+        if (!user || !user.hashed_password) {
             return done(null, false, {message: "Incorrect username or password"})
         }
-        const valid = await isValid(password, user.hashed_password)
+        const valid = await isValid(password, user.hashed_password as string)
         if (!valid){
             return done(null, false, {message: "Incorrect username or password"})
         }

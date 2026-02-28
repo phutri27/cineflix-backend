@@ -6,35 +6,60 @@ import { AuthProvider } from '../../generated/prisma/enums.js';
 
 const verifyCallback = async (accessToken: any, refreshToken: any, profile: any, cb: any) =>{
     try {
-        let user = await prisma.user.findFirst({
+        const email = profile.emails?.[0].value
+        if(!email){
+            return cb(null, false, {message: "No email provided by Google"})
+        }
+        const user = await prisma.user.findFirst({
             where:{
                 OR:[
-                    {googleId: profile.id},
-                    {email: profile.emails?.[0].value}
+                    {email: profile.emails?.[0].value},
+                    {thirdParty:{
+                        some:{
+                            provider: "GOOGLE",
+                            providerAccountId: profile.id
+                        }
+                    }}
                 ]
+            },
+            omit:{
+                hashed_password: true
+            },
+            include:{
+                thirdParty:true
             }
         })
+
         if (user){
-            if (!user.googleId){
-                user = await prisma.user.update({
-                    where: {
-                        id: user.id
-                    },
-                    data:{ googleId: profile.id, provider: 'GOOGLE'}
+            const findGoogle = user.thirdParty.some(u => u.provider === "GOOGLE")
+            if(!findGoogle){
+                await prisma.thirdParty.create({
+                    data:{
+                        provider: "GOOGLE",
+                        providerAccountId: profile.id,
+                        userId: user.id
+                    }
                 })
-            }
-            return cb(null, user)
+            } 
+            const { thirdParty, ...safeUser } = user
+            return cb(null, safeUser)
         }
-        user = await prisma.user.create({
+
+        const user2 = await prisma.user.create({
             data:{
                 email: profile.emails?.[0].value,
                 first_name: profile.name?.givenName  || '',
                 last_name: profile.name?.familyName || '',
-                googleId: profile.id,
-                provider: 'GOOGLE'
-            }
+                thirdParty:{
+                    create: {
+                        provider: 'GOOGLE',
+                        providerAccountId: profile.id
+                    }
+                }
+            },
+            omit: {hashed_password: true}
         })
-        return cb(null, user)
+        return cb(null, user2)
     } catch (error) {
         console.error(error)
         return cb(error, undefined)

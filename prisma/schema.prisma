@@ -21,13 +21,21 @@ model User {
   last_name       String?   @db.VarChar(255)
   role            Role      @default(USER)
 
-  provider        AuthProvider  @default(LOCAL)
-  googleId        String?       @unique
-
-
+  thirdParty      ThirdParty[]
   profile         Profile?
   bookings        Booking[]
 }
+
+model ThirdParty{
+  id                  String       @id @default(uuid())
+  userId              String       
+  provider            AuthProvider 
+  providerAccountId   String       
+
+  user                User         @relation(fields: [userId], references: [id])
+  @@unique([providerAccountId, provider])
+}
+
 
 model Profile {
   spending_total Decimal @default(0) @db.Decimal(10, 2)
