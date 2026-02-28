@@ -5,11 +5,6 @@ class User {
         const user = await prisma.user.findUnique({
             where: {
                 id: userId
-            },
-            select:{
-                id: true,
-                email: true,
-                role: true
             }
         })
         return user
@@ -34,6 +29,17 @@ class User {
             }
         })
         return user
+    }
+
+    async updatePassword(userId: string, hashed_password: string){
+        await prisma.user.update({
+            data:{
+                hashed_password: hashed_password
+            },
+            where:{
+                id: userId
+            }
+        })
     }
 }
 
