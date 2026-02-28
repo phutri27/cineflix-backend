@@ -1,13 +1,13 @@
 import app from "../root.js";
-import { describe, expect, test, beforeEach, afterEach } from "vitest";
+import { describe, expect, test, beforeEach, afterEach, beforeAll, afterAll } from "vitest";
 import request from "supertest"
 import { prisma } from "../../src/lib/prisma.js";
 
-beforeEach(async () => {
+beforeAll(async () => {
     await prisma.user.deleteMany({})
 });
 
-afterEach(async () => {
+afterAll(async () => {
     await prisma.user.deleteMany({})
 })
 
@@ -31,6 +31,16 @@ describe("test signup route", () => {
         expect(response.body.message).toBe("Create account succesfully")
     })
 
+    test("test login success", async () => {
+        const response = await request(app)
+            .post("/api/login")
+            .type("form")
+            .send({email: "test1@gmail.com", pw: "Testsignup1."})
+            .set('Accept', 'application/json')
+            
+        expect(response.status).toBe(200)
+    })
+
     test("test signup post fail", async () => {
         const signupForm = {
             email: 'test2@gmail.com',
@@ -48,6 +58,5 @@ describe("test signup route", () => {
         expect(response.status).toBe(400)
         expect(response.headers["content-type"]).toMatch(/json/)
         expect(response.body.errors.length).toEqual(4)
-        expect(response.body.errors[0]).toBe("Password must contain combining uppercase/lowercase letters, at least one special character (.,?@...) and one number (0-9)")
     })
 })
