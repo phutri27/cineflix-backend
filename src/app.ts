@@ -7,8 +7,8 @@ import "./config/session.js"
 import routes from './routes/index.route.js'
 import { errorHandler } from "./error/error.js"
 import { RedisStore } from "connect-redis"
-import { client } from "./lib/redis.js"
-
+import { redisClient } from "./lib/redis.js"
+import { authorizeRoles } from "./middlewares/authorize.js"
 const app = express()
 app.use(cors())
 app.use(express.json())
@@ -24,7 +24,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: new RedisStore({
-      client: client,
+      client: redisClient,
       prefix: "sess:"
     })
   })
@@ -36,6 +36,8 @@ app.use(passport.session())
 app.use("/api/login", routes.login)
 app.use("/api/signup", routes.signup)
 app.use("/api/movies", routes.movies)
+app.use("/api/customer/profile", authorizeRoles(["USER"]), routes.profile)
+
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 3000

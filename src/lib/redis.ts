@@ -1,10 +1,12 @@
 import { createClient } from "redis";
-
-const client = await createClient()
+import "dotenv/config"
+const redisClient = await createClient({
+  url: `${process.env.REDIS_URL}`
+})
   .on("error", (err) => console.log("Redis Client Error", err))
   .connect();
 
-await client.set("key", "value");
-const value = await client.get("key");
+await redisClient.set("key", "value");
+const value = await redisClient.get("key");
 
-export { client }
+export { redisClient }
