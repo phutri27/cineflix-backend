@@ -15,7 +15,7 @@ datasource db {
 
 model User {
   id              String    @id @default(uuid())
-  hashed_password String    @db.VarChar(255)
+  hashed_password String    @db.VarChar(1080)
   email           String    @unique @db.VarChar(255)
   first_name      String?   @db.VarChar(255)
   last_name       String?   @db.VarChar(255)
@@ -43,6 +43,7 @@ model Movie {
   premiereDate DateTime
   rated        String
 
+  bookings     Booking[]
   genres       Genre[]
   directors    Director[]
   actors       Actor[]
@@ -121,6 +122,9 @@ model Booking {
   id            String         @id @default(uuid())
   userId        String
   user          User           @relation(fields: [userId], references: [id])
+
+  movieId       String
+  movie         Movie          @relation(fields: [movieId], references: [id])
   
   showtimeId    String
   showtime      Showtime       @relation(fields: [showtimeId], references: [id])
