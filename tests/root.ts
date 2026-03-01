@@ -37,6 +37,8 @@ app.use("/api/login", routes.login)
 app.use("/api/signup", routes.signup)
 app.use("/api/movies", routes.movies)
 app.use("/api/customer/profile", authorizeRoles(["USER"]), routes.profile)
+app.use("/api/password", routes.password)
+
 app.use(errorHandler)
 
 export default app

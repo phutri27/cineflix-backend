@@ -1,5 +1,4 @@
 import nodemailer from 'nodemailer'
-import crypto from 'crypto'
 import { OTPobj } from '../redis-query/otp-query'
 import { generateOTP } from './generteOTP'
 
