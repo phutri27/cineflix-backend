@@ -5,13 +5,13 @@ class OTP{
         await redisClient.set(`otp:${userCred}`, otp, {EX:900})
     }
 
-    async getOTP(userId: string){
-        const otp = await redisClient.get(`otp:${userId}`)
+    async getOTP(userCred: string){
+        const otp = await redisClient.get(`otp:${userCred}`)
         return otp
     }
 
-    async deleteOTP(userId: string){
-        await redisClient.del(`otp:${userId}`)
+    async deleteOTP(userCred: string){
+        await redisClient.del(`otp:${userCred}`)
     }
 }
 
