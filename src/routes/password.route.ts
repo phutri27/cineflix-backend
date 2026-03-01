@@ -4,9 +4,11 @@ import { changingPasswordValidate, otpValidate } from '../validate/profile.valid
 import { passwordValidate } from '../validate/password.validate.js'
 import * as password from "../controller/password.controller.js"
 import { emailValidate } from '../validate/email.validate.js'
+import { authorizeRoles } from '../middlewares/authorize.js'
+
 const router = express.Router()
 
-router.post("/change", changingPasswordValidate, handleValidationErrors, password.changePassword)
+router.post("/change", authorizeRoles(["USER, ADMIN"]),changingPasswordValidate, handleValidationErrors, password.changePassword)
 router.post("/otp", otpValidate, handleValidationErrors, password.confirmOtp)
 router.post("/new", passwordValidate, handleValidationErrors, password.newPassword)
 router.post("/forgot", emailValidate, handleValidationErrors, password.forgotPassword)
