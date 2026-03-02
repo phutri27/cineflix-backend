@@ -15,5 +15,5 @@ export default {
     password,
     admin,
     cinema,
-    screen
+    screen,
 }

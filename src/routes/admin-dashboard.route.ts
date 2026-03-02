@@ -4,13 +4,14 @@ import * as movies from "../controller/movies.controller.js"
 import * as vouchers from "../controller/voucher.controller.js"
 import * as cinemas from "../controller/cinema.controller.js"
 import * as screens from "../controller/screen.controller.js"
+import * as seats from "../controller/seat.controller.js"
 import { validateMovie } from "../validate/movies.validate.js"
 import { validateSnack } from '../validate/snack.validate.js'
 import { validateVoucher } from '../validate/voucher.validate.js'
 import { validateCinema } from '../validate/cinema.validate.js'
 import { validateScreen } from '../validate/screen.validate.js'
+import { seatValidate } from '../validate/seat.validate'
 import { handleValidationErrors } from "../middlewares/validateResult.js"
-
 import { upload } from "../utils/fileupload.js"
 
 const router = express.Router()
@@ -20,6 +21,7 @@ router.post("/movie",upload.single('filename'), validateMovie, handleValidationE
 router.put("/movie/:id", upload.single('filename'), validateMovie, handleValidationErrors, movies.updateMovies)
 router.delete("/movie/:id", movies.deleteMovie)
 
+router.get("/snacks", snacks.getAllSnacks)
 router.post("/snacks", upload.single('filename'), validateSnack, handleValidationErrors, snacks.insertSnack)
 router.put("/snacks/:id", upload.single('filename'), validateSnack, handleValidationErrors, snacks.updateSnack)
 router.delete("/snacks/:id", snacks.deleteSnack)
@@ -38,4 +40,10 @@ router.get("/screen/:cinema_id", screens.getScreenByCinema)
 router.post("/screen/:cinema_id", validateScreen, handleValidationErrors, screens.insertScreen)
 router.put("/screen/:id", validateScreen, handleValidationErrors, screens.updateScreen)
 router.delete("/screen/:id", screens.deleteScreen)
+
+router.get("/seat/:screen_id", seats.getAllSeatOfScreen)
+router.post("/seat/:screen_id", seatValidate, handleValidationErrors, seats.insertSeat)
+router.put("/seat/:id", seatValidate, handleValidationErrors, seats.updateSeat)
+router.delete("/seat/:id", seats.deleteSeat)
+
 export default router
