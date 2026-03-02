@@ -3,10 +3,12 @@ import * as snacks from "../controller/snacks.controller.js"
 import * as movies from "../controller/movies.controller.js"
 import * as vouchers from "../controller/voucher.controller.js"
 import * as cinemas from "../controller/cinema.controller.js"
+import * as screens from "../controller/screen.controller.js"
 import { validateMovie } from "../validate/movies.validate.js"
 import { validateSnack } from '../validate/snack.validate.js'
 import { validateVoucher } from '../validate/voucher.validate.js'
 import { validateCinema } from '../validate/cinema.validate.js'
+import { validateScreen } from '../validate/screen.validate.js'
 import { handleValidationErrors } from "../middlewares/validateResult.js"
 
 import { upload } from "../utils/fileupload.js"
@@ -32,4 +34,8 @@ router.post("/", validateCinema, handleValidationErrors, cinemas.insertCinema)
 router.put("/:cinema_id", validateCinema, handleValidationErrors, cinemas.updateCinema)
 router.delete("/:cinema_id", cinemas.deleteCinema)
 
+router.get("/screen/:cinema_id", screens.getScreenByCinema)
+router.post("/screen/:cinema_id", validateScreen, handleValidationErrors, screens.insertScreen)
+router.put("/screen/:id", validateScreen, handleValidationErrors, screens.updateScreen)
+router.delete("/screen/:id", screens.deleteScreen)
 export default router
