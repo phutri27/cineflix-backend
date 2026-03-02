@@ -39,6 +39,7 @@ app.use("/api/movies", routes.movies)
 app.use("/api/customer/profile", authorizeRoles(["USER"]), routes.profile)
 app.use("/api/password", routes.password)
 app.use("/api/admin/dashboard", authorizeRoles(["ADMIN", "GUEST"]),routes.admin)
+app.use("/api/cinema", routes.cinema)
 
 app.use(errorHandler)
 

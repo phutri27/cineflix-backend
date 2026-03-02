@@ -54,6 +54,7 @@ model Movie {
   premiereDate DateTime
   rated        String
 
+  cinemas      Cinema[]
   bookings     Booking[]
   genres       Genre[]
   directors    Director[]
@@ -91,6 +92,7 @@ model Cinema {
   cityId  Int
   city    City     @relation(fields: [cityId], references: [id])
   
+  movies  Movie[]
   screens Screen[]
 }
 

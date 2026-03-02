@@ -4,6 +4,7 @@ import movies from "./movies.route.js"
 import profile from './profile.route.js'
 import password from "./password.route.js"
 import admin from "./admin-dashboard.route.js"
+import cinema from "./cinema.route.js"
 
 export default {
     signup,
@@ -11,5 +12,6 @@ export default {
     movies,
     profile,
     password,
-    admin
+    admin,
+    cinema
 }
