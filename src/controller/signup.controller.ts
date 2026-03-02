@@ -39,11 +39,15 @@ export const confirmOtpForSignup = async (req: Request, res: Response, next: Nex
             const info = JSON.parse(inf)
             const user = await userObj.createUser(userCred, info.pw as string, info.first_name as string, info.last_name as string)
             await profileObj.createProfile(user.id)
+            await signupObj.deleteSignupInfo(userCred)
             await OTPobj.deleteOTP(userCred)
             return res.status(200).json({
                 message: "Create account successfully"
             })
         }
+        return res.status(401).json({
+            message: "Wrong otp, try again"
+        })
     } catch (error) {
         console.error(error)
         return next(error)

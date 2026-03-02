@@ -1,7 +1,6 @@
 import { moviesObj } from "../dao/movies.dao";
 import type { NextFunction, Request, Response } from "express";
-import { matchedData, validationResult, Result } from "express-validator";
-import { validateMovie } from "../validate/movies.validate";
+import { matchedData } from "express-validator";
 import { uploadFile } from "../utils/fileupload";
 
 export const getAllComingMovies = async (req: Request, res: Response, next: NextFunction) => {
@@ -57,6 +56,16 @@ export const getSpecificMovie = async (req: Request, res: Response, next:NextFun
     }
 }
 
+export const getAllMovies = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const movies = await moviesObj.getAllMovies()
+        return res.status(200).json(movies) 
+    } catch (error) {
+        console.error(error)
+        return next(error)
+    }
+}
+
 export const insertMovies = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const filePath = req.file?.path as string
@@ -82,7 +91,8 @@ export const updateMovies = async (req: Request, res: Response, next: NextFuncti
             genre_option, actors, directors
         )
     } catch (error) {
-        
+        console.error(error)
+        return next(error)
     }
 }
 

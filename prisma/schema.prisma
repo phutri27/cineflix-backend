@@ -154,7 +154,9 @@ model Voucher {
   id             String   @id @default(uuid())
   name           String
   reduceAmount   Float     
-  activationCode String
+  startAt        DateTime
+  expireAt       DateTime
+  activationCode String   @unique
 
   bookings      BookingVoucher[]
 
@@ -191,7 +193,8 @@ model Snack {
   id       String         @id @default(uuid())
   name     String
   price    Decimal        @db.Decimal(10, 2)
-  
+  imageUrl String?
+
   bookings BookingSnack[]
 }
 

@@ -1,6 +1,6 @@
 import { prisma } from "../lib/prisma";
 
-const movieWithDetailsInclude = {
+export const movieWithDetailsInclude = {
     genres:{
         select:{
             name: true
@@ -20,6 +20,14 @@ const movieWithDetailsInclude = {
 
 
 class Movies {
+    async getAllMovies(){
+        const movies = await prisma.movie.findMany({
+            include: movieWithDetailsInclude
+        })
+
+        return movies
+    }
+
     async getAllComingMovies(){
         const currentDate = new Date()
         const movies = await prisma.movie.findMany({

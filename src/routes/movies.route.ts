@@ -11,9 +11,4 @@ router.get("/genre/:genre_name", movies.getMoviesByGenre)
 router.get("/title/:title_name", movies.getMoviesByTitle)
 router.get("/movie/:id", movies.getSpecificMovie)
 
-router.post("/movie",upload.single('filename'), validateMovie, handleValidationErrors, movies.insertMovies)
-
-router.put("/movie/:id", upload.single('filename'), validateMovie, handleValidationErrors, movies.updateMovies)
-
-router.delete("/movie/:id", movies.deleteMovie)
 export default router

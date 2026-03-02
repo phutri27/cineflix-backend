@@ -1,73 +1,47 @@
 import app from "../root.js";
-import { expect, test, beforeEach, afterEach, vi } from "vitest";
+import { describe, expect, test, beforeAll, afterAll, vi } from "vitest";
 import request from "supertest"
-import nodemailer from 'nodemailer'
+import { prisma } from "../../src/lib/prisma.js";
 import { OTPobj } from "../../src/redis-query/otp-query.js";
-import { generateOTP } from "../../src/service/generteOTP.js";
-import { sendEmail } from "../../src/service/mail.js";
+import { signupObj } from "../../src/redis-query/signup-query.js";
+import { redisClient } from "../../src/lib/redis.js";
 
-import { describe } from "node:test";
-vi.mock("../../src/redis-query/otp-query", () =>({
-    OTPobj:{
-        saveOTP: vi.fn()
-    }
-}))
+const signupForm = {
+    email: 'test1@gmail.com',
+    pw: "Testsignup1.",
+    confirmPw: "Testsignup1.",
+    first_name: "John",
+    last_name: "Smith"
+}
 
 vi.mock("../../src/service/generteOTP.js", () => ({
-    generateOTP: vi.fn()
+    generateOTP: vi.fn().mockReturnValue("123456")
 }))
 
-const mockSendMail = vi.fn();
-vi.mock('nodemailer', () => ({
-    default: {
-        createTestAccount: vi.fn(),
-        createTransport: vi.fn().mockImplementation(() => ({
-            sendMail: mockSendMail 
-        })),
-        getTestMessageUrl: vi.fn()
-    }
-}));
 
-describe('sendEmail Function', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
+beforeAll( async () => {
+    await request(app)
+        .post("/api/signup")
+        .type("form")
+        .send(signupForm)
+        .set('Accept', 'application/json')
+})
 
-    test('should successfully generate an OTP, send an email, and save to Redis', async () => {
-        vi.mocked(generateOTP).mockReturnValue('123456');
+afterAll(async () => {
+    await prisma.profile.deleteMany()
+    await prisma.user.deleteMany()
+    await signupObj.deleteSignupInfo('test1@gmail.com')
+    await OTPobj.deleteOTP('test1@gmail.com')
+})
 
-        const mockAccount = {
-            smtp: { host: 'smtp.ethereal.email', port: 587, secure: false },
-            user: 'fake_user@ethereal.email',
-            pass: 'fake_pass'
-        };
-        vi.mocked(nodemailer.createTestAccount).mockResolvedValue(mockAccount as any);
+test("forgot password functionality", async () => {
+    const response = await request(app)
+        .post("/api/password/forgot")
+        .type("form")
+        .send({email: "test1@gmail.com"})
+        .set('Accept', 'application/json')
+    
+    console.log(response.body)
+    expect(response.status).toBe(200)
 
-        mockSendMail.mockResolvedValue({ messageId: 'mock-id-999' });
-
-        vi.mocked(nodemailer.getTestMessageUrl).mockReturnValue('http://fake-ethereal-url.com');
-
-        vi.mocked(OTPobj.saveOTP).mockResolvedValue(undefined);
-
-        await sendEmail('john@gmail.com', 'user-uuid-123');
-
-        expect(nodemailer.createTransport).toHaveBeenCalledWith({
-            host: mockAccount.smtp.host,
-            port: mockAccount.smtp.port,
-            secure: mockAccount.smtp.secure,
-            auth: {
-                user: mockAccount.user,
-                pass: mockAccount.pass,
-            }
-        });
-
-        expect(mockSendMail).toHaveBeenCalledWith(expect.objectContaining({
-            to: 'john@gmail.com',
-            subject: 'Changing password OTP',
-            html: expect.stringContaining('123456') 
-        }));
-
-        expect(OTPobj.saveOTP).toHaveBeenCalledWith('123456', 'user-uuid-123');
-        expect(OTPobj.saveOTP).toHaveBeenCalledTimes(1);
-    });
-});
+})

@@ -6,8 +6,6 @@ import { profileObj } from "../../src/dao/profile.dao.js";
 import { userObj } from "../../src/dao/user.dao.js";
 import { genPassword } from "../../src/utils/password.util.js";
 import { redisClient } from "../../src/lib/redis.js";
-import { createMockBookingData } from "../test_util/mockData.js";
-
 
 let user: any;
 const agent = request.agent(app)
@@ -23,12 +21,12 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-    // for await (const key of redisClient.sScanIterator('sess', {MATCH: "*"})){
-    //     console.log(key)
-    //     await redisClient.del(key)
-    // }
-    await prisma.user.deleteMany()
+    for await (const key of redisClient.scanIterator({MATCH: 'sess:*'})){
+        await redisClient.del(key)
+    }
     await prisma.profile.deleteMany()
+    await prisma.user.deleteMany()
+    
 })
 
 test("test edit profile route", async () => {

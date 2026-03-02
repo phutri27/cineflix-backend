@@ -21,6 +21,10 @@ class Signup{
         const info = await redisClient.get(key)
         return info
     }
+
+    async deleteSignupInfo(key: string){
+        await redisClient.del(key)
+    }
 }
 
 export const signupObj = new Signup()

@@ -10,10 +10,11 @@ export const emailValidate = [
     .isEmail()
     .withMessage(`Must be email! For example: example@gmail.com`)
     .custom(async (value, {req}) => {
-        const result = await userObj.getEmail(value)
+        const result = await userObj.getEmail(req.body.email)
         if (!result){
             throw new Error("Incorect login information")
         }
+
         return true
     }),
 ]
