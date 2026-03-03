@@ -20,6 +20,27 @@ class User {
         return user
     }
 
+    async findAllUserAdmin (){
+        const users = await prisma.user.findMany({
+            select:{
+                email: true,
+                last_name: true,
+                first_name: true,
+                profile:{
+                    select:{
+                        spending_total: true,
+                        member_rank: true
+                    }
+                }
+            },
+            where:{
+                role: "USER"
+            }
+        })
+
+        return users
+    }
+
     async createUser(email: string, hashed_password: string, first_name: string, last_name: string){
         const user = await prisma.user.create({
             data:{

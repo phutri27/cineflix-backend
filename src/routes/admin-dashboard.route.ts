@@ -6,15 +6,20 @@ import * as cinemas from "../controller/cinema.controller.js"
 import * as screens from "../controller/screen.controller.js"
 import * as seats from "../controller/seat.controller.js"
 import * as seatTypes from "../controller/seat-type.controller.js"
+import * as users from "../controller/user.controller.js"
+import * as actors from "../controller/actor.controller.js"
+import * as directors from "../controller/director.controller.js"
 import { validateMovie } from "../validate/movies.validate.js"
 import { validateSnack } from '../validate/snack.validate.js'
 import { validateVoucher } from '../validate/voucher.validate.js'
 import { validateCinema } from '../validate/cinema.validate.js'
 import { validateScreen } from '../validate/screen.validate.js'
 import { seatValidate } from '../validate/seat.validate'
+import { validateActorDirector } from '../validate/actor_director.validate.js'
 import { seatTypeValidate } from '../validate/seat-type.validate.js'
 import { handleValidationErrors } from "../middlewares/validateResult.js"
 import { upload } from "../utils/fileupload.js"
+
 
 const router = express.Router()
 
@@ -60,4 +65,18 @@ router.post("/seat-type/:cinema_id", seatTypeValidate, handleValidationErrors, s
 router.put("/seat-type/:id", seatTypeValidate, handleValidationErrors, seatTypes.updateSeatType)
 router.delete("/seat-type/:id", seatTypes.deleteSeatType)
 
+//USer
+router.get("/users", users.getAllUser)
+
+//Actor
+router.get("/actors", actors.getAllActor)
+router.post("/actors", validateActorDirector, handleValidationErrors, actors.insertActor)
+router.put("/actors/:id", validateActorDirector, handleValidationErrors, actors.updateActor)
+router.delete("/actors/:id", actors.deleteActor)
+
+//Director
+router.get("/directors", directors.getAllDirector)
+router.post("/directors", validateActorDirector, handleValidationErrors, directors.insertDirector)
+router.put("/directors/:id", validateActorDirector, handleValidationErrors, directors.updateDirector)
+router.delete("/directors/:id", directors.deleteDirector)
 export default router

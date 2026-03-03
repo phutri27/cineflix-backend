@@ -1,6 +1,11 @@
 import { prisma } from "../lib/prisma";
 
 class Actors {
+    async getActors(){
+        const actors = await prisma.actor.findMany()
+        return actors
+    }
+
     async insert(name: string){
         const actor = await prisma.actor.create({
             data:{
