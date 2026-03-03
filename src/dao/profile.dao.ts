@@ -59,18 +59,22 @@ class Profile{
                 },
                 tickets:{
                     select:{
-                        price: true,
                         seat:{
                             select:{
                                 row: true,
-                                seat_type:true,
-                                number:true,
+                                number: true,
+                                seatTypeDetail:{
+                                    select:{
+                                        seat_type: true,
+                                        price: true
+                                    }
+                                },
                                 screen:{
                                     select:{
-                                        name:true,
-                                        cinema: {
+                                        name: true,
+                                        cinema:{
                                             select:{
-                                                name:true
+                                                name: true
                                             }
                                         }
                                     }

@@ -92,6 +92,7 @@ model Cinema {
   cityId  Int
   city    City     @relation(fields: [cityId], references: [id])
   
+  seatType SeatTypeDetail[]
   movies  Movie[]
   screens Screen[]
 }
@@ -107,14 +108,16 @@ model Screen {
 }
 
 model Seat {
-  id        String   @id @default(uuid())
-  row       String
-  seat_type String
-  number    Int
-  screenId  String
-  screen    Screen   @relation(fields: [screenId], references: [id])
+  id              String   @id @default(uuid())
+  row             String
+  number          Int
+
+  seat_typeId     String
+  seatTypeDetail  SeatTypeDetail @relation(fields: [seat_typeId], references: [id])
   
-  tickets   Ticket[]
+  screenId        String
+  screen          Screen @relation(fields: [screenId], references: [id])
+  tickets         Ticket[]
 }
 
 model Showtime {
@@ -161,7 +164,6 @@ model Voucher {
   activationCode String   @unique
 
   bookings      BookingVoucher[]
-
 }
 
 model BookingVoucher {
@@ -175,9 +177,21 @@ model BookingVoucher {
   @@id([bookingId, voucherId])
 }
 
+model SeatTypeDetail{
+  id        String  @id @default(uuid())
+  price     Decimal @db.Decimal(10, 2)
+  seat_type String
+
+  seats     Seat[]
+
+  cinemaId  String
+  cinema    Cinema  @relation(fields: [cinemaId], references: [id], onDelete: Cascade)
+
+  @@unique([seat_type, cinemaId])
+}
+
 model Ticket {
   id         String   @id @default(uuid())
-  price      Decimal  @db.Decimal(10, 2)
   
   bookingId  String
   booking    Booking  @relation(fields: [bookingId], references: [id])
