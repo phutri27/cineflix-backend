@@ -3,7 +3,7 @@ import {describe, expect, test, beforeEach, afterEach, vi } from "vitest";
 import request from "supertest"
 import nodemailer from 'nodemailer'
 import { OTPobj } from "../../src/redis-query/otp-query.js";
-import { generateOTP } from "../../src/service/generteOTP.js";
+import { generateOTP } from "../../src/service/generateOTP.js";
 import { sendEmail } from "../../src/service/mail.js";
 
 vi.mock("../../src/redis-query/otp-query", () =>({

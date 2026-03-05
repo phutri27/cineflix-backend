@@ -6,7 +6,6 @@ export const getAllUser = async (req: Request, res: Response, next: NextFunction
         const users = await userObj.findAllUserAdmin()
         return res.status(200).json(users)
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }

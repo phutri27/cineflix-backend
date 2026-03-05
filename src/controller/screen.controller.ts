@@ -8,7 +8,6 @@ export const getScreenByCinema = async (req: Request, res: Response, next: NextF
         const screens = await screenObj.getScreenByCinema(cinema_id)
         return res.status(200).json(screens)
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -22,7 +21,6 @@ export const insertScreen = async (req: Request, res: Response, next: NextFuncti
             message: "Create screen successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -36,7 +34,6 @@ export const updateScreen = async (req: Request, res: Response, next: NextFuncti
             message: "Update screen successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -49,7 +46,6 @@ export const deleteScreen = async (req: Request, res: Response, next: NextFuncti
             message: "Delete screen successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }

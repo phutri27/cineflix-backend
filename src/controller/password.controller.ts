@@ -26,7 +26,6 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
             })
         }
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -51,7 +50,6 @@ export const confirmOtp = async (req: Request, res: Response, next: NextFunction
             message: "Wrong otp, please try again"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -64,7 +62,6 @@ export const forgotPassword = async (req: Request, res:Response, next: NextFunct
             message: "The OTP has been send to your email. Please check your email!"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -93,7 +90,6 @@ export const newPassword = async (req: Request, res: Response, next: NextFunctio
             message: "Change password successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }

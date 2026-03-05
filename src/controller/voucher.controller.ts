@@ -8,7 +8,6 @@ export const getAllVouchers =async (req: Request, res: Response, next: NextFunct
         const vouchers = await voucherObj.getAllVouchers()
         return res.status(200).json(vouchers)
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -28,7 +27,6 @@ export const activateVouchers = async (req: Request, res: Response, next: NextFu
             message: "No voucher with that activate code exists"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -42,7 +40,6 @@ export const insertVoucher = async (req: Request, res: Response, next: NextFunct
             message: "Create voucher successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -57,7 +54,6 @@ export const updateVoucher = async (req: Request, res: Response, next: NextFunct
             message: "Update voucher successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -70,7 +66,6 @@ export const deleteVoucher = async (req: Request, res: Response, next: NextFunct
             message: "Success"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 

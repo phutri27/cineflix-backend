@@ -1,38 +1,39 @@
 import express from 'express'
-import * as snacks from "../controller/snacks.controller.js"
-import * as movies from "../controller/movies.controller.js"
-import * as vouchers from "../controller/voucher.controller.js"
-import * as cinemas from "../controller/cinema.controller.js"
-import * as screens from "../controller/screen.controller.js"
-import * as seats from "../controller/seat.controller.js"
-import * as seatTypes from "../controller/seat-type.controller.js"
-import * as users from "../controller/user.controller.js"
-import * as actors from "../controller/actor.controller.js"
-import * as directors from "../controller/director.controller.js"
-import { validateMovie } from "../validate/movies.validate.js"
-import { validateSnack } from '../validate/snack.validate.js'
-import { validateVoucher } from '../validate/voucher.validate.js'
-import { validateCinema } from '../validate/cinema.validate.js'
-import { validateScreen } from '../validate/screen.validate.js'
+import * as snacks from "../controller/snacks.controller"
+import * as movies from "../controller/movies.controller"
+import * as vouchers from "../controller/voucher.controller"
+import * as cinemas from "../controller/cinema.controller"
+import * as screens from "../controller/screen.controller"
+import * as seats from "../controller/seat.controller"
+import * as seatTypes from "../controller/seat-type.controller"
+import * as users from "../controller/user.controller"
+import * as actors from "../controller/actor.controller"
+import * as directors from "../controller/director.controller"
+import { validateMovie } from "../validate/movies.validate"
+import { validateSnack } from '../validate/snack.validate'
+import { validateVoucher } from '../validate/voucher.validate'
+import { validateCinema } from '../validate/cinema.validate'
+import { validateScreen } from '../validate/screen.validate'
+import { validateFile } from '../validate/files.validate'
 import { seatValidate } from '../validate/seat.validate'
-import { validateActorDirector } from '../validate/actor_director.validate.js'
-import { seatTypeValidate } from '../validate/seat-type.validate.js'
-import { handleValidationErrors } from "../middlewares/validateResult.js"
-import { upload } from "../utils/fileupload.js"
+import { validateActorDirector } from '../validate/actor_director.validate'
+import { seatTypeValidate } from '../validate/seat-type.validate'
+import { handleValidationErrors } from "../middlewares/validateResult"
+import { upload } from "../utils/fileupload"
 
 
 const router = express.Router()
 
 //Movies
 router.get("/movies", movies.getAllMovies)
-router.post("/movie",upload.single('filename'), validateMovie, handleValidationErrors, movies.insertMovies)
-router.put("/movie/:id", upload.single('filename'), validateMovie, handleValidationErrors, movies.updateMovies)
+router.post("/movie",upload.single('filename'), validateFile, validateMovie, handleValidationErrors, movies.insertMovies)
+router.put("/movie/:id", upload.single('filename'), validateFile, validateMovie, handleValidationErrors, movies.updateMovies)
 router.delete("/movie/:id", movies.deleteMovie)
 
 //Snacks
 router.get("/snacks", snacks.getAllSnacks)
-router.post("/snacks", upload.single('filename'), validateSnack, handleValidationErrors, snacks.insertSnack)
-router.put("/snacks/:id", upload.single('filename'), validateSnack, handleValidationErrors, snacks.updateSnack)
+router.post("/snacks", upload.single('filename'), validateFile, validateSnack, handleValidationErrors, snacks.insertSnack)
+router.put("/snacks/:id", upload.single('filename'), validateFile, validateSnack, handleValidationErrors, snacks.updateSnack)
 router.delete("/snacks/:id", snacks.deleteSnack)
 
 //Vouchers

@@ -8,7 +8,6 @@ export const getCustomerProfile = async (req: Request, res: Response, next: Next
         const profile = await profileObj.getProfile(userId)
         res.status(200).json(profile)
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -23,7 +22,6 @@ export const editCustomerProfile = async( req: Request, res: Response, next: Nex
             profile: newProfile
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -35,7 +33,6 @@ export const getBookingHistory = async (req: Request, res: Response, next: NextF
         const bookingHistory = await profileObj.getBookingHistory(userId, page)
         return res.status(200).json(bookingHistory)
     } catch (error){
-        console.error(error)
         return next(error)
     }
 }

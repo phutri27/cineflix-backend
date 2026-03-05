@@ -6,6 +6,15 @@ class Snack{
         return snacks
     }
 
+    async getSpecficSnacK(snackId: string){
+        const snack = await prisma.snack.findUnique({
+            where:{
+                id: snackId
+            }
+        })
+        return snack
+    }
+
     async insert(name: string, price: number, imageUrl: string){
         const snack = await prisma.snack.create({
             data:{

@@ -9,8 +9,13 @@ import { errorHandler } from "./error/error.js"
 import { RedisStore } from "connect-redis"
 import { redisClient } from "./lib/redis.js"
 import { authorizeRoles } from "./middlewares/authorize.js"
+import helmet from "helmet"
 const app = express()
-app.use(cors())
+app.use(helmet())
+app.use(cors({
+    origin: process.env.FRONTEND_ORIGIN,
+    credentials: true,
+}))
 app.use(express.json())
 
 app.use(express.urlencoded({ extended: true })); 
@@ -18,7 +23,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   expressSession({
     cookie: {
-     maxAge: 2 * 24 * 60 * 60 * 1000 // ms
+      httpOnly:true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 2 * 24 * 60 * 60 * 1000 // ms
     },
     secret: process.env.SECRET_KEY as string,
     resave: false,
@@ -38,7 +46,7 @@ app.use("/api/signup", routes.signup)
 app.use("/api/movies", routes.movies)
 app.use("/api/customer/profile", authorizeRoles(["USER"]), routes.profile)
 app.use("/api/password", routes.password)
-app.use("/api/admin/dashboard", authorizeRoles(["ADMIN", "GUEST"]),routes.admin)
+app.use("/api/admin/dashboard", authorizeRoles(["ADMIN"]),routes.admin)
 app.use("/api/cinema", routes.cinema)
 
 app.use(errorHandler)

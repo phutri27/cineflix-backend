@@ -1,5 +1,17 @@
 import { prisma } from "../lib/prisma";
 
+export type movie = {
+    title: string,
+    plot: string,
+    posterUrl: string,
+    duration: number,
+    premiereDate: Date,
+    rated: string,
+    genre_option: string[],
+    actors: string[],
+    directors: string[]
+}
+
 export const movieWithDetailsInclude = {
     genres:{
         select:{
@@ -90,25 +102,23 @@ class Movies {
         return movie
     }
 
-    async insert(title: string, plot: string, posterUrl: string, duration: number, premiereDate: Date, rated: string,
-        genre_option: string[], actors: string[], directors: string[]
-    ){
+    async insert(data: movie){
         const movie = await prisma.movie.create({
             data:{
-                title: title,
-                plot: plot,
-                posterUrl: posterUrl,
-                durationMin: duration,
-                premiereDate: premiereDate,
-                rated: rated,
+                title: data.title,
+                plot: data.plot,
+                posterUrl: data.posterUrl,
+                durationMin: data.duration,
+                premiereDate: data.premiereDate,
+                rated: data.rated,
                 genres: {
-                    connect: genre_option.map((id: string) => ({ id }))
+                    connect: data.genre_option.map((id: string) => ({ id }))
                 },
                 actors: {
-                    connect: actors.map((id: string) => ({ id }))
+                    connect: data.actors.map((id: string) => ({ id }))
                 },
                 directors: {
-                    connect: directors.map((id: string) => ({ id }))
+                    connect: data.directors.map((id: string) => ({ id }))
                 }
             }
         })
@@ -116,24 +126,23 @@ class Movies {
         return movie
     }
 
-    async update(id: string, title: string, plot: string, posterUrl: string, duration: number, premiereDate: Date, rated: string,
-        genre_option: string[], actors: string[], directors: string[]){
+    async update(id: string, data: movie){
         const movie = await prisma.movie.update({
             data:{
-                title: title,
-                plot: plot,
-                posterUrl: posterUrl,
-                durationMin: duration,
-                premiereDate: premiereDate,
-                rated: rated,
+                title: data.title,
+                plot: data.plot,
+                posterUrl: data.posterUrl,
+                durationMin: data.duration,
+                premiereDate: data.premiereDate,
+                rated: data.rated,
                 genres: {
-                    connect: genre_option.map((id: string) => ({ id }))
+                    set: data.genre_option.map((id: string) => ({ id }))
                 },
                 actors: {
-                    connect: actors.map((id: string) => ({ id }))
+                    set: data.actors.map((id: string) => ({ id }))
                 },
                 directors: {
-                    connect: directors.map((id: string) => ({ id }))
+                    set: data.directors.map((id: string) => ({ id }))
                 }
             },
             where:{

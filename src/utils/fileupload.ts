@@ -9,11 +9,19 @@ const storage = multer.diskStorage({
 
 export const upload = multer({storage: storage})    
 
-export const uploadFile = (filePath: string) => {
-    return new Promise((resolve, reject) => {
-        cloudinary.uploader.upload(filePath, (err, result) => {
-            if (err) return reject(err)
-            return resolve(result)
-        })
-    })
+export const uploadFile = async (filePath: string) => {
+    try {
+        const result = await cloudinary.uploader.upload(filePath)
+        return result
+    } catch (error) {
+        return console.error(error)
+    }
+}
+
+export const deleteFile = async (filePublicId: string) => {
+    try {
+        await cloudinary.uploader.destroy(filePublicId)
+    } catch (error) {
+        console.error(error)
+    }
 }

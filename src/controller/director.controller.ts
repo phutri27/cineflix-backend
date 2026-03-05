@@ -7,7 +7,6 @@ export const getAllDirector = async (req: Request, res: Response, next: NextFunc
         const directors = await directorObj.getDirectors()
         return res.status(200).json(directors)
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -20,7 +19,6 @@ export const insertDirector = async(req: Request, res: Response, next: NextFunct
             message: "Add director successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -34,7 +32,6 @@ export const updateDirector = async(req: Request, res: Response, next: NextFunct
             message: "Update director successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 } 
@@ -47,7 +44,6 @@ export const deleteDirector = async(req: Request, res: Response, next: NextFunct
             message: "Delete director successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }

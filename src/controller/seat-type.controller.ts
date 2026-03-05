@@ -8,7 +8,6 @@ export const getAllSeatType = async (req: Request, res: Response, next: NextFunc
         const seatTypes = await seatTypeObj.getSeatDetails(cinema_id)
         return res.status(200).json(seatTypes)
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -22,7 +21,6 @@ export const insertSeatType = async (req: Request, res: Response, next: NextFunc
             message: "Create seat type successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 } 
@@ -36,7 +34,6 @@ export const updateSeatType = async (req: Request, res: Response, next: NextFunc
             message: "Update seat type successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -49,7 +46,6 @@ export const deleteSeatType = async (req: Request, res: Response, next: NextFunc
             memssage: "Delete seat type successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }

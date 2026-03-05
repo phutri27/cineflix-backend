@@ -16,7 +16,7 @@ export const insertActor = async(req: Request, res: Response, next: NextFunction
     try {
         const { name } = matchedData(req)
         await actorObj.insert(name)
-        return res.status(200).json({
+        return res.status(201).json({
             message: "Add actor successfully"
         })
     } catch (error) {
@@ -30,7 +30,7 @@ export const updateActor = async(req: Request, res: Response, next: NextFunction
         const id = req.params.id as string
         const { name } = matchedData(req)
         await actorObj.update(id, name)
-        return res.status(200).json({
+        return res.status(201).json({
             message: "Update actor successfully"
         })
     } catch (error) {

@@ -23,7 +23,6 @@ export const signupPost = async (req: Request, res: Response, next: NextFunction
             message: "Please check your email, an OTP is need to complete the signup"
         })
     } catch (error) {
-        console.error(error)
         next(error)
     }
 }
@@ -49,7 +48,6 @@ export const confirmOtpForSignup = async (req: Request, res: Response, next: Nex
             message: "Wrong otp, try again"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 } 

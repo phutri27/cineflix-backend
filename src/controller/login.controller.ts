@@ -1,6 +1,6 @@
 import passport from "passport";
 import type { Request, Response, NextFunction } from "express";
-
+import "dotenv/config"
 export const loginPost = (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate('local', (err: any, user: any, info: any) => {
         if (err){
@@ -26,5 +26,5 @@ export const loginPost = (req: Request, res: Response, next: NextFunction) => {
 }
 
 export const googleRedirectToAppilcation = (req: Request, res: Response, next: NextFunction) => {
-    return res.redirect("http://localhost:5173")
+    return res.redirect(process.env.FRONTEND_ORIGIN as string)
 }

@@ -1,7 +1,6 @@
 import { seatObj } from "../dao/seat.dao";
 import { matchedData } from "express-validator";
 import type { Request, Response, NextFunction } from "express";
-import e from "express";
 
 export const getAllSeatOfScreen = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -9,7 +8,6 @@ export const getAllSeatOfScreen = async (req: Request, res: Response, next: Next
         const seats = await seatObj.getAllSeatOfScreen(screen_id)
         return res.status(200).json(seats)
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -23,7 +21,6 @@ export const insertSeat = async (req: Request, res: Response, next: NextFunction
             message: "Create seat successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -38,7 +35,6 @@ export const updateSeat = async (req: Request, res: Response, next: NextFunction
             message: "Update seat successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
@@ -51,7 +47,6 @@ export const deleteSeat = async (req: Request, res: Response, next: NextFunction
             message: "Delete seat successfully"
         })
     } catch (error) {
-        console.error(error)
         return next(error)
     }
 }
