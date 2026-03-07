@@ -1,6 +1,6 @@
 import { body } from "express-validator";
 
-export const validateActorDirector = [
+export const movieOptionsValidate = [
     body("name").trim()
     .notEmpty()
     .withMessage("Name must not be empty")

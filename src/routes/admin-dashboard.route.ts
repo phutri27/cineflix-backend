@@ -9,6 +9,7 @@ import * as seatTypes from "../controller/seat-type.controller"
 import * as users from "../controller/user.controller"
 import * as actors from "../controller/actor.controller"
 import * as directors from "../controller/director.controller"
+import * as genres from "../controller/genre.controller"
 import { validateMovie } from "../validate/movies.validate"
 import { validateSnack } from '../validate/snack.validate'
 import { validateVoucher } from '../validate/voucher.validate'
@@ -16,7 +17,7 @@ import { validateCinema } from '../validate/cinema.validate'
 import { validateScreen } from '../validate/screen.validate'
 import { validateFile } from '../validate/files.validate'
 import { seatValidate } from '../validate/seat.validate'
-import { validateActorDirector } from '../validate/actor_director.validate'
+import { movieOptionsValidate } from '../validate/movie-options.validate'
 import { seatTypeValidate } from '../validate/seat-type.validate'
 import { handleValidationErrors } from "../middlewares/validateResult"
 import { upload } from "../utils/fileupload"
@@ -71,13 +72,20 @@ router.get("/users", users.getAllUser)
 
 //Actor
 router.get("/actors", actors.getAllActor)
-router.post("/actors", validateActorDirector, handleValidationErrors, actors.insertActor)
-router.put("/actors/:id", validateActorDirector, handleValidationErrors, actors.updateActor)
+router.post("/actors", movieOptionsValidate, handleValidationErrors, actors.insertActor)
+router.put("/actors/:id", movieOptionsValidate, handleValidationErrors, actors.updateActor)
 router.delete("/actors/:id", actors.deleteActor)
 
 //Director
 router.get("/directors", directors.getAllDirector)
-router.post("/directors", validateActorDirector, handleValidationErrors, directors.insertDirector)
-router.put("/directors/:id", validateActorDirector, handleValidationErrors, directors.updateDirector)
+router.post("/directors", movieOptionsValidate, handleValidationErrors, directors.insertDirector)
+router.put("/directors/:id", movieOptionsValidate, handleValidationErrors, directors.updateDirector)
 router.delete("/directors/:id", directors.deleteDirector)
+
+//Genres
+router.get("/genres", genres.getAllGenres)
+router.post("/genres", movieOptionsValidate, handleValidationErrors, genres.insertGenre)
+router.put("/genres/:id", movieOptionsValidate, handleValidationErrors, genres.updateGenre)
+router.delete("/genres/:id", genres.deleteGenre)
+
 export default router
