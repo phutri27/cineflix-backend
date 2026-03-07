@@ -2,7 +2,7 @@ import passport from 'passport'
 import { Strategy as GoogleStrategy  } from 'passport-google-oauth2'
 import { prisma } from '../lib/prisma.js';
 import "dotenv/config"
-import { AuthProvider } from '../../generated/prisma/enums.js';
+import { profileObj } from '../dao/profile.dao.js';
 
 const verifyCallback = async (accessToken: any, refreshToken: any, profile: any, cb: any) =>{
     try {
@@ -59,6 +59,7 @@ const verifyCallback = async (accessToken: any, refreshToken: any, profile: any,
             },
             omit: {hashed_password: true}
         })
+        await profileObj.createProfile(user2.id)
         return cb(null, user2)
     } catch (error) {
         console.error(error)

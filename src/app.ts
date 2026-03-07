@@ -3,17 +3,31 @@ import "dotenv/config"
 import cors from "cors"
 import passport from 'passport'
 import expressSession  from 'express-session'
-import "./config/session.js"
-import routes from './routes/index.route.js'
-import { errorHandler } from "./error/error.js"
+import "./config/session"
+import routes from './routes/index.route'
+import { errorHandler } from "./error/error"
 import { RedisStore } from "connect-redis"
-import { redisClient } from "./lib/redis.js"
-import { authorizeRoles } from "./middlewares/authorize.js"
+import { redisClient } from "./lib/redis"
+import { authorizeRoles } from "./middlewares/authorize"
 import helmet from "helmet"
+
 const app = express()
+const allowedOrigins = [
+    process.env.FRONTEND_ORIGIN, 
+    process.env.FRONTEND_SUB_ORIGIN
+];
+
 app.use(helmet())
 app.use(cors({
-    origin: process.env.FRONTEND_ORIGIN,
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
 }))
 app.use(express.json())
@@ -40,7 +54,9 @@ app.use(
 
 app.use(passport.initialize())
 app.use(passport.session())
- 
+
+import "./config/google-oauth2"
+
 app.use("/api/login", routes.login)
 app.use("/api/signup", routes.signup)
 app.use("/api/movies", routes.movies)
@@ -57,11 +73,7 @@ const server = app.listen(PORT, () => {
 })
 
 server.on('error', (err: any) => {
-  if (err.code === 'EADDRINUSE') {
-    console.error(`Error: Port ${PORT} is already in use. Please kill the process or change the port.`);
-  } else {
     console.error(`Failed to start server:`, err);
-  }
   
   process.exit(1);
 })

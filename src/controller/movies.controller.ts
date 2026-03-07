@@ -81,7 +81,7 @@ export const updateMovies = async (req: Request, res: Response, next: NextFuncti
     const filePath = req.file?.path as string
     const data = matchedData(req)
     const imageUrl: any = await uploadFile(filePath)
-    Object.assign(data, {posterUrl: imageUrl.public_id})
+    Object.assign(data, {posterUrl: imageUrl.public_id})    
     try {
         const oldMovie = await moviesObj.getSpecificMovie(id)
         await deleteFile(oldMovie?.posterUrl as string)

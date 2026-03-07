@@ -8,7 +8,7 @@ export const seatValidate = [
     .isAlpha()
     .withMessage(`Row must only be letters`),
 
-    body("seat_type").trim()
+    body("seat_typeId")
     .notEmpty()
     .withMessage(`Seat type ${emptyMsg}`),
 

@@ -15,8 +15,8 @@ export const getAllSeatOfScreen = async (req: Request, res: Response, next: Next
 export const insertSeat = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const screen_id = req.params.screen_id as string
-        const {row, seat_type, number } = matchedData(req)
-        await seatObj.insertSeat(row, seat_type, Number(number), screen_id)
+        const {row, seat_typeId, number } = matchedData(req)
+        await seatObj.insertSeat(row, seat_typeId, Number(number), screen_id)
         return res.status(200).json({
             message: "Create seat successfully"
         })
@@ -29,8 +29,8 @@ export const insertSeat = async (req: Request, res: Response, next: NextFunction
 export const updateSeat = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = req.params.id as string
-        const { seat_type, number} = matchedData(req)
-        await seatObj.updateSeat(id, seat_type, Number(number))
+        const { seat_typeId, number} = matchedData(req)
+        await seatObj.updateSeat(id, seat_typeId, Number(number))
         return res.status(200).json({
             message: "Update seat successfully"
         })

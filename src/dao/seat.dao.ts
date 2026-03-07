@@ -11,24 +11,24 @@ class Seat{
         return seats
     }
 
-    async insertSeat(row: string, seat_type: string, number: number, screenId: string){
+    async insertSeat(row: string, seat_typeId: string, number: number, screenId: string){
         await prisma.seat.create({
             data:{
                 row: row,
-                seat_type: seat_type,
+                seat_typeId: seat_typeId,
                 number: number,
                 screenId: screenId
             }
         })
     }
 
-    async updateSeat(id: string, seat_type: string, number: number){
+    async updateSeat(id: string, seat_typeId: string, number: number){
         await prisma.seat.update({
             where:{
                 id: id
             },
             data:{
-                seat_type: seat_type,
+                seat_typeId: seat_typeId,
                 number: number
             }
         })
