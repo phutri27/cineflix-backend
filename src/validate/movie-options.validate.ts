@@ -4,6 +4,6 @@ export const movieOptionsValidate = [
     body("name").trim()
     .notEmpty()
     .withMessage("Name must not be empty")
-    .isAlpha()
-    .withMessage("Name must only be numbers")
+    .matches(/^[\p{L}\s\-]+$/u)
+    .withMessage("Name must only be letters")
 ]
