@@ -1,5 +1,12 @@
 import { prisma } from "../lib/prisma";
 
+export interface SnackType {
+    name: string
+    price: number
+    imageUrl: string
+    imagePublicId: string
+}
+
 class Snack{
     async getAllSnacks(){
         const snacks = await prisma.snack.findMany()
@@ -15,26 +22,28 @@ class Snack{
         return snack
     }
 
-    async insert(name: string, price: number, imageUrl: string){
+    async insert(data: SnackType){
         const snack = await prisma.snack.create({
             data:{
-                name: name,
-                price: price,
-                imageUrl: imageUrl
+                name: data.name,
+                price: data.price,
+                imageUrl: data.imageUrl,
+                imagePublicId: data.imagePublicId
             }
         })
         return snack
     }
 
-    async update(id: string, name: string, price: number, imageUrl: string){
+    async update(id: string, data: SnackType){
         const snack = await prisma.snack.update({
             where:{
                 id: id
             },
             data:{
-                name: name,
-                price: price,
-                imageUrl: imageUrl
+                name: data.name,
+                price: data.price,
+                imageUrl: data.imageUrl,
+                imagePublicId: data.imagePublicId   
             }
         })
     }

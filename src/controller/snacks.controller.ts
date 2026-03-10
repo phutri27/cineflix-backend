@@ -1,8 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
 import { snackObj } from "../dao/snacks.dao";
 import { matchedData } from "express-validator";
-import { uploadFile, deleteFile } from "../utils/fileupload";
-
+import { uploadFile, deleteFile, upload } from "../utils/fileupload";
+import type { SnackType } from "../dao/snacks.dao";
+import { url } from "node:inspector";
 export const getAllSnacks = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const snacks = await snackObj.getAllSnacks()
@@ -14,10 +15,11 @@ export const getAllSnacks = async (req: Request, res: Response, next: NextFuncti
 
 export const insertSnack = async(req: Request, res: Response, next:NextFunction) =>{
     const filePath = req.file?.path as string
-    const {name, price} = matchedData(req)
-    const imageUrl:any = await uploadFile(filePath)
+    const data = matchedData(req)
+    const imageUrl:any = await uploadFile(filePath, "snack_images")
+    Object.assign(data, {imageUrl: imageUrl.secure_url, imagePublicId: imageUrl.public_id})
     try {
-        const snack = await snackObj.insert(name, price, imageUrl.public_id)
+        const snack = await snackObj.insert(data as SnackType)
         return res.status(200).json({
             snack,
             message: "Success"
@@ -31,11 +33,17 @@ export const insertSnack = async(req: Request, res: Response, next:NextFunction)
 export const updateSnack = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string
     const filePath = req.file?.path as string
-    const { name, price} = matchedData(req)
-    const imageUrl:any = await uploadFile(filePath)
+    const data = matchedData(req)
+    const oldSnack = await snackObj.getSpecficSnacK(id)
+    let imageUrl: any
+    if (filePath) {
+        imageUrl = await uploadFile(filePath, "snack_images")
+        Object.assign(data, {imageUrl: imageUrl.secure_url, imagePublicId: imageUrl.public_id})
+    } else  {
+        Object.assign(data, {imageUrl: oldSnack?.imageUrl, imagePublicId: oldSnack?.imagePublicId})
+    }
     try {
-        const oldSnack = await snackObj.getSpecficSnacK(id)
-        const snack = await snackObj.update(id, name, price, imageUrl.public_id)
+        const snack = await snackObj.update(id, data as SnackType)
         await deleteFile(oldSnack?.imageUrl as string)
         return res.status(200).json({
             message: "Success",

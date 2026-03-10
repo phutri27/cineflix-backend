@@ -17,10 +17,16 @@ export const loginPost = (req: Request, res: Response, next: NextFunction) => {
                 return next(err)
             }
 
-            return res.status(200).json({
-                message: "Login successfully",
-                user: user
-            })
+            req.session.save((saveErr) => {
+                if (saveErr) {
+                    return next(saveErr);
+                }
+                
+                return res.status(200).json({
+                    message: "Login successfully",
+                    user: user
+                });
+            });
         })
     })(req, res, next)
 }

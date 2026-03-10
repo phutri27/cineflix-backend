@@ -24,7 +24,9 @@ export const validateMovie = [
 
     body("premiere_date")
     .notEmpty()
-    .withMessage(`Premiere date ${emptyMsg}`),
+    .withMessage(`Premiere date ${emptyMsg}`)
+    .isDate()
+    .withMessage("Premiere date must be of type date"),
 
     body("rated")
     .notEmpty()

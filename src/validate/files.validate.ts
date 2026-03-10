@@ -2,7 +2,7 @@ import { body } from "express-validator";
 
 const emptyErr = "must not be empty"
 export const validateFile = [
-    body("filename")
+body("filename")
     .custom((value, {req}) => {
         if (!req.file){
             throw new Error(`File ${emptyErr}`)

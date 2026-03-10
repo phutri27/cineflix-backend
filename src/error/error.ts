@@ -26,16 +26,6 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
         }
     }
 
-    if (err.http_code || err.message.include("Resource")){
-        statusCode = 502
-        message = "There was an issue communicating with the cloud image server."
-    }
-
-    if (err.message && err.message.includes('Redis')) {
-        statusCode = 503;
-        message = "The caching service is currently down.";
-    }
-
     return res.status(statusCode).json({
         status: "error",
         message: message,

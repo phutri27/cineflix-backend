@@ -36,7 +36,7 @@ passport.serializeUser((user: any, done) => {
     done(null, user)
 })
 
-passport.deserializeUser(async (sessionData: any, done) => {
+passport.deserializeUser((sessionData: any, done) => {
     try{
         done(null, sessionData)
     } catch(err){

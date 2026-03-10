@@ -4,8 +4,9 @@ export type movie = {
     title: string,
     plot: string,
     posterUrl: string,
+    posterPublicId: string,
     duration: number,
-    premiereDate: Date,
+    premiere_date: Date,
     rated: string,
     genre_option: string[],
     actors: string[],
@@ -15,16 +16,19 @@ export type movie = {
 export const movieWithDetailsInclude = {
     genres:{
         select:{
+            id: true,
             name: true
         }
     },
     directors: {
         select:{
+            id: true,
             name: true
         }
     },
     actors: {
         select: {
+            id: true,   
             name: true
         }
     }
@@ -34,6 +38,9 @@ export const movieWithDetailsInclude = {
 class Movies {
     async getAllMovies(){
         const movies = await prisma.movie.findMany({
+            orderBy:{
+                premiereDate: "desc"
+            },
             include: movieWithDetailsInclude
         })
 
@@ -97,7 +104,8 @@ class Movies {
         const movie = await prisma.movie.findUnique({
             where:{
                 id: movieId
-            }
+            },
+            include: movieWithDetailsInclude
         })
         return movie
     }
@@ -108,8 +116,9 @@ class Movies {
                 title: data.title,
                 plot: data.plot,
                 posterUrl: data.posterUrl,
-                durationMin: data.duration,
-                premiereDate: data.premiereDate,
+                posterPublicId: data.posterPublicId,
+                durationMin: Number(data.duration),
+                premiereDate: new Date(data.premiere_date),
                 rated: data.rated,
                 genres: {
                     connect: data.genre_option.map((id: string) => ({ id }))
@@ -132,8 +141,9 @@ class Movies {
                 title: data.title,
                 plot: data.plot,
                 posterUrl: data.posterUrl,
-                durationMin: data.duration,
-                premiereDate: data.premiereDate,
+                posterPublicId: data.posterPublicId,
+                durationMin: Number(data.duration),
+                premiereDate: new Date(data.premiere_date),
                 rated: data.rated,
                 genres: {
                     set: data.genre_option.map((id: string) => ({ id }))

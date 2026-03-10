@@ -46,13 +46,14 @@ model Profile {
 }
 
 model Movie {
-  id           String   @id @default(uuid())
-  title        String
-  plot         String   @db.Text
-  posterUrl    String
-  durationMin  Int
-  premiereDate DateTime
-  rated        String
+  id             String   @id @default(uuid())
+  title          String
+  plot           String   @db.Text
+  posterUrl      String
+  posterPublicId String
+  durationMin    Int
+  premiereDate   DateTime
+  rated          String
 
   cinemas      Cinema[]
   bookings     Booking[]
@@ -163,7 +164,7 @@ model Voucher {
   expireAt       DateTime
   activationCode String   @unique
 
-  bookings      BookingVoucher[]
+  bookings       BookingVoucher[]
 }
 
 model BookingVoucher {
@@ -206,10 +207,11 @@ model Ticket {
 }
 
 model Snack {
-  id       String         @id @default(uuid())
-  name     String
-  price    Decimal        @db.Decimal(10, 2)
-  imageUrl String?
+  id            String         @id @default(uuid())
+  name          String
+  price         Decimal        @db.Decimal(10, 2)
+  imageUrl      String?
+  imagePublicId String
 
   bookings BookingSnack[]
 }

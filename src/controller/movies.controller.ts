@@ -64,9 +64,8 @@ export const getAllMovies = async (req: Request, res: Response, next: NextFuncti
 export const insertMovies = async (req: Request, res: Response, next: NextFunction) => {
     const filePath = req.file?.path as string
     const data = matchedData(req)
-    const imageUrl: any = await uploadFile(filePath)
-    Object.assign(data, {posterUrl: imageUrl.public_id})
-
+    const imageUrl: any = await uploadFile(filePath, "movie_poster")
+    Object.assign(data, {posterUrl: imageUrl.secure_url, posterPublicId: imageUrl.public_id})
     try {
         const movie = await moviesObj.insert(data as movie)
         return res.status(200).json(movie)
@@ -78,14 +77,19 @@ export const insertMovies = async (req: Request, res: Response, next: NextFuncti
 
 export const updateMovies = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string
-    const filePath = req.file?.path as string
     const data = matchedData(req)
-    const imageUrl: any = await uploadFile(filePath)
-    Object.assign(data, {posterUrl: imageUrl.public_id})    
+    const filePath = req.file?.path as string 
+    const oldMovie = await moviesObj.getSpecificMovie(id)
+    let imageUrl:any
+    if (filePath){
+        imageUrl = await uploadFile(filePath, "movie_poster")
+        Object.assign(data, {posterUrl: imageUrl.secure_url, posterPublicId: imageUrl.public_id})
+    } else{
+        Object.assign(data, {posterUrl: oldMovie?.posterUrl, posterPublicId: oldMovie?.posterPublicId})
+    }
     try {
-        const oldMovie = await moviesObj.getSpecificMovie(id)
-        await deleteFile(oldMovie?.posterUrl as string)
         const movie = await moviesObj.update(id, data as movie)
+        await deleteFile(oldMovie?.posterPublicId as string)
         return res.status(200).json(movie)
     } catch (error) {
         await deleteFile(imageUrl.public_id)
@@ -97,7 +101,7 @@ export const deleteMovie = async (req: Request, res: Response, next: NextFunctio
     try {
         const id = req.params.id as string
         const movie = await moviesObj.delete(id)
-        await deleteFile(movie.posterUrl)
+        await deleteFile(movie.posterPublicId)
         return res.status(200).json({
             message: "Delete movie succesfully"
         })

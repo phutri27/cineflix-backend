@@ -2,16 +2,17 @@ import multer from 'multer'
 import cloudinary from '../config/cloudinary.js'
 
 const storage = multer.diskStorage({
-    filename: (req, file, cb) => {
-        cb(null, file.originalname)
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        cb(null, file.fieldname + '-' + uniqueSuffix)
     }
 })
 
 export const upload = multer({storage: storage})    
 
-export const uploadFile = async (filePath: string) => {
+export const uploadFile = async (filePath: string, folderUrl: string) => {
     try {
-        const result = await cloudinary.uploader.upload(filePath)
+        const result = await cloudinary.uploader.upload(filePath, {folder: folderUrl})
         return result
     } catch (error) {
         return console.error(error)
@@ -20,7 +21,7 @@ export const uploadFile = async (filePath: string) => {
 
 export const deleteFile = async (filePublicId: string) => {
     try {
-        await cloudinary.uploader.destroy(filePublicId)
+        await cloudinary.uploader.destroy(filePublicId, {invalidate: true})
     } catch (error) {
         console.error(error)
     }

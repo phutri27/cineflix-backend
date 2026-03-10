@@ -33,13 +33,13 @@ app.use(cors({
 app.use(express.json())
 
 app.use(express.urlencoded({ extended: true })); 
-
+const isProduction = process.env.NODE_ENV === 'production';
 app.use(
   expressSession({
     cookie: {
       httpOnly:true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: isProduction, 
+      sameSite:isProduction ? 'none' : 'lax',
       maxAge: 2 * 24 * 60 * 60 * 1000 // ms
     },
     secret: process.env.SECRET_KEY as string,
