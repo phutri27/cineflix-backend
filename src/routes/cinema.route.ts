@@ -3,8 +3,9 @@ import * as cinemas from "../controller/cinema.controller.js"
 import { getAllCities } from '../controller/city.controller.js'
 const router = express.Router()
 
-router.get("/city/:city_id", cinemas.getCinemaByCity)
-router.get("/movie/:cinema_id", cinemas.getMovieByCinema)
-router.get("/city", getAllCities)
+router.get("/", cinemas.getAllCinema)
+router.get("/:cinema_id", cinemas.getSpecificCinema)
+router.get("/:cinema_id/movies", cinemas.getMovieByCinema)
+
 
 export default router

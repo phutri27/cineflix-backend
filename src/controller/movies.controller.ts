@@ -4,44 +4,6 @@ import { matchedData } from "express-validator";
 import { uploadFile } from "../utils/fileupload";
 import { deleteFile } from "../utils/fileupload";
 import type { movie } from "../dao/movies.dao";
-export const getAllComingMovies = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const movies = await moviesObj.getAllComingMovies()
-        return res.status(200).json(movies)
-    } catch (error) {
-        return next(error)
-    }
-}
-
-export const getAllShowingMovies = async (req: Request, res: Response, next: NextFunction) =>{
-    try {
-        const movies = await moviesObj.getAllShowingMovies()
-        return res.status(200).json(movies)
-    } catch (error) {
-        return next(error)
-    }
-}
-
-export const getMoviesByGenre = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const genre = req.params.genre_name as string
-        const movies = await moviesObj.getMoviesByGenre(genre)
-        return res.status(200).json(movies)
-    } catch (error) {
-        return next(error)
-    }
-}
-
-export const getMoviesByTitle = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const title = req.params.title_name as string
-        const movies = await moviesObj.getMoviesByTitle(title)
-        return res.status(200).json(movies)
-    } catch (error) {
-        return next(error)
-    }
-}
-
 export const getSpecificMovie = async (req: Request, res: Response, next:NextFunction) => {
     try {
         const id = req.params.id as string
@@ -54,6 +16,24 @@ export const getSpecificMovie = async (req: Request, res: Response, next:NextFun
 
 export const getAllMovies = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const { status, title, genre } = req.query
+        if (status){
+            if (status === "coming"){
+                const movies = await moviesObj.getAllComingMovies()
+                return res.status(200).json(movies)
+            } else if (status === "showing"){
+                const movies = await moviesObj.getAllShowingMovies()
+                return res.status(200).json(movies)
+            }
+        }
+        if (title){
+            const movies = await moviesObj.getMoviesByTitle(title as string)
+            return res.status(200).json(movies)
+        }
+        if (genre){
+            const movies = await moviesObj.getMoviesByGenre(genre as string)
+            return res.status(200).json(movies)
+        }
         const movies = await moviesObj.getAllMovies()
         return res.status(200).json(movies) 
     } catch (error) {

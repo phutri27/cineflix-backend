@@ -3,7 +3,7 @@ import login from './login.route.js'
 import movies from "./movies.route.js"
 import profile from './profile.route.js'
 import password from "./password.route.js"
-import admin from "./admin-dashboard.route.js"
+import admin from "./admin/admin-all.route.js"
 import cinema from "./cinema.route.js"
 import screen from "./screen.route.js"
 

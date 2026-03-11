@@ -1,11 +1,11 @@
 import { matchedData } from "express-validator";
 import { screenObj } from "../dao/screen.dao";
 import type { Request, Response, NextFunction } from "express";
-
+import type { ScreenTypeProp } from "../dao/screen.dao";
 export const getScreenByCinema = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const cinema_id = req.params.id as string
-        const screens = await screenObj.getScreenByCinema(cinema_id)
+        const { cinema_id } = req.params 
+        const screens = await screenObj.getScreenByCinema(cinema_id as string)
         return res.status(200).json(screens)
     } catch (error) {
         return next(error)
@@ -14,9 +14,8 @@ export const getScreenByCinema = async (req: Request, res: Response, next: NextF
 
 export const insertScreen = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const cinema_id = req.params.cinema_id as string
-        const { name } = matchedData(req)
-        await screenObj.insertScreen(cinema_id, name)
+        const data: ScreenTypeProp = matchedData(req)
+        await screenObj.insertScreen(data)
         return res.status(200).json({
             message: "Create screen successfully"
         })
@@ -28,8 +27,8 @@ export const insertScreen = async (req: Request, res: Response, next: NextFuncti
 export const updateScreen = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = req.params.id as string
-        const { name } = matchedData(req)
-        await screenObj.updateScreen(id, name)
+        const data: ScreenTypeProp = matchedData(req)
+        await screenObj.updateScreen(id, data)
         return res.status(200).json({
             message: "Update screen successfully"
         })

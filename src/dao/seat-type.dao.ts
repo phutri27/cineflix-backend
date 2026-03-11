@@ -1,5 +1,11 @@
 import { prisma } from "../lib/prisma";
 
+export interface SeatTypeProp{
+    price: number,
+    seat_type: string,
+    cinemaId: string
+}
+
 class SeatType{
     async getSeatDetails(cinemaId: string){
         const ticketsPrice = await prisma.seatTypeDetail.findMany({
@@ -15,12 +21,12 @@ class SeatType{
         return ticketsPrice
     }
 
-    async insert(price: number, seat_type: string, cinemaId: string){
+    async insert(data: SeatTypeProp){
         await prisma.seatTypeDetail.create({
             data:{
-                price: price,
-                seat_type: seat_type,
-                cinemaId: cinemaId
+                price: Number(data.price),
+                seat_type: data.seat_type,
+                cinemaId: data.cinemaId
             }
         })
     }

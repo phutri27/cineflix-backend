@@ -91,6 +91,8 @@ model Cinema {
   id      String   @id @default(uuid())
   name    String
   cityId  Int
+  address String
+  hotline String
   city    City     @relation(fields: [cityId], references: [id])
   
   seatType SeatTypeDetail[]

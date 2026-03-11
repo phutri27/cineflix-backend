@@ -1,11 +1,11 @@
 import { matchedData } from "express-validator";
 import { seatTypeObj } from "../dao/seat-type.dao";
 import type { Request, Response, NextFunction } from "express";
-
+import type { SeatTypeProp } from "../dao/seat-type.dao";
 export const getAllSeatType = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const cinema_id = req.params.cinema_id as string
-        const seatTypes = await seatTypeObj.getSeatDetails(cinema_id)
+        const { cinema_id } = req.params
+        const seatTypes = await seatTypeObj.getSeatDetails(cinema_id as string)
         return res.status(200).json(seatTypes)
     } catch (error) {
         return next(error)
@@ -14,9 +14,8 @@ export const getAllSeatType = async (req: Request, res: Response, next: NextFunc
 
 export const insertSeatType = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const cinema_id = req.params.cinema_id as string
-        const { price, seat_type } = matchedData(req)
-        await seatTypeObj.insert(Number(price), seat_type, cinema_id)
+        const data: SeatTypeProp = matchedData(req)
+        await seatTypeObj.insert(data)
         return res.status(200).json({
             message: "Create seat type successfully"
         })

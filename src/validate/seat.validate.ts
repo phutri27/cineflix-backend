@@ -18,4 +18,7 @@ export const seatValidate = [
     .isInt()
     .withMessage(`Seat number must only be numbers`),
 
+    body("screenId")
+    .notEmpty()
+    .withMessage(`Screen ${emptyMsg}`)
 ]

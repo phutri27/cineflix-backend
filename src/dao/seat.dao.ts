@@ -1,5 +1,11 @@
 import { prisma } from "../lib/prisma";
 
+export interface SeatsProp {
+    row: string
+    number: number
+    seat_typeId: string
+    screenId: string,
+}
 class Seat{
     async getAllSeatOfScreen(screenId: string){
         const seats = await prisma.seat.findMany({
@@ -11,13 +17,13 @@ class Seat{
         return seats
     }
 
-    async insertSeat(row: string, seat_typeId: string, number: number, screenId: string){
+    async insertSeat(data: SeatsProp){
         await prisma.seat.create({
             data:{
-                row: row,
-                seat_typeId: seat_typeId,
-                number: number,
-                screenId: screenId
+                row: data.row,
+                seat_typeId: data.seat_typeId,
+                number: data.number,
+                screenId: data.screenId,
             }
         })
     }
