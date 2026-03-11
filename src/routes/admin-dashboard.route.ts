@@ -10,6 +10,7 @@ import * as users from "../controller/user.controller"
 import * as actors from "../controller/actor.controller"
 import * as directors from "../controller/director.controller"
 import * as genres from "../controller/genre.controller"
+import * as cities from "../controller/city.controller"
 import { validateMovie } from "../validate/movies.validate"
 import { validateSnack } from '../validate/snack.validate'
 import { validateVoucher } from '../validate/voucher.validate'
@@ -46,9 +47,15 @@ router.delete("/vouchers/:id", vouchers.deleteVoucher)
 
 //Cinema
 router.get("/cinema/city/:cinema_id", cinemas.getCinemaByCity)
-router.post("/", validateCinema, handleValidationErrors, cinemas.insertCinema)
+router.post("/cinema", validateCinema, handleValidationErrors, cinemas.insertCinema)
 router.put("/:cinema_id", validateCinema, handleValidationErrors, cinemas.updateCinema)
 router.delete("/:cinema_id", cinemas.deleteCinema)
+
+//City
+router.get("/city", cities.getAllCities)
+router.post("/city", movieOptionsValidate, handleValidationErrors, cities.createCity)
+router.put("/city/:id", movieOptionsValidate, handleValidationErrors,cities.updateCity)
+router.delete("/city/:id", cities.deleteCity)
 
 //Screen
 router.get("/screen/:cinema_id", screens.getScreenByCinema)
