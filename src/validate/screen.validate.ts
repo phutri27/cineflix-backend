@@ -14,7 +14,4 @@ export const validateScreen = [
 
     body("seats").isArray({min: 1})
     .withMessage(`Seats ${emptyMsg}`),
-
-    body("showtimes").isArray({min: 1})
-    .withMessage(`Showtimes ${emptyMsg}`)
 ]

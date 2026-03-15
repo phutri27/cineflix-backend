@@ -7,10 +7,6 @@ export const validateCinema = [
     .notEmpty()
     .withMessage(`Cinema name ${emptyMsg}`),
 
-    body("city_id")
-    .notEmpty()
-    .withMessage(`City name ${emptyMsg}`),
-
     body("address")
     .notEmpty()
     .withMessage(`Cinema address ${emptyMsg}`),
@@ -18,16 +14,4 @@ export const validateCinema = [
     body("hotline")
     .notEmpty()
     .withMessage(`Cinema hotline ${emptyMsg}`),
-
-    body("seatType")
-    .notEmpty()
-    .withMessage(`Cinema seat type ${emptyMsg}`),
-
-    body("movies")
-    .notEmpty()
-    .withMessage(`Cinema movies ${emptyMsg}`),
-
-    body("screens")
-    .notEmpty()
-    .withMessage(`Cinema screens ${emptyMsg}`)
 ]

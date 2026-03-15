@@ -4,7 +4,11 @@ import type { Request, Response, NextFunction } from "express";
 import type { ScreenTypeProp } from "../dao/screen.dao";
 export const getScreenByCinema = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { cinema_id } = req.params 
+        const { cinema_id, screen_id }= req.query
+        if (screen_id){
+            const screen = await screenObj.getScreenById(screen_id as string)
+            return res.status(200).json(screen)
+        }
         const screens = await screenObj.getScreenByCinema(cinema_id as string)
         return res.status(200).json(screens)
     } catch (error) {

@@ -11,7 +11,6 @@ export interface ScreenTypeProp {
     name: string
     cinema_id: string
     seats: SeatType[]
-    showtimes: string[]
 }
 class Screen{
     async getScreenByCinema(cinemaId: string){
@@ -22,6 +21,18 @@ class Screen{
         })
 
         return screens
+    }
+
+    async getScreenById(screenId: string){
+        const screen = await prisma.screen.findUnique({
+            where:{
+                id: screenId
+            },
+            include:{
+                seats: true
+            }
+        })
+        return screen
     }
 
     async insertScreen(data: ScreenTypeProp){
@@ -37,9 +48,6 @@ class Screen{
                             seat_typeId: seat.seat_typeId
                         }))
                     }
-                },
-                showtimes: {
-                    connect: data.showtimes.map((id: string) => ({id}))
                 }
             }
         })
@@ -50,6 +58,7 @@ class Screen{
             data:{
                 name: data.name,
                 seats: {
+                deleteMany: {},
                 createMany: { 
                     data : data.seats.map(seat => ({
                             row: seat.row,
@@ -57,9 +66,6 @@ class Screen{
                             seat_typeId: seat.seat_typeId
                     }))
                 }
-                },
-                showtimes: {
-                    connect: data.showtimes.map((id: string) => ({id}))
                 }
             },
             where:{

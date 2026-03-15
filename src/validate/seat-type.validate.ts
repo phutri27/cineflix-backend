@@ -13,7 +13,7 @@ export const seatTypeValidate = [
     .notEmpty()
     .withMessage(`Seat type ${emptyMsg}`),
 
-    body("cinema_id")
+    body("cinemaId")
     .notEmpty()
     .withMessage(`Cinema ${emptyMsg}`)
 ]

@@ -13,6 +13,7 @@ class SeatType{
                 cinemaId: cinemaId
             },
             select:{
+                id: true,
                 price: true,
                 seat_type: true
             }

@@ -5,9 +5,6 @@ export interface CinemaTypeProp  {
     cityId: number
     address: string
     hotline: string
-    seatType: string[]
-    movies: string[]
-    screens: string[]
 }
 
 class Cinema{
@@ -52,6 +49,30 @@ class Cinema{
         const cinema = await prisma.cinema.findUnique({
             where:{
                 id: id
+            },
+            include:{
+                movies: {
+                    select:{
+                        id: true,
+                        title: true,
+                        posterUrl: true
+                    }
+                },
+                seatType: {
+                    select:{
+                        id: true,
+                        seat_type: true,
+                        price: true,
+                        cinemaId: true
+                    }
+                },
+                screens: {
+                    select:{
+                        id: true,
+                        name: true,
+                        cinemaId: true
+                    }
+                }
             }
         })
         return cinema
@@ -64,15 +85,6 @@ class Cinema{
                 cityId: data.cityId,
                 address: data.address,
                 hotline: data.hotline,
-                seatType: {
-                    connect: data.seatType.map((id: string) => ({ id }))
-                },
-                movies: {
-                    connect: data.movies.map((id: string) => ({ id }))
-                },
-                screens: {
-                    connect: data.screens.map((id: string) => ({ id }))
-                }
             },
         })
     }
@@ -87,15 +99,6 @@ class Cinema{
                 cityId: data.cityId,
                 address: data.address,
                 hotline: data.hotline,
-                seatType: {
-                    set: data.seatType.map((id: string) => ({ id }))
-                },
-                movies: {
-                    set: data.movies.map((id: string) => ({ id }))
-                },
-                screens: {
-                    set: data.screens.map((id: string) => ({ id }))
-                }
             }
         })
     }
