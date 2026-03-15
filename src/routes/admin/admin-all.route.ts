@@ -11,6 +11,7 @@ import adminActorRoutes from './admin-actor.route'
 import adminDicrectorRoutes from './admin-director.route'
 import adminGenreRoutes from './admin-genre.route'
 import adminUserRoutes from './admin-user.route'
+import adminShowtimeRoutes from './admin-showtime.route'
 const adminRouter = express.Router()
 
 adminRouter.use("/movies", adminMovieRoutes)
@@ -25,5 +26,6 @@ adminRouter.use("/actors", adminActorRoutes)
 adminRouter.use("/directors", adminDicrectorRoutes)
 adminRouter.use("/genres", adminGenreRoutes)
 adminRouter.use("/users", adminUserRoutes)
+adminRouter.use("/showtimes", adminShowtimeRoutes)
 
 export default adminRouter
