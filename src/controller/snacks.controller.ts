@@ -3,7 +3,7 @@ import { snackObj } from "../dao/snacks.dao";
 import { matchedData } from "express-validator";
 import { uploadFile, deleteFile, upload } from "../utils/fileupload";
 import type { SnackType } from "../dao/snacks.dao";
-import { url } from "node:inspector";
+
 export const getAllSnacks = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const snacks = await snackObj.getAllSnacks()

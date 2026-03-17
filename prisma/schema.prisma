@@ -136,7 +136,7 @@ model Showtime {
   bookings  Booking[]
   tickets   Ticket[]
 
-  @@unique(name:"showtime_unique", fields: [startTime, screenId, movieId])
+  @@unique(name:"showtime_unique", fields: [startTime, screenId])
 }
 
 model Booking {

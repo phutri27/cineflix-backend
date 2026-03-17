@@ -1,3 +1,4 @@
+import type { deleteMovie } from "../controller/movies.controller";
 import { prisma } from "../lib/prisma";
 
 export interface CinemaTypeProp  {
@@ -86,6 +87,34 @@ class Cinema{
                 address: data.address,
                 hotline: data.hotline,
             },
+        })
+    }
+
+    async updateCinemaWithMovie(cinemaId: string, movieIdData: string[]){
+        await prisma.cinema.update({
+            where:{
+                id: cinemaId
+            },
+            data:{
+                movies: {
+                    connect: movieIdData.map((id: string) => ({id}))
+                }
+            }
+        })
+    }
+
+    async deleteMovieInCinema(cinemaId: string, movieId: string){
+        await prisma.cinema.update({
+            where:{
+                id: cinemaId
+            },
+            data:{
+                movies: {
+                    disconnect: {
+                        id: movieId
+                    }
+                }
+            }
         })
     }
 

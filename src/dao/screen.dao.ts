@@ -35,6 +35,33 @@ class Screen{
         return screen
     }
 
+    async getScreenByMovie(cinemaId: string, movieId: string){
+        const screens = await prisma.screen.findMany({
+            where:{
+                AND: [
+                    {
+                        cinemaId: cinemaId
+                    },
+                    {
+                        showtimes: {
+                            some: {
+                                movieId: movieId
+                            }
+                        }
+                    }
+                ]
+            },
+            include:{
+                showtimes: {
+                    where: {
+                        movieId: movieId
+                    }
+                }
+            }
+        })
+        return screens
+    }
+
     async insertScreen(data: ScreenTypeProp){
         await prisma.screen.create({
             data:{

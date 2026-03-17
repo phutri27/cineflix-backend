@@ -47,13 +47,33 @@ export const insertCinema = async (req: Request, res: Response, next: NextFuncti
 
 export const updateCinema = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const cinema_id = req.params.cinema_id as string
+        const {cinema_id, movieId} = req.params
+        if ( movieId ){
+            await cinemaObj.deleteMovieInCinema(String(cinema_id), String(movieId))
+            return res.status(200).json({
+                message: "Delete movie in cinema successfully"
+            })
+        }
+
         const data: CinemaTypeProp = matchedData(req)
-        await cinemaObj.updateCinema(cinema_id, data)
+        await cinemaObj.updateCinema(String(cinema_id), data)
         return res.status(200).json({
             message: "Update cinema successfully"
         })
     } catch (error) {
+        return next(error)
+    }
+}
+
+export const handleMovieCinema = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const cinema_id = req.params.cinema_id as string
+        const { movieIds }  = matchedData(req)
+        await cinemaObj.updateCinemaWithMovie(cinema_id, movieIds)
+        return res.status(200).json({
+            message: "Update movies in cinema successfully"
+        })
+    } catch (error){
         return next(error)
     }
 }

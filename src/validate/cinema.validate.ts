@@ -15,3 +15,9 @@ export const validateCinema = [
     .notEmpty()
     .withMessage(`Cinema hotline ${emptyMsg}`),
 ]
+
+export const validateMovieInCinema = [
+    body("movieIds")
+    .isArray({min: 1})
+    .withMessage(`MovieIds must be an array and must contain at least one movie id`)
+]

@@ -2,14 +2,23 @@ import { prisma } from "../lib/prisma";
 
 export interface ShowtimeProp{
     startTime: Date
-    movieId: string
     screenId: string
+    movieId: string;
+}
+
+export interface CreateShowtimeProp extends ShowtimeProp{
+    movieId: string;
 }
 
 class Showtime {
-    async createShowtime(datas: ShowtimeProp[]) {
+    async createShowtime(datas: CreateShowtimeProp[]) {
         await prisma.showtime.createMany({
-            data: datas
+            data: datas.map((data) => ({
+                startTime: new Date(data.startTime),
+                movieId: data.movieId,
+                screenId: data.screenId
+            })),
+            skipDuplicates: true
         })
     }
 
@@ -24,18 +33,24 @@ class Showtime {
         return showtimes
     }
 
-    async updateShowtime(movieId: string, screenId: string,startTime: Date){
-        await prisma.showtime.updateMany({
-            where: {
-                AND:[
-                   { movieId: movieId},
-                    {screenId: screenId}
-                ]
-            }, 
-            data:{
-                startTime: startTime
-            }
-        })
+    async updateShowtime(movieId: string, cinemaId: string, data: ShowtimeProp[]){
+        await prisma.$transaction([
+            prisma.showtime.deleteMany({
+                where: {
+                    movieId: movieId,
+                    screen: {
+                        cinemaId: cinemaId
+                    }
+                }
+            }),
+            prisma.showtime.createMany({
+                data: data.map((d) => ({
+                    movieId: movieId, 
+                    screenId: d.screenId,
+                    startTime: new Date(d.startTime)
+                }))
+            })
+        ]);
     }
 
     async deleteShowTime(id: string){

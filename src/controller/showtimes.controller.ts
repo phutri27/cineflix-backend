@@ -1,11 +1,11 @@
 import type { Request, Response, NextFunction } from "express";
 import { matchedData } from "express-validator";
-import { showtimeObj, type ShowtimeProp } from "../dao/showtimes.dao";
+import { showtimeObj, type CreateShowtimeProp, type ShowtimeProp } from "../dao/showtimes.dao";
 
 export const createShowtime = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const datas: ShowtimeProp[]= matchedData(req);
-        await showtimeObj.createShowtime(datas);
+        const { data } = matchedData(req)
+        await showtimeObj.createShowtime(data as CreateShowtimeProp[]);
         res.status(201).json({ message: "Showtime created successfully" });
     } catch (error) {
         next(error);
@@ -24,9 +24,9 @@ export const getShowtime = async (req: Request, res: Response, next: NextFunctio
 
 export const updateShowtime = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { movieId, screenId } = req.query;
-        const { startTime } = matchedData(req);
-        await showtimeObj.updateShowtime(movieId as string, screenId as string, startTime);
+        const { movieId, cinemaId } = req.query;
+        const { data }: {data: ShowtimeProp[]}  = matchedData(req);
+        await showtimeObj.updateShowtime(movieId as string, cinemaId as string, data);
         res.status(200).json({ message: "Showtime updated successfully" });
     } catch (error) {
         next(error);
