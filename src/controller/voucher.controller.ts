@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { voucherObj } from "../dao/vouchers.dao";
+import { voucherObj, type VoucherProp } from "../dao/vouchers.dao";
 import { matchedData } from "express-validator";
 import crypto from "crypto"
 
@@ -18,6 +18,7 @@ export const activateVouchers = async (req: Request, res: Response, next: NextFu
         const hashed_code = crypto.createHash('sha256').update(voucher_code).digest('hex')
         const voucher = await voucherObj.compareVoucher(hashed_code)
         if (voucher){
+            await voucherObj.reduceQuantity(voucher.id)
             return res.status(200).json({
                 message: "Add voucher successfully",
                 voucher
@@ -33,9 +34,10 @@ export const activateVouchers = async (req: Request, res: Response, next: NextFu
 
 export const insertVoucher = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { name, reduceAmount, startAt, expireAt, activation_code } = matchedData(req)
-        const hashed_code = crypto.createHash('sha256').update(activation_code).digest('hex')
-        await voucherObj.insert(name, reduceAmount, new Date(startAt), new Date(expireAt), hashed_code)
+        const data = matchedData(req)
+        const hashed_code = crypto.createHash('sha256').update(data.activationCode).digest('hex')
+        Object.assign(data, {activationCode: hashed_code})
+        await voucherObj.insert(data as VoucherProp)
         return res.status(200).json({
             message: "Create voucher successfully"
         })
@@ -47,9 +49,10 @@ export const insertVoucher = async (req: Request, res: Response, next: NextFunct
 export const updateVoucher = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = req.params.id as string
-        const { name, reduceAmount, startAt, expireAt, activation_code } = matchedData(req)
-        const hashed_code = crypto.createHash('sha256').update(activation_code).digest('hex')
-        await voucherObj.update(id, name, reduceAmount, new Date(startAt), new Date(expireAt), hashed_code)
+        const data = matchedData(req)
+        const hashed_code = crypto.createHash('sha256').update(data.activationCode).digest('hex')
+        Object.assign(data, {activationCode: hashed_code})
+        await voucherObj.update(id, data as VoucherProp)
         return res.status(200).json({
             message: "Update voucher successfully"
         })

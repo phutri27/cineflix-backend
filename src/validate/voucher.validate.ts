@@ -26,7 +26,14 @@ export const validateVoucher = [
     .isDate()
     .withMessage(`Expire date ${dateType}`),
 
-    body("activation_code")
+    body("activationCode")
+    .trim()
     .notEmpty()
-    .withMessage(`Activation code ${emptyMsg}`)
+    .withMessage(`Activation code ${emptyMsg}`),
+
+    body("quantity")
+    .notEmpty()
+    .withMessage(`Quantity ${emptyMsg}`)
+    .isNumeric()
+    .withMessage(`Quantity must only be number`)
 ]

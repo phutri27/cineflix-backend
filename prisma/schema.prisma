@@ -164,6 +164,7 @@ model Voucher {
   id             String   @id @default(uuid())
   name           String
   reduceAmount   Float     
+  quantity       Int
   startAt        DateTime
   expireAt       DateTime
   activationCode String   @unique
