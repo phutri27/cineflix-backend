@@ -4,7 +4,7 @@ import type { Request, Response, NextFunction } from "express";
 import type { SeatTypeProp } from "../dao/seat-type.dao";
 export const getAllSeatType = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { cinema_id } = req.params
+        const { cinema_id } = req.query
         const seatTypes = await seatTypeObj.getSeatDetails(cinema_id as string)
         return res.status(200).json(seatTypes)
     } catch (error) {

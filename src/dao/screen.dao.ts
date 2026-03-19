@@ -17,6 +17,9 @@ class Screen{
         const screens = await prisma.screen.findMany({
             where:{
                 cinemaId: cinemaId
+            },
+            orderBy:{
+                createdAt: 'desc'
             }
         })
 

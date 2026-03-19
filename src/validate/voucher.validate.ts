@@ -8,7 +8,7 @@ export const validateVoucher = [
     .notEmpty()
     .withMessage(`Voucher name ${emptyMsg}`),
 
-    body("reductAmount")
+    body("reduceAmount")
     .notEmpty()
     .withMessage(`Reduce amount ${emptyMsg}`)
     .isNumeric()
@@ -24,16 +24,25 @@ export const validateVoucher = [
     .notEmpty()
     .withMessage(`Expire date ${emptyMsg}`)
     .isDate()
-    .withMessage(`Expire date ${dateType}`),
-
-    body("activationCode")
-    .trim()
-    .notEmpty()
-    .withMessage(`Activation code ${emptyMsg}`),
+    .withMessage(`Expire date ${dateType}`)
+    .custom((value, {req}) => {
+        const startAt = new Date(req.body.startAt)
+        const expireAt = new Date(value)
+        if(startAt >= expireAt){
+            throw new Error("Expire date must be after start date")
+        }
+        return true
+    }),
 
     body("quantity")
     .notEmpty()
     .withMessage(`Quantity ${emptyMsg}`)
     .isNumeric()
     .withMessage(`Quantity must only be number`)
+]
+
+export const validateVoucherActivationCode = [
+    body("activationCode").trim()
+    .notEmpty()
+    .withMessage(`Activation code ${emptyMsg}`)
 ]

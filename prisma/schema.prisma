@@ -66,18 +66,21 @@ model Movie {
 model Genre {
   id     String       @id @default(uuid())
   name   String       @unique
+  createdAt DateTime @default(now())
   movies Movie[]
 }
 
 model Director {
   id     String          @id @default(uuid())
   name   String
+  createdAt DateTime @default(now())
   movies Movie[]
 }
 
 model Actor {
   id     String       @id @default(uuid())
   name   String
+  createdAt DateTime @default(now())
   movies Movie[]
 }
 
@@ -88,12 +91,13 @@ model City {
 }
 
 model Cinema {
-  id      String   @id @default(uuid())
-  name    String
-  cityId  Int
-  address String
-  hotline String
-  city    City     @relation(fields: [cityId], references: [id])
+  id        String   @id @default(uuid())
+  name      String
+  cityId    Int
+  address   String
+  hotline   String
+  createdAt DateTime @default(now())
+  city      City     @relation(fields: [cityId], references: [id], onDelete: Cascade)
   
   seatType SeatTypeDetail[]
   movies  Movie[]
@@ -103,8 +107,9 @@ model Cinema {
 model Screen {
   id        String     @id @default(uuid())
   name      String
+  createdAt DateTime   @default(now())
   cinemaId  String
-  cinema    Cinema     @relation(fields: [cinemaId], references: [id])
+  cinema    Cinema     @relation(fields: [cinemaId], references: [id], onDelete: Cascade)
   
   seats     Seat[]
   showtimes Showtime[]
@@ -116,7 +121,7 @@ model Seat {
   number          Int
 
   seat_typeId     String
-  seatTypeDetail  SeatTypeDetail @relation(fields: [seat_typeId], references: [id])
+  seatTypeDetail  SeatTypeDetail @relation(fields: [seat_typeId], references: [id], onUpdate: Cascade, onDelete: NoAction)
   
   screenId        String
   screen          Screen @relation(fields: [screenId], references: [id])
@@ -128,10 +133,10 @@ model Showtime {
   startTime DateTime
   
   movieId   String
-  movie     Movie    @relation(fields: [movieId], references: [id])
+  movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
   
   screenId  String
-  screen    Screen   @relation(fields: [screenId], references: [id])
+  screen    Screen   @relation(fields: [screenId], references: [id], onDelete: Cascade)
 
   bookings  Booking[]
   tickets   Ticket[]
@@ -145,10 +150,10 @@ model Booking {
   user          User           @relation(fields: [userId], references: [id])
 
   movieId       String
-  movie         Movie          @relation(fields: [movieId], references: [id])
+  movie         Movie          @relation(fields: [movieId], references: [id], onDelete: NoAction)
   
   showtimeId    String
-  showtime      Showtime       @relation(fields: [showtimeId], references: [id])
+  showtime      Showtime       @relation(fields: [showtimeId], references: [id], onDelete: NoAction)
   
   status        BookingStatus  @default(PENDING)
   totalAmount   Decimal        @db.Decimal(10, 2)
@@ -164,6 +169,7 @@ model Voucher {
   id             String   @id @default(uuid())
   name           String
   reduceAmount   Float     
+  createdAt      DateTime @default(now())
   quantity       Int
   startAt        DateTime
   expireAt       DateTime
@@ -188,6 +194,7 @@ model SeatTypeDetail{
   price     Decimal @db.Decimal(10, 2)
   seat_type String
 
+  createdAt DateTime @default(now())
   seats     Seat[]
 
   cinemaId  String
@@ -217,6 +224,7 @@ model Snack {
   price         Decimal        @db.Decimal(10, 2)
   imageUrl      String?
   imagePublicId String
+  createdAt     DateTime       @default(now())
 
   bookings BookingSnack[]
 }

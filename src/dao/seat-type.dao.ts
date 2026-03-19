@@ -16,6 +16,9 @@ class SeatType{
                 id: true,
                 price: true,
                 seat_type: true
+            },
+            orderBy:{
+                createdAt: 'desc'
             }
         })
 

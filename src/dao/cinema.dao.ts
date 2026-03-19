@@ -13,6 +13,9 @@ class Cinema{
         const cinemas = await prisma.cinema.findMany({
             where:{
                 cityId: cityId
+            },
+            orderBy:{
+                createdAt: 'desc'
             }
         })
         return cinemas

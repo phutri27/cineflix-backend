@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { voucherObj, type VoucherProp } from "../dao/vouchers.dao";
+import { voucherObj, type VoucherProp, type VoucherData } from "../dao/vouchers.dao";
 import { matchedData } from "express-validator";
 import crypto from "crypto"
 
@@ -50,9 +50,7 @@ export const updateVoucher = async (req: Request, res: Response, next: NextFunct
     try {
         const id = req.params.id as string
         const data = matchedData(req)
-        const hashed_code = crypto.createHash('sha256').update(data.activationCode).digest('hex')
-        Object.assign(data, {activationCode: hashed_code})
-        await voucherObj.update(id, data as VoucherProp)
+        await voucherObj.update(id, data as VoucherData)
         return res.status(200).json({
             message: "Update voucher successfully"
         })

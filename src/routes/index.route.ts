@@ -7,6 +7,7 @@ import admin from "./admin/admin-all.route.js"
 import cinema from "./cinema.route.js"
 import screen from "./screen.route.js"
 import showtime from "./showtime.route.js"
+import city from "./city.route.js"
 
 export default {
     signup,
@@ -17,5 +18,6 @@ export default {
     admin,
     cinema,
     screen,
-    showtime
+    showtime,
+    city
 }

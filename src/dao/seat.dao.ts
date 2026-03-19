@@ -11,6 +11,10 @@ class Seat{
         const seats = await prisma.seat.findMany({
             where:{
                 screenId: screenId
+            },
+            orderBy:{
+                row: 'asc',
+                number: 'asc'
             }
         })
 

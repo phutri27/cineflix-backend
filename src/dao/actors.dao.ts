@@ -2,7 +2,11 @@ import { prisma } from "../lib/prisma";
 
 class Actors {
     async getActors(){
-        const actors = await prisma.actor.findMany()
+        const actors = await prisma.actor.findMany({
+            orderBy:{
+                createdAt: 'desc'
+            }
+        })
         return actors
     }
 

@@ -27,10 +27,72 @@ class Showtime {
             where: {
                 movieId: movieId,
                 screenId: screenId
+            },
+            orderBy:{
+                startTime: 'asc'
             }
         })
 
         return showtimes
+    }
+
+    async getShowtimeByDate(movieId: string, date: Date, cityId: number){
+        const endOfDay = new Date(date);
+        endOfDay.setHours(23, 59, 59, 999);
+        const showtimes = await prisma.movie.findUnique({
+            where: {
+                id: movieId
+            },
+            select: {
+                cinemas: {
+                    where: {
+                        cityId: cityId
+                    },
+                    select: {
+                        id: true,
+                        name: true,
+                        screens: {
+                            select: {
+                                id: true,
+                                name: true,
+                                showtimes: {
+                                    where: {
+                                        startTime: {
+                                            gte: new Date(date),
+                                            lte: endOfDay
+                                        }
+                                    },
+                                    select: {
+                                        id: true,
+                                        startTime: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        const result = showtimes?.cinemas.map((cinema) => {
+            const allShowtimes = cinema.screens.flatMap((screen) => (
+                screen.showtimes.map((st) => ({
+                    id: st.id,
+                    startTime: st.startTime,
+                    screenId: screen.id,
+                    screenName: screen.name 
+                }))
+            ))
+
+            allShowtimes.sort((a, b) => a.startTime.getTime() - b.startTime.getTime())
+
+            return {
+                id: cinema.id,
+                name: cinema.name,
+                showtimes: allShowtimes
+            }
+        }).filter(cinema => cinema.showtimes.length > 0)
+
+        return result
     }
 
     async updateShowtime(movieId: string, cinemaId: string, data: ShowtimeProp[]){

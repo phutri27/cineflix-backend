@@ -25,7 +25,11 @@ class Genres{
     }
 
     async getAllGenres(){
-        const genres = await prisma.genre.findMany()
+        const genres = await prisma.genre.findMany({
+            orderBy:{
+                createdAt: 'desc'
+            }
+        })
         return genres
     }
 

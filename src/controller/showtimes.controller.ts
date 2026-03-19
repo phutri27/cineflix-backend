@@ -22,6 +22,16 @@ export const getShowtime = async (req: Request, res: Response, next: NextFunctio
     }   
 }
 
+export const getShowtimeByDateAndCity = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { movieId, date, cityId } = req.query;
+        const showtimes = await showtimeObj.getShowtimeByDate(movieId as string, new Date(date as string), Number(cityId));
+        res.status(200).json(showtimes);
+    } catch (error) {
+        next(error);
+    }
+}
+
 export const updateShowtime = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { movieId, cinemaId } = req.query;

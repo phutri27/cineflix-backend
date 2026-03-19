@@ -2,7 +2,11 @@ import { prisma } from "../lib/prisma";
 
 class Directors {
     async getDirectors(){
-        const directors = await prisma.director.findMany()
+        const directors = await prisma.director.findMany({
+            orderBy:{
+                createdAt: 'desc'
+            }
+        })
         return directors
     }
 

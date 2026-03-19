@@ -9,7 +9,11 @@ export interface SnackType {
 
 class Snack{
     async getAllSnacks(){
-        const snacks = await prisma.snack.findMany()
+        const snacks = await prisma.snack.findMany({
+            orderBy:{
+                createdAt: 'desc'
+            }
+        })
         return snacks
     }
 

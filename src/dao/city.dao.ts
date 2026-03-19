@@ -10,7 +10,11 @@ class City{
     }
 
     async findAll() {
-        return await prisma.city.findMany();
+        return await prisma.city.findMany({
+            orderBy:{
+                name: 'desc'
+            }
+        });
     }
 
     async update(id: number, name: string) {

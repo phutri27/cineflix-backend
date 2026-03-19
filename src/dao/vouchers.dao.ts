@@ -1,16 +1,23 @@
 import { prisma } from "../lib/prisma";
 
-export interface VoucherProp{
+export interface VoucherData{
     name: string,
     reduceAmount: number,
     quantity: number,
     startAt: Date,
     expireAt: Date,
+}
+
+export interface VoucherProp extends VoucherData{
     activationCode: string
 }
 class Vouchers{
     async getAllVouchers(){
-        const vouchers = await prisma.voucher.findMany()
+        const vouchers = await prisma.voucher.findMany({
+            orderBy:{
+                createdAt: 'desc'
+            }
+        })
         return vouchers
     }
 
@@ -57,24 +64,23 @@ class Vouchers{
         await prisma.voucher.create({
             data:{
                 name: data.name,
-                reduceAmount: data.reduceAmount,
-                startAt: data.startAt,
-                expireAt: data.expireAt,
-                quantity: data.quantity,
+                reduceAmount: Number(data.reduceAmount),
+                startAt: new Date(data.startAt),
+                expireAt: new Date(data.expireAt),
+                quantity: Number(data.quantity),
                 activationCode: data.activationCode
             }
         })
     }
 
-    async update(id: string, data: VoucherProp){
+    async update(id: string, data: VoucherData){
         await prisma.voucher.update({
             data:{
                 name: data.name,
-                reduceAmount: data.reduceAmount,
-                startAt: data.startAt,
-                expireAt: data.expireAt,
-                activationCode: data.activationCode,
-                quantity: data.quantity
+                reduceAmount: Number(data.reduceAmount),
+                startAt: new Date(data.startAt),
+                expireAt: new Date(data.expireAt),
+                quantity: Number(data.quantity),
             },
             where:{
                 id: id
