@@ -5,9 +5,9 @@ import { movieOptionsValidate } from '../../validate/movie-options.validate'
 
 const router = express.Router()
 
-router.get("/genres", genres.getAllGenres)
-router.post("/genres", movieOptionsValidate, handleValidationErrors, genres.insertGenre)
-router.put("/genres/:id", movieOptionsValidate, handleValidationErrors, genres.updateGenre)
-router.delete("/genres/:id", genres.deleteGenre)
+router.get("/", genres.getAllGenres)
+router.post("/", movieOptionsValidate, handleValidationErrors, genres.insertGenre)
+router.put("/:id", movieOptionsValidate, handleValidationErrors, genres.updateGenre)
+router.delete("/:id", genres.deleteGenre)
 
 export default router
