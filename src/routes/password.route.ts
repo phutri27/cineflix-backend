@@ -12,5 +12,6 @@ router.post("/change", authorizeRoles(["USER", "ADMIN"]),changingPasswordValidat
 router.post("/otp", otpValidate, handleValidationErrors, password.confirmOtp)
 router.post("/new", passwordValidate, handleValidationErrors, password.newPassword)
 router.post("/forgot", emailValidate, handleValidationErrors, password.forgotPassword)
+router.post("/forgot/new", passwordValidate, handleValidationErrors, password.newPasswordForForgotPassword)
 
 export default router

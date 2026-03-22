@@ -17,8 +17,8 @@ export const passwordValidate = [
         return true
     }),
 
-    body("confirmPw").trim()
-    .notEmpty().withMessage(`Password ${emptyMsg}`)
+    body("confirm_pw").trim()
+    .notEmpty().withMessage(`Confirm password ${emptyMsg}`)
     .bail()
     .custom((value: string, {req}) => {
         if(value !== req.body.pw){

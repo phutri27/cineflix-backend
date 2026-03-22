@@ -32,18 +32,19 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
 
 export const confirmOtp = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userCred = req.user?.id as string || req.body.email
+        const userCred = req.user?.id as string || req.body?.email as string
+        console.log(userCred)
         const { otp } = matchedData(req)
         const savedOTP = await OTPobj.getOTP(userCred)
         const valid = otp === savedOTP
         if (valid){
             const resetToken = generateSecureToken(32)
-
             await OTPobj.deleteOTP(userCred)
             await resetTokenObj.saveResetToken(userCred, resetToken)
             return res.status(200).json({
                 message: "Success",
-                resetToken
+                resetToken,
+                userCred
             })
         }
         return res.status(401).json({
@@ -66,13 +67,12 @@ export const forgotPassword = async (req: Request, res:Response, next: NextFunct
     }
 }
 
-export const newPassword = async (req: Request, res: Response, next: NextFunction) => {
+export const newPasswordForForgotPassword = async (req: Request, res:Response, next: NextFunction) => {
     try {
-        const userCred = req.user?.id as string || req.body.email
-        const { resetToken } = req.body
-    
+        const { email, resetToken } = req.body
         const { pw } = matchedData(req)
-        const savedToken = await resetTokenObj.getResetToken(userCred)
+        const savedToken = await resetTokenObj.getResetToken(email)
+        console.log(savedToken)
         if (!savedToken || resetToken !== savedToken){
             return res.status(401).json({
                 message: "Not authorized to do this action"
@@ -80,12 +80,30 @@ export const newPassword = async (req: Request, res: Response, next: NextFunctio
         }
 
         const hashed_password = await genPassword(pw) as string
-        let cred: any = {id: req.user?.id}
-        if (req.body.email){
-            cred = {email: req.body.email}
+        await userObj.updatePassword({email}, hashed_password)
+        await resetTokenObj.delResetToken(email)
+        return res.status(200).json({
+            message: "Change password successfully"
+        })
+    } catch (error) {
+        return next(error)
+    }
+}
+
+export const newPassword = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = req.user?.id as string
+        const { resetToken } = req.body
+        const { pw } = matchedData(req)
+        const savedToken = await resetTokenObj.getResetToken(id)
+        if (!savedToken || resetToken !== savedToken){
+            return res.status(401).json({
+                message: "Not authorized to do this action"
+            })
         }
-        await userObj.updatePassword(cred, hashed_password)
-        await resetTokenObj.delResetToken(userCred)
+        const hashed_password = await genPassword(pw) as string
+        await userObj.updatePassword({id}, hashed_password)
+        await resetTokenObj.delResetToken(id)
         return res.status(200).json({
             message: "Change password successfully"
         })

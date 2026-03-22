@@ -60,7 +60,7 @@ import "./config/google-oauth2"
 app.use("/api/login", routes.login)
 app.use("/api/signup", routes.signup)
 app.use("/api/movies", routes.movies)
-app.use("/api/customer/profile", authorizeRoles(["USER"]), routes.profile)
+app.use("/api/customer/profile", authorizeRoles(["USER", "ADMIN"]), routes.profile)
 app.use("/api/password", routes.password)
 app.use("/api/admin/dashboard", authorizeRoles(["ADMIN"]),routes.admin)
 app.use("/api/cinema", routes.cinema)

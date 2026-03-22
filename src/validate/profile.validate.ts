@@ -16,7 +16,8 @@ export const validateProfile = [
     .bail()
     .withMessage(`Last name ${emptyMsg}`)
     .isAlpha('en-US', { ignore: ' ' })
-    .withMessage(`Last name ${alpha}`)
+    .withMessage(`Last name ${alpha}`),
+
 ]
 
 export const changingPasswordValidate = [

@@ -114,6 +114,18 @@ class Profile{
         })
     }
 
+    async getPasswordByUserId(userId: string){
+        const user = await prisma.user.findUnique({
+            where:{
+                id: userId
+            },
+            select:{
+                hashed_password: true
+            }
+        })
+        return user?.hashed_password
+    }
+
     async editProfile(userId: string, first_name: string, last_name: string){
         const editedProfile = await prisma.user.update({
             data:{
