@@ -68,6 +68,8 @@ app.use("/api/showtime", routes.showtime)
 app.use("/api/city", routes.city)
 app.use("/api/seat-type", routes.seatType)
 app.use("/api/booking", routes.booking)
+app.use("/api/snacks", routes.snack)
+app.use("/api/vouchers")
 
 app.use(errorHandler)
 

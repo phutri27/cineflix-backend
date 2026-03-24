@@ -1,3 +1,4 @@
+import { empty } from "@prisma/client/runtime/client";
 import { body } from "express-validator";
 
 const emptyMsg = "must not be empty"
@@ -45,4 +46,10 @@ export const validateVoucherActivationCode = [
     body("activationCode").trim()
     .notEmpty()
     .withMessage(`Activation code ${emptyMsg}`)
+]
+
+export const validateVoucherCodeUser = [
+    body("voucher_code").trim()
+    .notEmpty()
+    .withMessage(`Voucher code ${emptyMsg}`)
 ]

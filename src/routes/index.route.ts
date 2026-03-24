@@ -10,6 +10,8 @@ import showtime from "./showtime.route.js"
 import city from "./city.route.js"
 import seatType from "./seat-type.route.js"
 import booking from "./booking.route"
+import snack from './snack.route'
+import voucher from './voucher.route'
 
 export default {
     signup,
@@ -23,5 +25,7 @@ export default {
     showtime,
     city,
     seatType,
-    booking
+    booking,
+    snack,
+    voucher
 }
