@@ -8,6 +8,8 @@ import cinema from "./cinema.route.js"
 import screen from "./screen.route.js"
 import showtime from "./showtime.route.js"
 import city from "./city.route.js"
+import seatType from "./seat-type.route.js"
+import booking from "./booking.route"
 
 export default {
     signup,
@@ -19,5 +21,7 @@ export default {
     cinema,
     screen,
     showtime,
-    city
+    city,
+    seatType,
+    booking
 }

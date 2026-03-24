@@ -66,6 +66,8 @@ app.use("/api/admin/dashboard", authorizeRoles(["ADMIN"]),routes.admin)
 app.use("/api/cinema", routes.cinema)
 app.use("/api/showtime", routes.showtime)
 app.use("/api/city", routes.city)
+app.use("/api/seat-type", routes.seatType)
+app.use("/api/booking", routes.booking)
 
 app.use(errorHandler)
 

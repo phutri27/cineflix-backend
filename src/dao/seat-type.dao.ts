@@ -15,7 +15,7 @@ class SeatType{
             select:{
                 id: true,
                 price: true,
-                seat_type: true
+                seat_type: true,
             },
             orderBy:{
                 createdAt: 'desc'

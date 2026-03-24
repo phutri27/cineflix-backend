@@ -31,9 +31,7 @@ export const confirmOtpForSignup = async (req: Request, res: Response, next: Nex
     try {
         const userCred = req.body.email
         const { otp } = matchedData(req)
-        console.log(otp)
         const savedOTP = await OTPobj.getOTP(userCred)
-        console.log(savedOTP)
         const valid = otp === savedOTP
         if (valid){
             const inf = await signupObj.getSignupInfo(userCred) as string

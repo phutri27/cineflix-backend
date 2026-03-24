@@ -22,6 +22,47 @@ class Showtime {
         })
     }
 
+    async getSpecificShowtime(id: string) {
+        const showtime = await prisma.showtime.findUnique({
+            where: {
+                id: id
+            },
+            select:{
+                id: true,
+                startTime: true,
+                screen: {
+                    select: {
+                        id:true,
+                        name: true,
+                        seats: {
+                            select: {
+                                id: true,
+                                row: true,
+                                number: true,
+                                seat_typeId: true
+                            }
+                        },
+                        cinema: {
+                            select: {
+                                name: true
+                            }
+                        }
+                    }
+                },
+                movie: {
+                    select: {
+                        id: true,
+                        title: true,
+                        rated: true,
+                        posterUrl: true
+                    }
+                }
+            }
+        })
+
+        return showtime
+    }
+
     async getShowtime(movieId: string, screenId: string){
         const showtimes = await prisma.showtime.findMany({
             where: {
@@ -37,7 +78,7 @@ class Showtime {
     }
 
     async getShowtimeByDate(movieId: string, date: Date, cityId: number){
-        const endOfDay = new Date(date);
+        const endOfDay = new Date(date.setHours(date.getHours() + 7))
         endOfDay.setHours(23, 59, 59, 999);
         const showtimes = await prisma.movie.findUnique({
             where: {

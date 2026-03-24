@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+    import { body } from "express-validator";
 import { prisma } from "../lib/prisma";
 
 export const ShowtimeValidation = [

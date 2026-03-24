@@ -32,7 +32,12 @@ class Screen{
                 id: screenId
             },
             include:{
-                seats: true
+                seats: true,
+                cinema: {
+                    select:{
+                        name: true
+                    }
+                }
             }
         })
         return screen
@@ -58,6 +63,9 @@ class Screen{
                 showtimes: {
                     where: {
                         movieId: movieId
+                    },
+                    orderBy:{
+                        startTime: "asc"
                     }
                 }
             }

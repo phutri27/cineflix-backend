@@ -12,6 +12,16 @@ export const createShowtime = async (req: Request, res: Response, next: NextFunc
     }
 }
 
+export const getSpecificShowtime = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = req.params.id as string;
+        const showtime = await showtimeObj.getSpecificShowtime(id);
+        res.status(200).json(showtime);
+    } catch (error) {
+        next(error);
+    }
+}
+
 export const getShowtime = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { movieId, screenId } = req.query;
@@ -35,7 +45,7 @@ export const getShowtimeByDateAndCity = async (req: Request, res: Response, next
 export const updateShowtime = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { movieId, cinemaId } = req.query;
-        const { data }: {data: ShowtimeProp[]}  = matchedData(req);
+        const { data }: {data: ShowtimeProp[]}  = req.body;
         await showtimeObj.updateShowtime(movieId as string, cinemaId as string, data);
         res.status(200).json({ message: "Showtime updated successfully" });
     } catch (error) {

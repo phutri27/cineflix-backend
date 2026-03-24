@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.post('/', ShowtimeValidation, movieIdValidation, handleValidationErrors, showtimes.createShowtime)
 router.get('/', showtimes.getShowtime)
-router.put('/', ShowtimeValidation, handleValidationErrors, showtimes.updateShowtime)
+router.put('/', handleValidationErrors, showtimes.updateShowtime)
 router.delete('/:id', showtimes.deleteShowtime)
 
 export default router
