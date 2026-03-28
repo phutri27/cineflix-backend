@@ -5,8 +5,10 @@ import { handleValidationErrors } from '../middlewares/validateResult'
 
 const router = express.Router()
 
+router.get("/", bookings.getBookingInfo)
+router.get("/seats", bookings.getAllLockedSeat)
 router.post("/", bookingValidation , handleValidationErrors, bookings.createBooking)
 router.patch("/:id/status", statusValidate, handleValidationErrors, bookings.updateBookingStatus)
-router.delete("/:id", bookings.deleteBooking)
+router.post("/:id", bookings.deleteBooking)
 
 export default router

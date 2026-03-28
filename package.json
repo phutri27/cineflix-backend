@@ -72,6 +72,12 @@
     "passport-oauth2": "^1.8.0",
     "pg": "^8.18.0",
     "redis": "^5.11.0",
+    "socket.io": "^4.8.3",
+    "stripe": "^21.0.1",
     "uuid": "^13.0.0"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.1.0",
+    "utf-8-validate": "^6.0.6"
   }
 }

@@ -12,6 +12,7 @@ import seatType from "./seat-type.route.js"
 import booking from "./booking.route"
 import snack from './snack.route'
 import voucher from './voucher.route'
+import checkout from './checkout-session.route'
 
 export default {
     signup,
@@ -27,5 +28,6 @@ export default {
     seatType,
     booking,
     snack,
-    voucher
+    voucher,
+    checkout
 }

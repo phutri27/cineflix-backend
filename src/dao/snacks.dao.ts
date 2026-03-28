@@ -12,6 +12,10 @@ class Snack{
         const snacks = await prisma.snack.findMany({
             orderBy:{
                 createdAt: 'desc'
+            },
+            omit:{
+                createdAt: true,
+                imagePublicId: true
             }
         })
         return snacks

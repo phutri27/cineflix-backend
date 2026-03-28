@@ -6,7 +6,4 @@ const redisClient = await createClient({
   .on("error", (err) => console.log("Redis Client Error", err))
   .connect();
 
-await redisClient.set("key", "value");
-const value = await redisClient.get("key");
-
 export { redisClient }

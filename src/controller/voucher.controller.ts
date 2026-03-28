@@ -19,10 +19,7 @@ export const activateVouchers = async (req: Request, res: Response, next: NextFu
         const voucher = await voucherObj.compareVoucher(hashed_code)
         if (voucher){
             await voucherObj.reduceQuantity(voucher.id)
-            return res.status(200).json({
-                message: "Add voucher successfully",
-                voucher
-            })
+            return res.status(200).json(voucher)
         } 
         return res.status(401).json({
             message: "No voucher with that activate code exists"
