@@ -22,9 +22,11 @@ class SeatLock {
     async getAllLockedSeat(showTimeId: string){
         const confirmedBookings = await prisma.ticket.findMany({
             where:{
-                showtimeId: showTimeId,
                 booking:{
-                    status: "CONFIRMED"
+                    AND:[
+                        {showtimeId: showTimeId},
+                        {status: "CONFIRMED"}
+                    ]
                 }
             },
             select:{

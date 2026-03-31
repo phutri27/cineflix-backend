@@ -5,7 +5,6 @@ export const bookingValidation = [
     body("data.movieId").notEmpty().withMessage("Movie ID is required"),
     body("data.showtimeId").notEmpty().withMessage("Showtime ID is required"),
     body("data.totalAmount").isNumeric().withMessage("Total amount must be a number"),
-    body("seatIds").isArray({min: 1}).withMessage("At least one seat must be selected")
 ]
 
 export const statusValidate = [

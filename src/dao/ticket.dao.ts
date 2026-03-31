@@ -1,49 +1,98 @@
+import { response } from "express";
 import { prisma } from "../lib/prisma";
+import { format} from 'date-fns'
 
-class SeatType{
-    async getSeatDetails(cinemaId: string){
-        const ticketsPrice = await prisma.seatTypeDetail.findMany({
+export interface TicketResponse{
+    id: string
+    seat: string
+    movie: string
+    showtime: string | null
+    screen: string
+    cinema: string
+}
+class Ticket{
+    async createTicket(seatsId: string[], bookingId: string){
+        await prisma.ticket.createManyAndReturn({
+            data: seatsId.map((id) => ({
+                seatId: id,
+                bookingId: bookingId
+            }))
+        })
+    }
+
+    async getTicketInfo(bookingId: string): Promise<TicketResponse[]> {
+        const response = await prisma.ticket.findMany({
             where:{
-                cinemaId: cinemaId
+                bookingId: bookingId
             },
             select:{
-                price: true,
-                seat_type: true
+                id: true,
+                seat:{
+                    select:{
+                        row: true,
+                        number: true,
+                        seatTypeDetail:{
+                            select:{
+                                seat_type: true,
+                                price: true
+                            }
+                        }
+                    }
+                },
+                booking:{
+                    select:{
+                        movie:{
+                            select:{
+                                title: true,
+                            }
+                        },
+                        showtime:{
+                            select:{
+                                startTime: true,
+                                screen:{
+                                    select:{
+                                        name: true,
+                                        cinema: {
+                                            select:{
+                                                name: true
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        snacks:{
+                            select:{
+                                snack:{
+                                    select:{
+                                        name: true
+                                    }
+                                },
+                                quantity: true
+                            }
+                        }
+                    }
+                }
             }
         })
 
-        return ticketsPrice
+        const tickets = response.map((data) => {
+            const startTime = data?.booking.showtime.startTime.toString().replace("Z", "")
+            const formattedStartTime = startTime ? format(new Date(startTime), "HH:mm dd/MM/y") : null
+            const result = {
+                id: data?.id,
+                seat: `${data?.seat.row}${data?.seat.number} `,
+                movie: data?.booking.movie.title,
+                showtime: formattedStartTime,
+                screen: data?.booking.showtime.screen.name,
+                cinema: data?.booking.showtime.screen.cinema.name
+            }
+            return result
+        })
+
+        return tickets
     }
 
-    async insert(price: number, seat_type: string, cinemaId: string){
-        await prisma.seatTypeDetail.create({
-            data:{
-                price: price,
-                seat_type: seat_type,
-                cinemaId: cinemaId
-            }
-        })
-    }
-
-    async update(id: string, price: number, seat_type: string){
-        await prisma.seatTypeDetail.update({
-            data:{
-                price: price,
-                seat_type: seat_type
-            },
-            where:{
-                id: id
-            }
-        })
-    }
-
-    async delete(id: string){
-        await prisma.seatTypeDetail.delete({
-            where:{
-                id: id
-            }
-        })
-    }
 }
 
-export const seatTypeObj = new SeatType() 
+export const ticketObj = new Ticket()

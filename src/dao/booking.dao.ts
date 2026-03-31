@@ -1,6 +1,5 @@
 import { prisma } from "../lib/prisma";
 import { BookingStatus } from "../../generated/prisma/enums";
-import { stat } from "node:fs";
 
 interface BookingProps{
     movieId: string
@@ -63,6 +62,7 @@ class Booking{
                 },
                 showtime:{
                     select:{
+                        id: true,
                         startTime: true,
                         screen:{
                             select:{
@@ -104,6 +104,18 @@ class Booking{
         return booking
     }
 
+    async getBookingStatus(id: string): Promise<{status: BookingStatus} | null> {
+        const data = await prisma.booking.findUnique({
+            where:{
+                id: id
+            }, 
+            select:{
+                status: true
+            }
+        })
+        return data
+    }
+
     async updateBookingStatus(bookingId: string, status: BookingStatus){
         await prisma.booking.update({
             where:{
@@ -125,6 +137,17 @@ class Booking{
             }
         })
         return response
+    }
+
+    async insertSessionId(bookingId: string, checkoutSessionId: string){
+        await prisma.booking.update({
+            where: {
+                id: bookingId
+            },
+            data:{
+                checkoutSessionId: checkoutSessionId
+            }
+        })
     }
 }
 

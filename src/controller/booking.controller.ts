@@ -6,18 +6,8 @@ import { matchedData } from "express-validator";
 export const createBooking = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = req.user?.id as string
-        const { data, seatIds }: {data: any, seatIds: string[]} = matchedData(req)
-        seatIds.map(async (seatId) => {
-            const result = await seatLockObj.lockSeat(data.showtimeId, seatId, userId)
-            if (!result){
-                return res.status(409).json({
-                    message: `Seat has been taken, please choose another seat`
-                })
-            } 
-        })
+        const { data }: {data: any} = matchedData(req)
         const bookingData = await bookingObj.insertBooking(data, userId)
-        const io = req.app.get("socketio")
-        io.emit('seats_status', seatIds)
         return res.status(201).json(bookingData)
     } catch (error) {
         next(error)

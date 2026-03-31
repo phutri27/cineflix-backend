@@ -139,26 +139,26 @@ model Showtime {
   screen    Screen   @relation(fields: [screenId], references: [id], onDelete: Cascade)
 
   bookings  Booking[]
-  tickets   Ticket[]
 
   @@unique(name:"showtime_unique", fields: [startTime, screenId])
 }
 
 model Booking {
-  id            String         @id @default(uuid())
-  userId        String
-  user          User           @relation(fields: [userId], references: [id])
+  id              String         @id @default(uuid())
+  userId          String
+  user            User           @relation(fields: [userId], references: [id])
 
-  movieId       String
-  movie         Movie          @relation(fields: [movieId], references: [id], onDelete: NoAction)
+  movieId         String
+  movie           Movie          @relation(fields: [movieId], references: [id], onDelete: NoAction)
   
-  showtimeId    String
-  showtime      Showtime       @relation(fields: [showtimeId], references: [id], onDelete: NoAction)
+  showtimeId      String
+  showtime        Showtime       @relation(fields: [showtimeId], references: [id], onDelete: NoAction)
   
-  status        BookingStatus  @default(PENDING)
-  totalAmount   Decimal        @db.Decimal(10, 2)
-  bankReference String?        @unique 
-  createdAt     DateTime       @default(now())
+  status          BookingStatus  @default(PENDING)
+  totalAmount     Decimal        @db.Decimal(10, 2)
+  bankReference   String?        @unique 
+  createdAt       DateTime       @default(now())
+  checkoutSessionId String?        @unique
 
   vouchers      BookingVoucher[]
   tickets       Ticket[]
@@ -212,10 +212,6 @@ model Ticket {
   seatId     String
   seat       Seat     @relation(fields: [seatId], references: [id])
   
-  showtimeId String
-  showtime   Showtime @relation(fields: [showtimeId], references: [id])
-
-  @@unique([showtimeId, seatId]) 
 }
 
 model Snack {

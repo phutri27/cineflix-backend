@@ -4,7 +4,7 @@ import { userObj } from "../dao/user.dao";
 import { matchedData } from "express-validator";
 import { profileObj } from "../dao/profile.dao";
 import { signupObj } from "../redis-query/signup-query";
-import { sendEmail } from "../service/mail";
+import { sendEmail } from "../service/OTPMail";
 import { OTPobj } from "../redis-query/otp-query";
 
 interface SignupInfo{

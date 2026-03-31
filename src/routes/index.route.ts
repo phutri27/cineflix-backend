@@ -9,10 +9,11 @@ import screen from "./screen.route.js"
 import showtime from "./showtime.route.js"
 import city from "./city.route.js"
 import seatType from "./seat-type.route.js"
-import booking from "./booking.route"
-import snack from './snack.route'
-import voucher from './voucher.route'
-import checkout from './checkout-session.route'
+import booking from "./booking.route.js"
+import snack from './snack.route.js'
+import voucher from './voucher.route.js'
+import checkout from './checkout-session.route.js'
+import webhook from './fulfill-payment.js'
 
 export default {
     signup,
@@ -29,5 +30,6 @@ export default {
     booking,
     snack,
     voucher,
-    checkout
+    checkout,
+    webhook
 }

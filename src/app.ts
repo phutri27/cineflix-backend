@@ -8,14 +8,30 @@ import routes from './routes/index.route'
 import { errorHandler } from "./error/error"
 import { RedisStore } from "connect-redis"
 import { redisClient } from "./lib/redis"
+import { type RedisClientType } from "redis"
 import { authorizeRoles } from "./middlewares/authorize"
 import helmet from "helmet"
+import { Server } from "socket.io"
+import { createServer } from "http"
+import { handleSubcribeInit } from "./pubsub/event-subcribe"
+import bodyParser from 'body-parser'
+
+const allowedOrigins = [
+    process.env.FRONTEND_ORIGIN as string, 
+    process.env.FRONTEND_SUB_ORIGIN as string
+];
 
 const app = express()
-const allowedOrigins = [
-    process.env.FRONTEND_ORIGIN, 
-    process.env.FRONTEND_SUB_ORIGIN
-];
+
+const httpServer = createServer(app)
+const io = new Server(httpServer,{
+  cors:{
+    origin: allowedOrigins,
+    credentials: true
+  }
+})
+
+app.set("socketio", io)
 
 app.use(helmet())
 app.use(cors({
@@ -30,6 +46,8 @@ app.use(cors({
     },
     credentials: true,
 }))
+
+app.use("/webhook", bodyParser.raw({type: 'application/json'}), routes.webhook)
 app.use(express.json())
 
 app.use(express.urlencoded({ extended: true })); 
@@ -57,6 +75,7 @@ app.use(passport.session())
 
 import "./config/google-oauth2"
 
+app.use("/payment", routes.checkout)
 app.use("/api/login", routes.login)
 app.use("/api/signup", routes.signup)
 app.use("/api/movies", routes.movies)
@@ -69,12 +88,14 @@ app.use("/api/city", routes.city)
 app.use("/api/seat-type", routes.seatType)
 app.use("/api/booking", routes.booking)
 app.use("/api/snacks", routes.snack)
-app.use("/api/vouchers")
+app.use("/api/vouchers", routes.voucher)
 
 app.use(errorHandler)
 
+await handleSubcribeInit(redisClient as RedisClientType, io)
+
 const PORT = process.env.PORT || 3000
-const server = app.listen(PORT, () => {
+const server = httpServer.listen(PORT, () => {
   console.log(`Server successfully running on http://localhost:${PORT}`);
 })
 
