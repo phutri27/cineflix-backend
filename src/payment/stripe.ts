@@ -1,17 +1,18 @@
-import Stripe from "stripe"
 import { paymentObj } from "../redis-query/payment-query";
 import { bookingObj } from "../dao/booking.dao";
 import { ticketObj } from "../dao/ticket.dao";
 import { sendTicket } from "../service/ticket-mail";
 import { seatLockObj } from "../redis-query/seat-lock-query";
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
+import { stripe  } from "../controller/stripe.controller";
+import "dotenv/config"
 
-export async function fulfillCheckout(sessionId: string, bookingId: string, userId: string, seatIds: string, userEmail: string) {
-  console.log("booking Id: ", bookingId)
-  console.log("seatIds", JSON.parse(seatIds))
-  console.log("Email: ", userEmail)
-  // TODO: Make this function safe to run multiple times,
-  // even concurrently, with the same session ID
+export async function fulfillCheckout(sessionId: string, 
+  bookingId: string, 
+  userId: string, 
+  seatIds: string, 
+  userEmail: string,
+  showTimeId: string) {
+
   const result = await paymentObj.setPaymentSession(sessionId, userId)
   if (!result){
     return 
@@ -37,11 +38,11 @@ export async function fulfillCheckout(sessionId: string, bookingId: string, user
     await ticketObj.createTicket(seatIdsArr, bookingId)
     const tickets = await ticketObj.getTicketInfo(bookingId)
     await sendTicket(userEmail, tickets, bookingId)
-    
+    for (const seatId of seatIdsArr){
+      await seatLockObj.unlockSeat(showTimeId, seatId)
+    }
     // TODO: Record/save fulfillment status for this
     // Checkout Session
-    
-    await bookingObj.insertSessionId(bookingId, sessionId)
     await bookingObj.updateBookingStatus(bookingId, 'CONFIRMED')
 
   }

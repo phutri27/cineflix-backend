@@ -48,12 +48,8 @@ export const updateBookingStatus = async (req: Request, res: Response, next: Nex
 export const deleteBooking = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const bookingId = req.params.id as string
-        const { seatIds }: {seatIds: string[]} = req.body
         const response = await bookingObj.deleteBooking(bookingId)
-        seatIds.map(async (seatId) => {
-            await seatLockObj.unlockSeat(response.showtimeId, seatId)
-        })
-        return res.status(200).json({message: "Booking deleted successfully"})
+        next()
     } catch (error) {
         next(error)
     }

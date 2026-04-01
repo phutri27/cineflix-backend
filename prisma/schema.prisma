@@ -126,6 +126,7 @@ model Seat {
   screenId        String
   screen          Screen @relation(fields: [screenId], references: [id])
   tickets         Ticket[]
+  bookings        Booking[]
 }
 
 model Showtime {
@@ -160,6 +161,7 @@ model Booking {
   createdAt       DateTime       @default(now())
   checkoutSessionId String?        @unique
 
+  seats         Seat[]         
   vouchers      BookingVoucher[]
   tickets       Ticket[]
   snacks        BookingSnack[]

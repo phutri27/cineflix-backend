@@ -5,6 +5,7 @@ interface BookingProps{
     movieId: string
     showtimeId: string
     totalAmount: number
+    seats: string[]
     snacks?: {snackId: string, quantity: number}[] 
     vouchers?: {voucherId: string, quantity: number}[]
 }
@@ -21,6 +22,9 @@ class Booking{
                 movieId: data.movieId,
                 showtimeId: data.showtimeId,
                 totalAmount: data.totalAmount,
+                seats: {
+                    connect: data.seats.map((id) => ({id}))
+                },
                 ...(data.snacks?.length ? {
                     snacks: {
                         createMany: {
@@ -52,7 +56,14 @@ class Booking{
                 id: id
             },
             select:{
-                userId: true,
+                id: true,
+                status: true,
+                user:{
+                    select:{
+                        id: true,
+                        email: true,
+                    }
+                },
                 movie:{
                     select:{
                         posterUrl: true,
@@ -77,6 +88,13 @@ class Booking{
                     }
                 },
                 totalAmount: true,
+                seats:{
+                    select:{
+                        id: true,
+                        row: true,
+                        number: true
+                    }
+                },
                 vouchers:{
                     select:{
                         voucher:{
@@ -148,6 +166,26 @@ class Booking{
                 checkoutSessionId: checkoutSessionId
             }
         })
+    }
+
+    async getBookingCancelInfo(sessionId: string){
+        const response = await prisma.booking.findUnique({
+            where:{
+                checkoutSessionId: sessionId
+            },
+            select:{
+                id: true,
+                seats:{
+                    select:{
+                        id: true
+                    }
+                },
+                showtimeId: true,
+                status: true
+            }
+        })
+
+        return response
     }
 }
 

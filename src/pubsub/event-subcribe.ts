@@ -1,6 +1,8 @@
 import { type RedisClientType } from "redis"
 import { Server } from "socket.io" 
-
+import { stripe } from "../controller/stripe.controller"
+import { bookingObj } from "../dao/booking.dao"
+import { seatLockObj } from "../redis-query/seat-lock-query"
 export const handleSubcribeInit = async (redisClient: RedisClientType, io: Server) => {
     try {
         await redisClient.configSet("notify-keyspace-events", "Exg")
@@ -12,12 +14,24 @@ export const handleSubcribeInit = async (redisClient: RedisClientType, io: Serve
         const delChannel = '__keyevent@0__:del';
 
         const handleSubcribe = async (message: string, channel: string) => {
-
             if (message.startsWith(`lock:showTime`)){
                 const parts = message.split(':')
                 const showtimeId = parts[2]
                 const seatId = parts[4]
                 io.emit('seat-expired', seatId)
+            }
+            if (message.startsWith(`lock:cs`)){
+                const parts = message.split(':')
+                const sessionId = parts[2]
+                const data = await bookingObj.getBookingCancelInfo(sessionId!)
+                if (data?.status === "PENDING"){
+                    await stripe.checkout.sessions.expire(sessionId!)
+                    await bookingObj.updateBookingStatus(data?.id!, "CANCELLED")
+                    const seatIds = data?.seats.map((seat) => seat.id)
+                    for (const seatId of seatIds!){
+                        await seatLockObj.unlockSeat(data?.showtimeId!, seatId)
+                    }
+                }
             }
         }
         
