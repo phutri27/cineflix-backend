@@ -5,13 +5,14 @@ import { sendTicket } from "../service/ticket-mail";
 import { seatLockObj } from "../redis-query/seat-lock-query";
 import { stripe  } from "../controller/stripe.controller";
 import "dotenv/config"
+import { transactionObj } from "../dao/transaction.dao";
 
 export async function fulfillCheckout(sessionId: string, 
   bookingId: string, 
-  userId: string, 
-  seatIds: string, 
+  userId: string,  
   userEmail: string,
-  showTimeId: string) {
+  showTimeId: string,
+  transactionId: string) {
 
   const result = await paymentObj.setPaymentSession(sessionId, userId)
   if (!result){
@@ -21,7 +22,7 @@ export async function fulfillCheckout(sessionId: string,
   // TODO: Make sure fulfillment hasn't already been
   // performed for this Checkout Session
   const data = await bookingObj.getBookingStatus(bookingId)
-  if (data?.status === "CONFIRMED"){
+  if (data?.status === "PAID"){
     return
   }
 
@@ -34,16 +35,16 @@ export async function fulfillCheckout(sessionId: string,
   // to determine if fulfillment should be performed
   if (checkoutSession.payment_status !== 'unpaid') {
     // TODO: Perform fulfillment of the line items
-    const seatIdsArr = JSON.parse(seatIds) as string[]
-    await ticketObj.createTicket(seatIdsArr, bookingId)
+    const seatIds = await bookingObj.getBookingSeats(bookingId)
+    const seatIdsArr = seatIds?.seats.map((seat) => seat.id)
+    await ticketObj.createTicket(seatIdsArr!, bookingId)
     const tickets = await ticketObj.getTicketInfo(bookingId)
     await sendTicket(userEmail, tickets, bookingId)
-    for (const seatId of seatIdsArr){
+    for (const seatId of seatIdsArr!){
       await seatLockObj.unlockSeat(showTimeId, seatId)
     }
     // TODO: Record/save fulfillment status for this
     // Checkout Session
-    await bookingObj.updateBookingStatus(bookingId, 'CONFIRMED')
-
+    await transactionObj.updateTransactionSuccess(transactionId, bookingId)
   }
 }

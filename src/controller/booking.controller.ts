@@ -2,7 +2,6 @@ import type { Request, Response, NextFunction } from "express";
 import { seatLockObj } from "../redis-query/seat-lock-query";
 import { bookingObj } from "../dao/booking.dao";
 import { matchedData } from "express-validator";
-
 export const createBooking = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = req.user?.id as string

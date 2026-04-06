@@ -1,18 +1,33 @@
 import type { Request, Response, NextFunction } from "express";
 import Stripe from "stripe"
-import { bookingObj } from "../dao/booking.dao";
+import { moviesObj } from "../dao/movies.dao";
 import { fulfillCheckout } from "../payment/stripe";
 import { paymentObj } from "../redis-query/payment-query";
+import type { BookingObj } from "./transaction.controller";
+import { v4 as uuidv4 } from 'uuid';
+import { transactionObj } from "../dao/transaction.dao";
+import { ticketObj } from "../dao/ticket.dao";
 import "dotenv/config"
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 export const checkoutSession = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { bookingId, seatIds, showTimeId }: {bookingId: string, seatIds: string[], showTimeId: string} = req.body;
-      const data = await bookingObj.getBooking(bookingId)
-      const amountIncents = Number(data?.totalAmount)
+      const { datas }: {datas: BookingObj} = req.body;
+      
+      if (datas.bookingId){
+        const ticketData = await ticketObj.getPaidTicket(datas.bookingId!)
+        if (ticketData.length > 0){
+          return res.status(400).json({seatTaken: true})
+        }
+      }
+      
+      const movie = await moviesObj.getSpecificMovie(datas.movieId!)
+      const amountIncents = res.locals.amount
       const userId = req.user?.id as string
       const email = req.user?.email as string
+      
+      const bookingId = datas.bookingId || uuidv4()
+      const transactionId = uuidv4()
       const session = await stripe.checkout.sessions.create({
         customer_email: email,
         line_items: [
@@ -20,8 +35,8 @@ export const checkoutSession = async (req: Request, res: Response, next: NextFun
             price_data:{
               currency: "vnd",
               product_data:{
-                name: "Movie ticket",
-                description: `Booking Id: ${bookingId}`
+                name: `${movie?.title}'s ticket`,
+                description: `Booking id: ${bookingId}`
               },
               unit_amount: amountIncents
             },
@@ -31,18 +46,27 @@ export const checkoutSession = async (req: Request, res: Response, next: NextFun
         metadata: {
           bookingId: bookingId,
           userId: userId,
-          seatIds: JSON.stringify(seatIds),
           userEmail: email,
-          showTimeId: showTimeId
+          showTimeId: datas.showtimeId,
+          transactionId: transactionId
         },
         mode: 'payment',
         success_url: `http://localhost:5173/payment/complete?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `http://localhost:5173/payment/cancel?session_id={CHECKOUT_SESSION_ID}`
       }); 
+
       await paymentObj.setCheckoutSession(session.id, userId)
-      await bookingObj.insertSessionId(bookingId, session.id)
+      const booking = {id: bookingId, seats: datas.seats,showtimeId: datas.showtimeId, snacks: datas.snacks, vouchers: datas.vouchers}
+      const transaction = {id: transactionId, bookingId: bookingId, provider: "Stripe", providerTransactionId: session.id, amount: amountIncents}
+
+      if (datas.bookingId){
+        await transactionObj.createTransaction(transaction)
+      } else{
+        await transactionObj.createTransactionAndBooking(booking, transaction, userId)
+      }
+
       res.locals.redirectUrl = session.url
-      
+      res.locals.bookingId = bookingId
       return next()
     } catch (error) {
       next(error)
@@ -51,11 +75,10 @@ export const checkoutSession = async (req: Request, res: Response, next: NextFun
 
 export const checkoutPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const endpointSecret = 'whsec_fc9c04f7312c8b6ed5e9de0fea355cb82fcc475bfcb519d6ffa5f20c4aedcfc6'
+        const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET as string
         const payload = req.body;
         const sig: any = req.headers['stripe-signature'];
         let event;
-
         try {
             event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
         } catch (err: any) {
@@ -67,12 +90,16 @@ export const checkoutPost = async (req: Request, res: Response, next: NextFuncti
             await fulfillCheckout(event.data.object.id, 
               session?.bookingId as string, 
               session?.userId as string, 
-              session?.seatIds as string,
               session?.userEmail as string,
-              session?.showTimeId as string)
-        }
+              session?.showTimeId as string,
+              session?.transactionId as string)
+            res.locals.showTimeId = session?.showTimeId as string
+            res.locals.transactionId = session?.transactionId as string
+            res.locals.userId = session?.userId as string 
+            return next()
+          }
 
-        res.status(200).json({ success: true });
+        return res.status(200).end();
     } catch(error) {
         next(error)
     }

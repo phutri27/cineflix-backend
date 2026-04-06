@@ -2,16 +2,22 @@ import { redisClient } from "../lib/redis";
 import { prisma } from "../lib/prisma";
 
 class SeatLock {
-    async lockSeat(showTimeId: string, seatId: string, userId: string): Promise<boolean> {
+    async lockSeat(showTimeId: string, seatId: string, bookingId: string): Promise<boolean> {
         const lockKey = `lock:showTime:${showTimeId}:seat:${seatId}`
-        const result = await redisClient.set(lockKey, userId, {expiration: {type: "EX", value: 300}, condition: 'NX'})
-        
+        const result = await redisClient.set(lockKey, bookingId, {expiration: {type: "EX", value: 300}, condition: 'NX'})
+            
         if (result){
             const tracker = `tracker:showtimes:${showTimeId}`
             await redisClient.sAdd(tracker, seatId)
             await redisClient.expire(tracker, 86400)    
         }
         return result === "OK"
+    }
+
+    async getLockSeatValue(showTimeId: string, seatId: string): Promise<string | null>{
+        const lockKey = `lock:showTime:${showTimeId}:seat:${seatId}`
+        const result = await redisClient.get(lockKey)
+        return result
     }
 
     async unlockSeat(showTimeId: string, seatId: string){
@@ -25,7 +31,7 @@ class SeatLock {
                 booking:{
                     AND:[
                         {showtimeId: showTimeId},
-                        {status: "CONFIRMED"}
+                        {status: "PAID"}
                     ]
                 }
             },

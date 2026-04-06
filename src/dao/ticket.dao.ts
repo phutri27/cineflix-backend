@@ -12,7 +12,7 @@ export interface TicketResponse{
 }
 class Ticket{
     async createTicket(seatsId: string[], bookingId: string){
-        await prisma.ticket.createManyAndReturn({
+        await prisma.ticket.createMany({
             data: seatsId.map((id) => ({
                 seatId: id,
                 bookingId: bookingId
@@ -41,13 +41,13 @@ class Ticket{
                 },
                 booking:{
                     select:{
-                        movie:{
-                            select:{
-                                title: true,
-                            }
-                        },
                         showtime:{
                             select:{
+                                movie:{
+                                    select:{
+                                        title: true
+                                    }
+                                },
                                 startTime: true,
                                 screen:{
                                     select:{
@@ -82,7 +82,7 @@ class Ticket{
             const result = {
                 id: data?.id,
                 seat: `${data?.seat.row}${data?.seat.number} `,
-                movie: data?.booking.movie.title,
+                movie: data?.booking.showtime.movie.title,
                 showtime: formattedStartTime,
                 screen: data?.booking.showtime.screen.name,
                 cinema: data?.booking.showtime.screen.cinema.name
@@ -92,7 +92,24 @@ class Ticket{
 
         return tickets
     }
+    
+    async getPaidTicket(bookingId: string) {
+        const response = await prisma.ticket.findMany({
+            where:{
+                bookingId: bookingId
+            },
+            select:{
+                bookingId: true,
+                seat:{
+                    select:{
+                        id: true
+                    }
+                }
+            }
+        })
 
+        return response
+    }
 }
 
 export const ticketObj = new Ticket()

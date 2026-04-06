@@ -13,7 +13,8 @@ import booking from "./booking.route.js"
 import snack from './snack.route.js'
 import voucher from './voucher.route.js'
 import checkout from './checkout-session.route.js'
-import webhook from './fulfill-payment.js'
+import webhook from './fulfill-payment.route.js'
+import notifications  from './notification.route'
 
 export default {
     signup,
@@ -31,5 +32,6 @@ export default {
     snack,
     voucher,
     checkout,
-    webhook
+    webhook,
+    notifications
 }

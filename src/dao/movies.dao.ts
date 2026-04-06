@@ -93,7 +93,10 @@ class Movies {
     async getMoviesByTitle(title: string){
         const movies = await prisma.movie.findMany({
             where:{
-                title:title
+                title:{
+                    contains: title,
+                    mode: 'insensitive'
+                }
             },
             include: movieWithDetailsInclude
         })

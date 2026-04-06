@@ -2,9 +2,7 @@ import { prisma } from "../lib/prisma";
 import { BookingStatus } from "../../generated/prisma/enums";
 
 interface BookingProps{
-    movieId: string
     showtimeId: string
-    totalAmount: number
     seats: string[]
     snacks?: {snackId: string, quantity: number}[] 
     vouchers?: {voucherId: string, quantity: number}[]
@@ -19,9 +17,7 @@ class Booking{
         const response =await prisma.booking.create({
             data:{
                 userId: userId,
-                movieId: data.movieId,
                 showtimeId: data.showtimeId,
-                totalAmount: data.totalAmount,
                 seats: {
                     connect: data.seats.map((id) => ({id}))
                 },
@@ -57,24 +53,23 @@ class Booking{
             },
             select:{
                 id: true,
-                status: true,
                 user:{
                     select:{
                         id: true,
                         email: true,
                     }
                 },
-                movie:{
-                    select:{
-                        posterUrl: true,
-                        title: true,
-                        rated: true
-                    }
-                },
                 showtime:{
                     select:{
                         id: true,
                         startTime: true,
+                        movie: {
+                            select:{
+                                posterUrl: true,
+                                title: true,
+                                rated: true
+                            }
+                        },
                         screen:{
                             select:{
                                 name: true,
@@ -87,7 +82,11 @@ class Booking{
                         }
                     }
                 },
-                totalAmount: true,
+                transaction:{
+                    where:{
+                        status: "PENDING"
+                    }
+                },
                 seats:{
                     select:{
                         id: true,
@@ -134,6 +133,24 @@ class Booking{
         return data
     }
 
+    async getBookingSeats (id: string){
+        const seats = await prisma.booking.findUnique({
+            where:{
+                id: id
+            },
+            select:{
+                seats:{
+                    select:{
+                        id: true,
+                        row: true,
+                        number: true
+                    }
+                }
+            }
+        })
+        return seats
+    }
+
     async updateBookingStatus(bookingId: string, status: BookingStatus){
         await prisma.booking.update({
             where:{
@@ -154,37 +171,6 @@ class Booking{
                 showtimeId: true
             }
         })
-        return response
-    }
-
-    async insertSessionId(bookingId: string, checkoutSessionId: string){
-        await prisma.booking.update({
-            where: {
-                id: bookingId
-            },
-            data:{
-                checkoutSessionId: checkoutSessionId
-            }
-        })
-    }
-
-    async getBookingCancelInfo(sessionId: string){
-        const response = await prisma.booking.findUnique({
-            where:{
-                checkoutSessionId: sessionId
-            },
-            select:{
-                id: true,
-                seats:{
-                    select:{
-                        id: true
-                    }
-                },
-                showtimeId: true,
-                status: true
-            }
-        })
-
         return response
     }
 }

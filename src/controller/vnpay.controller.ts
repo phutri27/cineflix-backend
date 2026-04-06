@@ -11,30 +11,63 @@ import { ProductCode,
     InpOrderAlreadyConfirmed, 
     IpnUnknownError, 
     IpnSuccess, 
-    type VerifyReturnUrl} from "vnpay";
+    type VerifyReturnUrl,
+
+dateFormat} from "vnpay";
+import { v4 as uuidv4 } from 'uuid'
 import { seatLockObj } from "../redis-query/seat-lock-query";
 import { sendTicket } from "../service/ticket-mail";
+import type { BookingObj } from "./transaction.controller";
+import { transactionObj } from "../dao/transaction.dao";
+import { paymentObj } from "../redis-query/payment-query";
 
 export const vnpayCheckout = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { bookingId }: {bookingId: string} = req.body;
-        const data = await bookingObj.getBooking(bookingId)
+        const { datas }: {datas: BookingObj} = req.body
+        if (datas.bookingId){
+            const ticketData = await ticketObj.getPaidTicket(datas.bookingId!)
+            if (ticketData.length > 0){
+                return res.status(400).json({seatTaken: true})
+            }
+        }
+        const userId = req.user?.id as string
+        const amount = res.locals.amount
         const returnUrl = 'http://localhost:5173/payment/complete'
+        const expireDate = new Date()
+        expireDate.setMinutes(expireDate.getMinutes() + 5)
+        const transactionId = uuidv4()
+        const bookingId = datas.bookingId || uuidv4()
+
         const paymentUrl = vnpay.buildPaymentUrl({
-            vnp_Amount: data?.totalAmount.toNumber()!,
+            vnp_Amount: amount,
             vnp_IpAddr:
                     req.headers['x-forwarded-for'] as string ||
                     req.connection.remoteAddress as string||
                     req.socket.remoteAddress as string ||
                     req.ip as string, 
-            vnp_TxnRef: data?.id as string,
-            vnp_OrderInfo: `Thanh toan don hang ${data?.id}`,
+            vnp_TxnRef: transactionId,
+            vnp_OrderInfo: `Thanh toan don hang ${transactionId}`,
             vnp_OrderType: ProductCode.Entertainment_Training,
             vnp_ReturnUrl: returnUrl,
             vnp_Locale: VnpLocale.VN,
-        })
+            vnp_ExpireDate: dateFormat(expireDate),
+        },
+    )
+        const url = new URL(paymentUrl)
+        const params = new URLSearchParams(url.search)
+        const sessionId = params.get("vnp_SecureHash")
+        await paymentObj.setCheckoutSession(sessionId!, userId)
+        const booking = {id: bookingId, seats: datas.seats,showtimeId: datas.showtimeId, snacks: datas.snacks, vouchers: datas.vouchers}
+        const transaction = {id: transactionId, bookingId: bookingId, provider: "vnpay", providerTransactionId: sessionId!, amount: amount}
+
+        if (datas.bookingId){
+            await transactionObj.createTransaction(transaction)
+        } else{
+            await transactionObj.createTransactionAndBooking(booking, transaction, userId)
+        }
+
+        res.locals.bookingId = bookingId
         res.locals.vnpayPaymentUrl = paymentUrl
-        res.locals.paymentData = data
         next()
     } catch (error) {
         next(error)
@@ -45,47 +78,55 @@ export const ipnUrlProccess = async (req: any, res: Response, next: NextFunction
     try{
         const verify: VerifyReturnUrl = vnpay.verifyIpnCall(req.query);
         if (!verify.isVerified) {
-            await bookingObj.updateBookingStatus(verify.vnp_TxnRef, "FAILED")
+            await transactionObj.updateTransactionStatus(verify.vnp_TxnRef, "FAILED")
             return res.status(400).json(IpnFailChecksum);
         }
 
         if (!verify.isSuccess) {
-            await bookingObj.updateBookingStatus(verify.vnp_TxnRef, "CANCELLED")
+            await transactionObj.updateTransactionStatus(verify.vnp_TxnRef, "CANCELLED")
             const data = await bookingObj.getBooking(verify.vnp_TxnRef)
             const seatIds = data?.seats.map((seat) => seat.id)
             for (const seatId of seatIds!){
                 await seatLockObj.unlockSeat(data?.showtime.id!, seatId)
             }
-            return res.status(400).json(IpnUnknownError);
+            return res.redirect('http://localhost:5173/payment/cancel')
         }
 
         // Tìm đơn hàng trong cơ sở dữ liệu
-        const data = await bookingObj.getBooking(verify.vnp_TxnRef); // Phương thức tìm đơn hàng theo id, bạn cần tự triển khai
+        const data = await transactionObj.getTransactionInfo(verify.vnp_TxnRef); // Phương thức tìm đơn hàng theo id, bạn cần tự triển khai
 
         // Nếu không tìm thấy đơn hàng hoặc mã đơn hàng không khớp
         if (!data || verify.vnp_TxnRef !== data.id) {
             return res.status(400).json(IpnOrderNotFound);
         }
 
+        if (data.status === "CANCELLED"){
+            return res.status(400).json(InpOrderAlreadyConfirmed)
+        }
+
         // Nếu số tiền thanh toán không khớp
-        if (verify.vnp_Amount !== data.totalAmount.toNumber()) {
-            await bookingObj.updateBookingStatus(data.id, 'FAILED')
+        if (verify.vnp_Amount !== data.amount.toNumber()) {
+            await transactionObj.updateTransactionStatus(data.id, 'FAILED')
             return res.status(400).json(IpnInvalidAmount);
         }
 
         // Nếu đơn hàng đã được xác nhận trước đó
-        if (data.status === 'CONFIRMED') {
+        if (data.status === 'SUCCESS') {
             return res.status(200).json(InpOrderAlreadyConfirmed);
         }
 
-        const userEmail = data.user.email
-        const seatsId = data.seats.map(seat => seat.id)
-        await ticketObj.createTicket(seatsId, data.id)
-        const tickets = await ticketObj.getTicketInfo(data.id)
-        await sendTicket(userEmail, tickets, data.id)
+        const userEmail = data.booking.user.email
+        const seatsId = data.booking.seats.map(seat => seat.id)
+        await ticketObj.createTicket(seatsId, data.bookingId)
+        const tickets = await ticketObj.getTicketInfo(data.bookingId)
+        await sendTicket(userEmail, tickets, data.bookingId)
 
-        await bookingObj.updateBookingStatus(data.id, 'CONFIRMED');
-        return res.status(200).json(IpnSuccess);
+        await transactionObj.updateTransactionSuccess(data.id, data.bookingId)
+        res.locals.showTimeId = data.booking.showtimeId
+        res.locals.userId = data.booking.user.id
+        res.locals.transactionId = data.id
+        res.locals.IpnSuccess = IpnSuccess
+        return next()
     } catch (error) {
         return res.status(500).json(IpnUnknownError);
     }

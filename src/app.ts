@@ -32,6 +32,15 @@ const io = new Server(httpServer,{
 })
 
 app.set("socketio", io)
+io.on("connection", (socket) => {
+  socket.on("join-room", (userId) => {
+    socket.join(userId)
+  })
+
+  socket.on("leave-room", (userId) => {
+    socket.leave(userId)
+  })
+})
 
 app.use(helmet())
 app.use(cors({
@@ -89,6 +98,7 @@ app.use("/api/seat-type", routes.seatType)
 app.use("/api/booking", routes.booking)
 app.use("/api/snacks", routes.snack)
 app.use("/api/vouchers", routes.voucher)
+app.use("/api/notifications", routes.notifications)
 
 app.use(errorHandler)
 
