@@ -7,6 +7,7 @@ import type { BookingObj } from "./transaction.controller";
 import { v4 as uuidv4 } from 'uuid';
 import { transactionObj } from "../dao/transaction.dao";
 import { ticketObj } from "../dao/ticket.dao";
+import { bookingObj } from "../dao/booking.dao";
 import "dotenv/config"
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
@@ -15,9 +16,19 @@ export const checkoutSession = async (req: Request, res: Response, next: NextFun
       const { datas }: {datas: BookingObj} = req.body;
       
       if (datas.bookingId){
-        const ticketData = await ticketObj.getPaidTicket(datas.bookingId!)
-        if (ticketData.length > 0){
+        const tickets = await ticketObj.getPaidTicket(datas.bookingId!)
+        if (tickets > 0){
           return res.status(400).json({seatTaken: true})
+        }
+
+        const transactions = await transactionObj.getTransactionMethod("Stripe", datas.bookingId!)
+        if (transactions > 0){
+          return res.status(400).json({transactionMethodPicked: true})
+        }
+
+        const bookingData = await bookingObj.getBookingStatus(datas.bookingId)
+        if (bookingData?.status !== "PENDING"){
+            return res.status(400).json({bookingExpire: true})
         }
       }
       
@@ -91,8 +102,8 @@ export const checkoutPost = async (req: Request, res: Response, next: NextFuncti
               session?.bookingId as string, 
               session?.userId as string, 
               session?.userEmail as string,
-              session?.showTimeId as string,
               session?.transactionId as string)
+              
             res.locals.showTimeId = session?.showTimeId as string
             res.locals.transactionId = session?.transactionId as string
             res.locals.userId = session?.userId as string 

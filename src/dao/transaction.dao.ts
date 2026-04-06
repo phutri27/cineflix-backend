@@ -118,6 +118,18 @@ class Transaction{
         }
     }
 
+    async getTransactionMethod(provider: string, bookingId: string){
+        const response = await prisma.transaction.count({
+            where:{
+                provider: provider,
+                bookingId: bookingId,
+                status: "PENDING"
+            }
+        })
+        
+        return response
+    }
+
     async updateTransactionStatus(transactionId: string, status: TransactionStatus){
         await prisma.transaction.update({
             where:{
@@ -129,6 +141,19 @@ class Transaction{
         })
     }
 
+    async updateTransactionWhenBookingExpire(bookingId: string){
+        const response = await prisma.transaction.findMany({
+            where:{
+                bookingId: bookingId,
+                status: "PENDING"
+            },
+        })
+
+        const allTransaction = response.map((res) => res.providerTransactionId)
+        for (const id of allTransaction){
+            await paymentObj.deleteCheckoutSession(id!)
+        }
+    }
     async getTransactionInfo(transactionId: string){
         const response = await prisma.transaction.findUnique({
             where:{

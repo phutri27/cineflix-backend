@@ -9,7 +9,7 @@ class Payment{
 
     async setCheckoutSession(sessionId: string, userId: string) {
         const lockKey = `lock:cs:${sessionId}`
-        await redisClient.set(lockKey, userId, {expiration: {type: 'EX', value: 300}})
+        await redisClient.set(lockKey, userId, {expiration: {type: 'EX', value: 60}})
     }
 
     async deleteCheckoutSession(sessionId: string) {

@@ -29,16 +29,19 @@ export const handleSubcribeInit = async (redisClient: RedisClientType, io: Serve
                 const bookingId = data?.bookingId
                 if (data?.status === "PENDING"){
                     if (data.provider === "Stripe"){
-                        await stripe.checkout.sessions.expire(sessionId!)
+                        const session = await stripe.checkout.sessions.retrieve(sessionId!);
+                        if (session.status === 'complete') {
+                            return; 
+                        }
+                        if (session.status === 'open') {
+                            await stripe.checkout.sessions.expire(sessionId!);
+                        }
                     }
                     await transactionObj.updateTransactionStatus(data.id, "CANCELLED")
-                    if (data.booking.status === "PENDING"){
-                        await bookingObj.updateBookingStatus(bookingId!, "CANCELLED")
-                    }
-                    const seatIds = data?.booking.seats.map((seat) => seat.id)
-                    for (const seatId of seatIds!){
-                        await seatLockObj.unlockSeat(data?.booking.showtimeId!, seatId)
-                    }
+                }
+                if (channel.startsWith('__keyevent@0__:expired') && data?.booking.status === "PENDING"){
+                    await bookingObj.updateBookingStatus(bookingId!, "CANCELLED")
+                    await transactionObj.updateTransactionWhenBookingExpire(bookingId!)
                 }
             }
         }

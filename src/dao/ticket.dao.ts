@@ -94,18 +94,10 @@ class Ticket{
     }
     
     async getPaidTicket(bookingId: string) {
-        const response = await prisma.ticket.findMany({
+        const response = await prisma.ticket.count({
             where:{
                 bookingId: bookingId
             },
-            select:{
-                bookingId: true,
-                seat:{
-                    select:{
-                        id: true
-                    }
-                }
-            }
         })
 
         return response

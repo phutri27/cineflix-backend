@@ -4,7 +4,7 @@ import { prisma } from "../lib/prisma";
 class SeatLock {
     async lockSeat(showTimeId: string, seatId: string, bookingId: string): Promise<boolean> {
         const lockKey = `lock:showTime:${showTimeId}:seat:${seatId}`
-        const result = await redisClient.set(lockKey, bookingId, {expiration: {type: "EX", value: 300}, condition: 'NX'})
+        const result = await redisClient.set(lockKey, bookingId, {expiration: {type: "EX", value: 360}, condition: 'NX'})
             
         if (result){
             const tracker = `tracker:showtimes:${showTimeId}`
@@ -20,9 +20,9 @@ class SeatLock {
         return result
     }
 
-    async unlockSeat(showTimeId: string, seatId: string){
+    async expireSeat(showTimeId: string, seatId: string){
         const lockKey = `lock:showTime:${showTimeId}:seat:${seatId}`
-        await redisClient.del(lockKey)
+        await redisClient.expire(lockKey, 120)
     }
 
     async getAllLockedSeat(showTimeId: string){

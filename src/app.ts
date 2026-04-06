@@ -99,6 +99,7 @@ app.use("/api/booking", routes.booking)
 app.use("/api/snacks", routes.snack)
 app.use("/api/vouchers", routes.voucher)
 app.use("/api/notifications", routes.notifications)
+app.use("/api/seats", routes.seats)
 
 app.use(errorHandler)
 

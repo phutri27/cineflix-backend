@@ -31,11 +31,21 @@ export const seatLock = async (req: Request, res: Response, next: NextFunction) 
     }
 }
 
-export const unlockSeat  = async (req: Request, res: Response, next: NextFunction) => {
+export const getAllLockedSeat = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { showTimeId } = req.query 
+        const seats = await seatLockObj.getAllLockedSeat(String(showTimeId))
+        return res.status(200).json(seats)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const expireSeat  = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { seatIds, showTimeId }: {seatIds: string[], showTimeId: string} = req.body
         for (const seatId of seatIds){
-            await seatLockObj.unlockSeat(showTimeId, seatId)
+            await seatLockObj.expireSeat(showTimeId, seatId)
         }
         return res.status(200).json({ success: true })
     } catch (error) {

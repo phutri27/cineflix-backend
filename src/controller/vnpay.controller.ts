@@ -24,17 +24,28 @@ import { paymentObj } from "../redis-query/payment-query";
 export const vnpayCheckout = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { datas }: {datas: BookingObj} = req.body
+
         if (datas.bookingId){
-            const ticketData = await ticketObj.getPaidTicket(datas.bookingId!)
-            if (ticketData.length > 0){
+            const ticketData = await ticketObj.getPaidTicket(datas.bookingId)
+            if (ticketData > 0){
                 return res.status(400).json({seatTaken: true})
             }
+            const transactions = await transactionObj.getTransactionMethod("vnpay", datas.bookingId)
+            if (transactions > 0){
+                return res.status(400).json({transactionMethodPicked: true})
+            }
+
+            const bookingData = await bookingObj.getBookingStatus(datas.bookingId)
+            if (bookingData?.status !== "PENDING"){
+                return res.status(400).json({bookingExpire: true})
+            }
         }
+
         const userId = req.user?.id as string
         const amount = res.locals.amount
         const returnUrl = 'http://localhost:5173/payment/complete'
         const expireDate = new Date()
-        expireDate.setMinutes(expireDate.getMinutes() + 5)
+        expireDate.setMinutes(expireDate.getMinutes() + 1)
         const transactionId = uuidv4()
         const bookingId = datas.bookingId || uuidv4()
 
@@ -84,11 +95,6 @@ export const ipnUrlProccess = async (req: any, res: Response, next: NextFunction
 
         if (!verify.isSuccess) {
             await transactionObj.updateTransactionStatus(verify.vnp_TxnRef, "CANCELLED")
-            const data = await bookingObj.getBooking(verify.vnp_TxnRef)
-            const seatIds = data?.seats.map((seat) => seat.id)
-            for (const seatId of seatIds!){
-                await seatLockObj.unlockSeat(data?.showtime.id!, seatId)
-            }
             return res.redirect('http://localhost:5173/payment/cancel')
         }
 
