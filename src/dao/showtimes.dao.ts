@@ -39,7 +39,12 @@ class Showtime {
                                 id: true,
                                 row: true,
                                 number: true,
-                                seat_typeId: true
+                                seat_typeId: true,
+                                seatTypeDetail:{
+                                    select:{
+                                        seat_type: true
+                                    }
+                                }
                             }
                         },
                         cinema: {

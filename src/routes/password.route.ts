@@ -9,7 +9,9 @@ import { authorizeRoles } from '../middlewares/authorize.js'
 const router = express.Router()
 
 router.post("/change", authorizeRoles(["USER", "ADMIN"]),changingPasswordValidate, handleValidationErrors, password.changePassword)
-router.post("/otp", otpValidate, handleValidationErrors, password.confirmOtp)
+
+router.post("/forgot/otp", password.getUserEmail, otpValidate, handleValidationErrors, password.confirmOtp)
+router.post("/change/otp", password.getUserId, otpValidate, handleValidationErrors, password.confirmOtp)
 router.post("/new", passwordValidate, handleValidationErrors, password.newPassword)
 router.post("/forgot", emailValidate, handleValidationErrors, password.forgotPassword)
 router.post("/forgot/new", passwordValidate, handleValidationErrors, password.newPasswordForForgotPassword)

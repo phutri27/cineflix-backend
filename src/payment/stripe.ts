@@ -5,12 +5,13 @@ import { sendTicket } from "../service/ticket-mail";
 import { stripe  } from "../controller/stripe.controller";
 import "dotenv/config"
 import { transactionObj } from "../dao/transaction.dao";
-
-  export async function fulfillCheckout(sessionId: string, 
+import { profileObj } from "../dao/profile.dao";
+export async function fulfillCheckout(sessionId: string, 
     bookingId: string, 
     userId: string,  
     userEmail: string,
-    transactionId: string) {
+    transactionId: string,
+    amount: number) {
 
     const result = await paymentObj.setPaymentSession(sessionId, userId)
     if (!result){
@@ -50,9 +51,11 @@ import { transactionObj } from "../dao/transaction.dao";
       const seatIdsArr = seatIds?.seats.map((seat) => seat.id)
       await ticketObj.createTicket(seatIdsArr!, bookingId)
       const tickets = await ticketObj.getTicketInfo(bookingId)
+      
       await sendTicket(userEmail, tickets, bookingId)
       // TODO: Record/save fulfillment status for this
       // Checkout Session
       await transactionObj.updateTransactionSuccess(transactionId, bookingId)
+      await profileObj.updateProfileSpending(amount, userId)
     }
   }

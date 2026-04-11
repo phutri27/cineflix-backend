@@ -55,6 +55,7 @@ model Movie {
   durationMin    Int
   premiereDate   DateTime
   rated          String
+  trailerUrl      String?
 
   cinemas      Cinema[]
   genres       Genre[]
@@ -121,7 +122,7 @@ model Seat {
   number          Int
 
   seat_typeId     String
-  seatTypeDetail  SeatTypeDetail @relation(fields: [seat_typeId], references: [id], onUpdate: Cascade, onDelete: NoAction)
+  seatTypeDetail  SeatTypeDetail @relation(fields: [seat_typeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   
   screenId        String
   screen          Screen @relation(fields: [screenId], references: [id])
@@ -134,7 +135,7 @@ model Showtime {
   startTime DateTime
   
   movieId   String
-  movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  movie     Movie    @relation(fields: [movieId], references: [id], onDelete: NoAction)
   
   screenId  String
   screen    Screen   @relation(fields: [screenId], references: [id], onDelete: Cascade)

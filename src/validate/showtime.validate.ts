@@ -1,17 +1,27 @@
-    import { body } from "express-validator";
+import { body } from "express-validator";
 import { prisma } from "../lib/prisma";
 
 export const ShowtimeValidation = [
     body("data").isArray({ min: 1 }).withMessage("Data must be an array with at least one showtime"),
     body("data.*.screenId").isString().withMessage("Screen ID must be a string"),
     body("data.*.startTime").isISO8601().toDate().withMessage("Start time must be a valid date")
-    .custom(async (value, {req}) => {
+    .custom(async (value, {req, path}) => {
         const startTime = new Date(value);
-        const datas = req.body.data
+        const match = path.match(/\d+/);
+        const index = match ? parseInt(match[0], 10) : 0;
+
+        const currentItem = req.body.data[index];
+        const currentScreenId = currentItem.screenId;
+        const currentMovieId = currentItem.movieId;
+
+        const showtimeIdToIgnore = currentItem.id
+
+        const ignoreClause = showtimeIdToIgnore ? { id: { not: showtimeIdToIgnore } } : {};
         const response = await prisma.showtime.findFirst({
             where: {
-                screenId: datas[0].screenId,
-                startTime: startTime
+                screenId: currentScreenId,
+                startTime: startTime,
+                ...ignoreClause 
             }
         })
         if (response) {
@@ -19,19 +29,27 @@ export const ShowtimeValidation = [
         }
     
         const showtimeData = await prisma.showtime.findMany({
-            where:{
-                screenId: datas[0].screenId,
+            where: {
+                screenId: currentScreenId,
+                ...ignoreClause 
             },
-            include:{
-                movie:true
-            }
+            include: { movie: true }
         })
+
+        const newMovie = await prisma.movie.findUnique({ 
+            where: { id: currentMovieId },
+            select: { durationMin: true } 
+        });
+
+        if (!newMovie) {
+            throw new Error(`Movie with ID ${currentMovieId} not found`);
+        }
 
         const overlappingShowtime = showtimeData.some((showtime) => {
             const existingStartTime = new Date(showtime.startTime);
             const existingEndTime = new Date(existingStartTime.getTime() + (showtime.movie.durationMin * 1000 * 60) + (15 * 60 * 1000)) 
             const newStartTime = new Date(value);
-            const newEndTime = new Date(newStartTime.getTime() + (showtime?.movie.durationMin * 1000 * 60) + (15 * 60 * 1000));
+            const newEndTime = new Date(newStartTime.getTime() + (newMovie.durationMin * 60000) + (15 * 60000));
 
             return (newStartTime < existingEndTime && newEndTime > existingStartTime);
         });

@@ -8,6 +8,7 @@ const router = express.Router()
 router.get("/auth/google", passport.authenticate('google'))
 router.get("/auth/google/callback", passport.authenticate('google', { failureRedirect: "http://localhost:5173/login", session: true}), login.googleRedirectToAppilcation)
 
+router.get("/user/me", login.getUserInfoGoogle)
 router.post("/", login.loginPost)
 
 export default router

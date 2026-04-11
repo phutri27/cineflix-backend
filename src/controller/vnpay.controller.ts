@@ -20,7 +20,7 @@ import { sendTicket } from "../service/ticket-mail";
 import type { BookingObj } from "./transaction.controller";
 import { transactionObj } from "../dao/transaction.dao";
 import { paymentObj } from "../redis-query/payment-query";
-
+import { profileObj } from "../dao/profile.dao";
 export const vnpayCheckout = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { datas }: {datas: BookingObj} = req.body
@@ -43,9 +43,9 @@ export const vnpayCheckout = async (req: Request, res: Response, next: NextFunct
 
         const userId = req.user?.id as string
         const amount = res.locals.amount
-        const returnUrl = 'http://localhost:5173/payment/complete'
+        const returnUrl = 'http://localhost:5173/payment/vnpay  '
         const expireDate = new Date()
-        expireDate.setMinutes(expireDate.getMinutes() + 1)
+        expireDate.setMinutes(expireDate.getMinutes() + 5)
         const transactionId = uuidv4()
         const bookingId = datas.bookingId || uuidv4()
 
@@ -95,7 +95,7 @@ export const ipnUrlProccess = async (req: any, res: Response, next: NextFunction
 
         if (!verify.isSuccess) {
             await transactionObj.updateTransactionStatus(verify.vnp_TxnRef, "CANCELLED")
-            return res.redirect('http://localhost:5173/payment/cancel')
+            return res.status(400).json(IpnUnknownError)
         }
 
         // Tìm đơn hàng trong cơ sở dữ liệu
@@ -128,6 +128,8 @@ export const ipnUrlProccess = async (req: any, res: Response, next: NextFunction
         await sendTicket(userEmail, tickets, data.bookingId)
 
         await transactionObj.updateTransactionSuccess(data.id, data.bookingId)
+        await profileObj.updateProfileSpending(Number(data.amount), data.booking.user.id)
+
         res.locals.showTimeId = data.booking.showtimeId
         res.locals.userId = data.booking.user.id
         res.locals.transactionId = data.id
@@ -143,7 +145,7 @@ export const getUrlReturn = async (req: any, res: Response, next: NextFunction) 
     try {
         verify = vnpay.verifyReturnUrl(req.query);
         if (!verify.isVerified) {
-            return res.status(400).json({message: "Failed verification"})
+            return res.status(400).json({verified: false})
         }
         if (!verify.isSuccess) {
             return res.status(400).json({success: false})

@@ -5,6 +5,7 @@ export type movie = {
     plot: string,
     posterUrl: string,
     posterPublicId: string,
+    trailerUrl: string,
     duration: number,
     premiere_date: Date,
     rated: string,
@@ -123,6 +124,7 @@ class Movies {
                 durationMin: Number(data.duration),
                 premiereDate: new Date(data.premiere_date),
                 rated: data.rated,
+                trailerUrl: data.trailerUrl,
                 genres: {
                     connect: data.genre_option.map((id: string) => ({ id }))
                 },
@@ -146,6 +148,7 @@ class Movies {
                 posterUrl: data.posterUrl,
                 posterPublicId: data.posterPublicId,
                 durationMin: Number(data.duration),
+                trailerUrl: data.trailerUrl,
                 premiereDate: new Date(data.premiere_date),
                 rated: data.rated,
                 genres: {

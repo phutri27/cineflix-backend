@@ -28,7 +28,8 @@ const io = new Server(httpServer,{
   cors:{
     origin: allowedOrigins,
     credentials: true
-  }
+  },
+  connectionStateRecovery: {}
 })
 
 app.set("socketio", io)
@@ -100,6 +101,8 @@ app.use("/api/snacks", routes.snack)
 app.use("/api/vouchers", routes.voucher)
 app.use("/api/notifications", routes.notifications)
 app.use("/api/seats", routes.seats)
+app.use("/api/user", routes.user)
+app.use("/api/logout", routes.logout)
 
 app.use(errorHandler)
 

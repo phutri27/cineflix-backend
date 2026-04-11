@@ -16,7 +16,7 @@ export const handleSubcribeInit = async (redisClient: RedisClientType, io: Serve
         const delChannel = '__keyevent@0__:del';
 
         const handleSubcribe = async (message: string, channel: string) => {
-            if (message.startsWith(`lock:showTime`)){
+            if (message.startsWith(`lock:showTime`) && channel.startsWith('__keyevent@0__:expired')){
                 const parts = message.split(':')
                 const showtimeId = parts[2]
                 const seatId = parts[4]

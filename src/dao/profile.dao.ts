@@ -138,6 +138,61 @@ class Profile{
         })
         return editedProfile
     }
+
+    async updateProfileSpending(amount: number, userId: string) {
+        const response = await prisma.profile.update({
+            where:{
+                userId: userId
+            },
+            data:{
+                spending_total: {
+                    increment: amount
+                }
+            }
+        })
+
+
+        if (response.member_rank === "diamond"){
+            return
+        }
+        if (response.spending_total.toNumber() >= 5000000 && response.member_rank === "copper"){
+            await prisma.profile.update({
+                where:{
+                    userId: userId
+                },
+                data:{
+                    member_rank: "silver"
+                }
+            })
+        } else if (response.spending_total.toNumber() >= 10000000 && response.member_rank === "silver"){
+            await prisma.profile.update({
+                where:{
+                    userId: userId
+                },
+                data:{
+                    member_rank: "gold"
+                }
+            })
+        } else if (response.spending_total.toNumber() >= 10000000 && response.member_rank === "silver"){
+            await prisma.profile.update({
+                where:{
+                    userId: userId
+                },
+                data:{
+                    member_rank: "gold"
+                }
+            })
+        } else if (response.spending_total.toNumber() >= 20000000 && response.member_rank === "gold"){
+            await prisma.profile.update({
+                where:{
+                    userId: userId
+                },
+                data:{
+                    member_rank: "diamond"
+                }
+            })
+        }
+    }
 }
 
 export const profileObj = new Profile()

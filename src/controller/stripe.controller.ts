@@ -59,7 +59,8 @@ export const checkoutSession = async (req: Request, res: Response, next: NextFun
           userId: userId,
           userEmail: email,
           showTimeId: datas.showtimeId,
-          transactionId: transactionId
+          transactionId: transactionId,
+          totalAmount:amountIncents
         },
         mode: 'payment',
         success_url: `http://localhost:5173/payment/complete?session_id={CHECKOUT_SESSION_ID}`,
@@ -102,7 +103,8 @@ export const checkoutPost = async (req: Request, res: Response, next: NextFuncti
               session?.bookingId as string, 
               session?.userId as string, 
               session?.userEmail as string,
-              session?.transactionId as string)
+              session?.transactionId as string,
+              Number(session?.totalAmount))
               
             res.locals.showTimeId = session?.showTimeId as string
             res.locals.transactionId = session?.transactionId as string

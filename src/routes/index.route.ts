@@ -16,6 +16,8 @@ import checkout from './checkout-session.route.js'
 import webhook from './fulfill-payment.route.js'
 import notifications  from './notification.route'
 import seats from './seats.route.js'
+import user from './user.route'
+import logout from './logout.route'
 
 export default {
     signup,
@@ -35,5 +37,7 @@ export default {
     checkout,
     webhook,
     notifications,
-    seats
+    seats,
+    user,
+    logout
 }

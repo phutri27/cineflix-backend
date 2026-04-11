@@ -14,7 +14,7 @@ class User {
     async getEmail (email: string){
         const user = await prisma.user.findUnique({
             where:{
-                email: email
+                email: email.toLowerCase().trim()
             }
         })
         return user
@@ -42,9 +42,10 @@ class User {
     }
 
     async createUser(email: string, hashed_password: string, first_name: string, last_name: string){
+        const sanitizedEmail = email.toLowerCase().trim()
         const user = await prisma.user.create({
             data:{
-                email: email,
+                email: sanitizedEmail,
                 hashed_password: hashed_password,
                 first_name: first_name,
                 last_name: last_name

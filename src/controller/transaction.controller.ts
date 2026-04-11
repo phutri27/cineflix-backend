@@ -42,17 +42,3 @@ export const calculateAmount = async (req: Request, res: Response, next: NextFun
     res.locals.amount = totalAmount
     next()
 }
-
-export const expireSeatPayment = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { sessionId } = req.body
-        const data = await transactionObj.getCancelTransaction(sessionId!)
-        const seatIds = data?.booking.seats.map((seat) => seat.id)
-        for (const seatId of seatIds!){
-            await seatLockObj.expireSeat(data?.booking.showtimeId!, seatId)
-        }
-        return res.status(200).json({ success: true })
-    } catch (error) {
-        next(error)
-    }
-}

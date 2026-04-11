@@ -11,10 +11,6 @@ class Signup{
             EX: 900,
             NX: true
         });
-        
-        if (!result) {
-            throw new Error("An OTP has already been sent to this email. Please check your inbox or wait 15 minutes to try again.");
-        }
     }
 
     async getSignupInfo(key: string){

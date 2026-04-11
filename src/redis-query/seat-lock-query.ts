@@ -39,7 +39,6 @@ class SeatLock {
                 seatId: true
             }
         })
-
         const confirmedSeatIds = confirmedBookings.map((booking) => booking.seatId)
 
         const trackedSeats = await redisClient.sMembers(`tracker:showtimes:${showTimeId}`)

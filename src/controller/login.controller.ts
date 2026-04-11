@@ -32,5 +32,14 @@ export const loginPost = (req: Request, res: Response, next: NextFunction) => {
 }
 
 export const googleRedirectToAppilcation = (req: Request, res: Response, next: NextFunction) => {
-    return res.redirect(process.env.FRONTEND_ORIGIN as string)
+    return res.redirect(`${process.env.FRONTEND_ORIGIN}`)
+}
+
+export const getUserInfoGoogle = async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user
+    if (!user) {
+        return res.end()
+    }
+
+    res.status(200).json({user})
 }

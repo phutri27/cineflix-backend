@@ -30,10 +30,20 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
     }
 }
 
+export const getUserEmail = async (req: Request, res: Response, next: NextFunction) => {
+    res.locals.userCred = req.body.email
+    next()
+}
+
+export const getUserId = async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.user?.id
+    res.locals.userCred = userId
+    next()
+}
+
 export const confirmOtp = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userCred = req.user?.id as string || req.body?.email as string
-        console.log(userCred)
+        const userCred = res.locals.userCred
         const { otp } = matchedData(req)
         const savedOTP = await OTPobj.getOTP(userCred)
         const valid = otp === savedOTP

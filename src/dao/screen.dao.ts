@@ -20,6 +20,14 @@ class Screen{
             },
             orderBy:{
                 createdAt: 'desc'
+            },
+            include:{
+                showtimes: {
+                    select:{
+                        id: true,
+                        startTime: true
+                    }
+                }
             }
         })
 

@@ -58,6 +58,7 @@ export const insertMovies = async (req: Request, res: Response, next: NextFuncti
 export const updateMovies = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string
     const data = matchedData(req)
+    console.log(data)
     const filePath = req.file?.path as string 
     const oldMovie = await moviesObj.getSpecificMovie(id)
     let imageUrl:any

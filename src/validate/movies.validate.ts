@@ -32,6 +32,8 @@ export const validateMovie = [
     .notEmpty()
     .withMessage(`Rating ${emptyMsg}`),
 
+    body("trailerUrl"),
+
     body("genre_option")
     .notEmpty().withMessage(`Genre option ${emptyMsg}`),
 
