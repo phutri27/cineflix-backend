@@ -23,9 +23,17 @@ class Screen{
             },
             include:{
                 showtimes: {
+                    where:{
+                        isCancelled: false
+                    },
                     select:{
                         id: true,
-                        startTime: true
+                        startTime: true,
+                        movie:{
+                            select:{
+                                id: true
+                            }
+                        }
                     }
                 }
             }
@@ -61,7 +69,8 @@ class Screen{
                     {
                         showtimes: {
                             some: {
-                                movieId: movieId
+                                movieId: movieId,
+                                isCancelled: false
                             }
                         }
                     }
@@ -70,7 +79,8 @@ class Screen{
             include:{
                 showtimes: {
                     where: {
-                        movieId: movieId
+                        movieId: movieId,
+                        isCancelled: false
                     },
                     orderBy:{
                         startTime: "asc"

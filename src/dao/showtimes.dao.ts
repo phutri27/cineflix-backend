@@ -72,7 +72,8 @@ class Showtime {
         const showtimes = await prisma.showtime.findMany({
             where: {
                 movieId: movieId,
-                screenId: screenId
+                screenId: screenId,
+                isCancelled: false
             },
             orderBy:{
                 startTime: 'asc'
@@ -87,7 +88,7 @@ class Showtime {
         endOfDay.setHours(23, 59, 59, 999);
         const showtimes = await prisma.movie.findUnique({
             where: {
-                id: movieId
+                id: movieId,
             },
             select: {
                 cinemas: {
@@ -103,10 +104,14 @@ class Showtime {
                                 name: true,
                                 showtimes: {
                                     where: {
-                                        startTime: {
-                                            gte: new Date(date),
-                                            lte: endOfDay
-                                        }
+                                        AND:[
+                                            {startTime: {
+                                                gte: new Date(date),
+                                                lte: endOfDay
+                                            }},
+                                            {isCancelled: false},
+                                            {movie:{id: movieId}}
+                                        ]
                                     },
                                     select: {
                                         id: true,
@@ -141,30 +146,24 @@ class Showtime {
         return result
     }
 
-    async updateShowtime(movieId: string, cinemaId: string, data: ShowtimeProp[]){
-        await prisma.$transaction([
-            prisma.showtime.deleteMany({
-                where: {
-                    movieId: movieId,
-                    screen: {
-                        cinemaId: cinemaId
-                    }
-                }
-            }),
-            prisma.showtime.createMany({
-                data: data.map((d) => ({
-                    movieId: movieId, 
-                    screenId: d.screenId,
-                    startTime: new Date(d.startTime)
-                }))
-            })
-        ]);
+    async updateShowtime(id: string, data: ShowtimeProp){
+        await prisma.showtime.update({
+            where:{
+                id: id
+            }, 
+            data:{
+                startTime: data.startTime
+            }
+        })
     }
 
     async deleteShowTime(id: string){
-        await prisma.showtime.delete({
+        await prisma.showtime.update({
             where: {
                 id: id
+            },
+            data:{
+                isCancelled: true
             }
         })
     }

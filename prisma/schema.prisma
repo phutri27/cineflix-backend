@@ -140,6 +140,8 @@ model Showtime {
   screenId  String
   screen    Screen   @relation(fields: [screenId], references: [id], onDelete: Cascade)
 
+  isCancelled Boolean @default(false)
+
   bookings  Booking[]
 
   @@unique(name:"showtime_unique", fields: [startTime, screenId])

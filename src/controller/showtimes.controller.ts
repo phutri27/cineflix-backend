@@ -44,9 +44,9 @@ export const getShowtimeByDateAndCity = async (req: Request, res: Response, next
 
 export const updateShowtime = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { movieId, cinemaId } = req.query;
-        const { data }: {data: ShowtimeProp[]}  = req.body;
-        await showtimeObj.updateShowtime(movieId as string, cinemaId as string, data);
+        const id = String(req.params.id)
+        const { data }: {data: ShowtimeProp} = matchedData(req);
+        await showtimeObj.updateShowtime(id, data);
         res.status(200).json({ message: "Showtime updated successfully" });
     } catch (error) {
         next(error);
