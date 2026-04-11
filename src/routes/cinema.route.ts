@@ -6,5 +6,4 @@ const router = express.Router()
 router.get("/", cinemas.getAllCinema)
 router.get("/:cinema_id/movies", cinemas.getMovieByCinema)
 
-
 export default router

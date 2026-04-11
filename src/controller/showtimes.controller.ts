@@ -5,7 +5,6 @@ import { showtimeObj, type CreateShowtimeProp, type ShowtimeProp } from "../dao/
 export const createShowtime = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { data } = matchedData(req)
-        console.log(data)
         await showtimeObj.createShowtime(data as CreateShowtimeProp[]);
         res.status(201).json({ message: "Showtime created successfully" });
     } catch (error) {

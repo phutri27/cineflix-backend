@@ -13,17 +13,19 @@ export const getMovieByCinema = async (req: Request, res: Response, next: NextFu
 
 export const getAllCinema = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { city_id, cinemaId } = req.query
+        const { city_id, cinemaId, date } = req.query
+        if (cinemaId && date && city_id){
+            const cinema = await cinemaObj.getCinemaSpecific(cinemaId.toString(), new Date(date as string))
+            return res.status(200).json(cinema)
+        }
         if (city_id){
             const cinemas = await cinemaObj.getCinemaByCity(Number(city_id))
             return res.status(200).json(cinemas)
         }
-        
         if (cinemaId){
             const cinema = await cinemaObj.getSpecificCinema(cinemaId as string)
             return res.status(200).json(cinema)
         }
-
         const cinemas = await cinemaObj.getAllCinemas()
         return res.status(200).json(cinemas)
     } catch (error) {

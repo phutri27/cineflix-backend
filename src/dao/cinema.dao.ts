@@ -142,6 +142,72 @@ class Cinema{
             }
         })
     }
+
+    async getCinemaSpecific(id: string, date: Date){
+        const endOfDay = new Date(date.setHours(date.getHours()))
+        endOfDay.setHours(23, 59, 59, 999);
+        const response = await prisma.cinema.findUnique({
+            where:{
+                id: id
+            },
+            include:{
+                movies:{
+                    where:{
+                        showtimes:{
+                            some:{
+                                startTime:{
+                                    gte: new Date(date),
+                                    lte: endOfDay
+                                }
+                            }
+                        }
+                    },
+                    select:{
+                        id: true,
+                        title:true,
+                        rated:true,
+                        posterUrl: true,
+                        showtimes:{
+                            where:{
+                                screen:{
+                                    cinemaId: id
+                                },
+                                startTime:{
+                                    gte: new Date(date),
+                                    lte: endOfDay
+                                }
+                            },
+                            select:{
+                                id: true,
+                                startTime: true,
+                                screen:{
+                                    select:{
+                                        name: true
+                                    }
+                                }
+                            },
+                            orderBy: {
+                                startTime: 'asc'
+                            }
+                        }
+                    }
+                },
+                seatType:{
+                    where:{
+                        NOT: {
+                            seat_type: "EMPTY"
+                        }
+                    },
+                    select:{
+                        id: true,
+                        price: true,
+                        seat_type: true
+                    },
+                }
+            }
+        })
+        return response
+    }
 }
 
 export const cinemaObj = new Cinema()
