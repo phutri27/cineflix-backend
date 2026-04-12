@@ -103,6 +103,7 @@ app.use("/api/notifications", routes.notifications)
 app.use("/api/seats", routes.seats)
 app.use("/api/user", routes.user)
 app.use("/api/logout", routes.logout)
+app.use("/api/transaction", routes.transaction)
 
 app.use(errorHandler)
 

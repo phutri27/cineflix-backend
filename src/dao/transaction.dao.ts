@@ -202,6 +202,55 @@ class Transaction{
         })
         return response
     }
+
+    async revenueByCinema(){
+        const response = await prisma.$queryRaw`SELECT 
+        c.name AS "cinemaName",
+        COALESCE(SUM(t.amount), 0) AS "totalRevenue"
+        FROM "Cinema" c
+        JOIN "Screen" s ON c.id = s."cinemaId"
+        JOIN "Showtime" st ON s.id = st."screenId"
+        JOIN "Booking" b ON st.id = b."showtimeId"
+        JOIN "Transaction" t ON b.id = t."bookingId"
+        WHERE t.status = 'SUCCESS'
+        GROUP BY c.id, c.name
+        ORDER BY "totalRevenue" DESC;`
+    
+        return response
+    }
+
+    async revenueByMovie(){
+        const response = await prisma.$queryRaw`
+            SELECT 
+            m.title AS "movieTitle",
+            COALESCE(SUM(t.amount), 0) AS "totalRevenue"
+            FROM "Movie" m
+            JOIN "Showtime" st ON m.id = st."movieId"
+            JOIN "Booking" b ON st.id = b."showtimeId"
+            JOIN "Transaction" t ON b.id = t."bookingId"
+            WHERE t.status = 'SUCCESS'
+            GROUP BY m.id, m.title
+            ORDER BY "totalRevenue" DESC;
+        `
+    
+        return response
+    }
+
+    async revenueByUser(){
+        const response = await prisma.$queryRaw`
+            SELECT 
+            u.email AS "email",
+            COALESCE(SUM(t.amount), 0) AS "totalSpent"
+            FROM "User" u
+            JOIN "Booking" b ON u.id = b."userId"
+            JOIN "Transaction" t ON b.id = t."bookingId"
+            WHERE t.status = 'SUCCESS'
+            GROUP BY u.first_name, u.last_name, u.email
+            ORDER BY "totalSpent" DESC
+            LIMIT 5;
+        `
+        return response 
+    }
 }
 
 export const transactionObj = new Transaction()

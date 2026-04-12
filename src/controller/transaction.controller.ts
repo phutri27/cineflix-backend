@@ -1,7 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { bookingObj } from "../dao/booking.dao";
 import { transactionObj } from "../dao/transaction.dao";
-import { seatLockObj } from "../redis-query/seat-lock-query";
 
 export interface PricingDetailProp {
     id: string
@@ -41,4 +39,31 @@ export const calculateAmount = async (req: Request, res: Response, next: NextFun
     const totalAmount = (totalSeatAmount + totalSnackAmount) - ((totalDiscount / 100) * (totalSeatAmount + totalSnackAmount))
     res.locals.amount = totalAmount
     next()
+}
+
+export const revenueByCinema = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const response = await transactionObj.revenueByCinema()
+        return res.status(200).json(response)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const revenueByMovie = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const response = await transactionObj.revenueByMovie()
+        return res.status(200).json(response)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const revenueByUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const response = await transactionObj.revenueByUser()
+        return res.status(200).json(response)
+    } catch (error) {
+        next(error)
+    }
 }

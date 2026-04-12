@@ -18,6 +18,7 @@ import notifications  from './notification.route'
 import seats from './seats.route.js'
 import user from './user.route'
 import logout from './logout.route'
+import transaction from './transaction.route'
 
 export default {
     signup,
@@ -39,5 +40,6 @@ export default {
     notifications,
     seats,
     user,
-    logout
+    logout,
+    transaction
 }
