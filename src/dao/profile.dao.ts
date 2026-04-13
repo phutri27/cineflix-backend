@@ -11,13 +11,14 @@ class Profile{
     }
 
     async getBookingHistory(userId: string, page: number = 1, limit: number = 5){
-        const skipAmount = (page - 1) * limit
+    const skipAmount = (page - 1) * limit
 
-        const totalBookings = await prisma.booking.count({
-            where:{
-                userId: userId
-            }
-        })
+    const totalBookings = await prisma.booking.count({
+        where:{
+            userId: userId,
+            status: "PAID"
+        }
+    })
 
     const bookingHistory =  await prisma.booking.findMany({
             where:{
