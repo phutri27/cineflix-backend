@@ -77,8 +77,8 @@ class Ticket{
         })
 
         const tickets = response.map((data) => {
-            const startTime = data?.booking.showtime.startTime.toString().replace("Z", "")
-            const formattedStartTime = startTime ? format(new Date(startTime), "HH:mm dd/MM/y") : null
+            const startTime = data?.booking.showtime.startTime
+            const formattedStartTime = startTime ? format(startTime, "HH:mm dd/MM/y") : null
             const result = {
                 id: data?.id,
                 seat: `${data?.seat.row}${data?.seat.number} `,
