@@ -1,4 +1,3 @@
-import { toUSVString } from "node:util";
 import { prisma } from "../lib/prisma.js";
 
 class Profile{
@@ -20,9 +19,10 @@ class Profile{
             }
         })
 
-        const bookingHistory =  await prisma.booking.findMany({
+    const bookingHistory =  await prisma.booking.findMany({
             where:{
-                userId: userId
+                userId: userId,
+                status: "PAID"
             },
             orderBy:{
                 createdAt: "desc"
@@ -31,19 +31,26 @@ class Profile{
             skip: skipAmount,
             select:{
                 id: true,
-                totalAmount: true,
                 createdAt: true,
-                bankReference: true,
-                status: true,
-                movie:{
-                    select:{
-                        title: true,
-                        posterUrl: true
-                    }
-                },
                 showtime:{
                     select:{
-                        startTime: true
+                        startTime: true,
+                        movie:{
+                            select:{
+                                title: true,
+                                posterUrl: true
+                            }
+                        },
+                        screen:{
+                            select:{
+                                name: true,
+                                cinema:{
+                                    select:{
+                                        name: true
+                                    }
+                                }
+                            }
+                        }
                     }
                 },
                 vouchers:{
@@ -57,30 +64,16 @@ class Profile{
                         }
                     }
                 },
-                tickets:{
+                seats:{
                     select:{
-                        seat:{
+                        row: true,
+                        number: true,
+                        seatTypeDetail:{
                             select:{
-                                row: true,
-                                number: true,
-                                seatTypeDetail:{
-                                    select:{
-                                        seat_type: true,
-                                        price: true
-                                    }
-                                },
-                                screen:{
-                                    select:{
-                                        name: true,
-                                        cinema:{
-                                            select:{
-                                                name: true
-                                            }
-                                        }
-                                    }
-                                }
+                                seat_type: true,
+                                price: true
                             }
-                        }
+                        },
                     }
                 },
                 snacks:{
@@ -92,6 +85,14 @@ class Profile{
                                 price: true
                             }
                         }
+                    }
+                },
+                transaction:{
+                    where:{
+                        status: "SUCCESS"
+                    },
+                    select:{
+                        amount: true
                     }
                 }
             }
