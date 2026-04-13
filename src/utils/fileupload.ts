@@ -26,3 +26,18 @@ export const deleteFile = async (filePublicId: string) => {
         console.error(error)
     }
 }
+
+export const uploadBufferFile = async (buffer: Buffer, folderUrl: string) => {
+    try {
+        return new Promise((resolve, reject) => {
+            cloudinary.uploader.upload_stream({folder: folderUrl}, (error, result) => {
+                if (error){
+                    return reject(error)
+                }
+                return resolve(result)
+            }).end(buffer)
+        })
+    } catch (error) {
+        console.error(error)
+    }
+}

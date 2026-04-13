@@ -235,7 +235,8 @@ model Ticket {
   
   seatId     String
   seat       Seat     @relation(fields: [seatId], references: [id])
-  
+
+  ticketUrl  String? 
 }
 
 model Snack {

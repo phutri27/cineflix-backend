@@ -1,6 +1,8 @@
 import nodemailer from 'nodemailer'
 import QRCode from 'qrcode'
 import { type TicketResponse } from '../dao/ticket.dao'
+import { uploadBufferFile } from '../utils/fileupload'
+import { ticketObj } from '../dao/ticket.dao'
 export const sendTicket = async (userEmail: string, tickets: TicketResponse[], bookingId: string) => {
     const testAccount = await nodemailer.createTestAccount()
 
@@ -30,6 +32,9 @@ export const sendTicket = async (userEmail: string, tickets: TicketResponse[], b
     const attach = await Promise.all(tickets.map(async (ticket) => {
         const qrData = `Ticket ID: ${ticket.id}\nMovie: ${ticket.movie}\nShowtime: ${ticket.showtime}\nSeat: ${ticket.seat}\nScreen: ${ticket.screen}\nCinema: ${ticket.cinema}`
         const qrCodeImage = await QRCode.toBuffer(qrData)
+        const folderUrl = `movies_ticket/${ticket.cinema}/${ticket.screen}/${ticket.showtime}`
+        const result: any = await uploadBufferFile(qrCodeImage, folderUrl)
+        await ticketObj.insertTicketUrl(ticket.id, result.secure_url)
         return {
             filename: `ticket-${ticket.id}.png`,
             content: qrCodeImage,

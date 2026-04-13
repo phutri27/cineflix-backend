@@ -102,6 +102,17 @@ class Ticket{
 
         return response
     }
+
+    async insertTicketUrl(id: string, url: string){
+        await prisma.ticket.update({
+            where:{
+                id: id
+            },
+            data:{
+                ticketUrl: url
+            }
+        })
+    }
 }
 
 export const ticketObj = new Ticket()
