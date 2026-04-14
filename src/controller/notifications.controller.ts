@@ -41,6 +41,16 @@ export const getUserNotis = async (req: Request, res: Response, next: NextFuncti
     }
 }
 
+export const getUnreadNotis = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId = String(req.user?.id)
+        const unreadNoti = await notiObj.getUnreadNoti(userId)
+        return res.status(200).json(unreadNoti)
+    } catch (error){
+        next(error)
+    }
+}
+
 export const updateNoti = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const notiId  = req.params.id

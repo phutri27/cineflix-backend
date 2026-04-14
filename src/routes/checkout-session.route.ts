@@ -7,7 +7,7 @@ import { calculateAmount } from '../controller/transaction.controller'
 
 const router = express.Router()
 
-router.post("/create-checkout-session", calculateAmount, checkoutSession, seatLock)
+router.post("/create-checkout-session",calculateAmount, checkoutSession, seatLock)
 
 router.post("/vnpay-checkout", calculateAmount, vnpayCheckout, seatLock)
 router.delete("/:sessionId", cancelCheckout)

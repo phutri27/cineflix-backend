@@ -4,6 +4,8 @@ import * as notis from '../controller/notifications.controller'
 const router = express.Router()
 
 router.get("/", notis.getUserNotis)
+router.get("/unread-noti", notis.getUnreadNotis)
+
 router.patch("/:id", notis.updateNoti)
 router.delete("/:id", notis.deleteNoti)
 

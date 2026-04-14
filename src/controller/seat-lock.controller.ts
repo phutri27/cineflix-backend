@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction} from 'express'
 import { seatLockObj } from '../redis-query/seat-lock-query'
 import type { BookingObj } from './transaction.controller'
+
 export const seatLock = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { datas }: {datas: BookingObj} = req.body

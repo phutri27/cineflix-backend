@@ -13,8 +13,7 @@ import "dotenv/config"
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 export const checkoutSession = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { datas }: {datas: BookingObj} = req.body;
-      
+      const { datas }: {datas: BookingObj} = req.body
       if (datas.bookingId){
         const tickets = await ticketObj.getPaidTicket(datas.bookingId!)
         if (tickets > 0){

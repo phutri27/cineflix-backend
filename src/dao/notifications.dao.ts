@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma";
+    import { prisma } from "../lib/prisma";
 
 class Notification{
     async createNoti(title: string, content: string, userId: string){
@@ -37,6 +37,17 @@ class Notification{
             totalPages: Math.ceil(totalBookings / limit),
             currentPage: page
         }
+    }
+
+    async getUnreadNoti(userId: string) {
+        const response = await prisma.notifications.count({
+            where:{
+                userId: userId,
+                readStatus: false
+            }
+        })
+
+        return response
     }
 
     async updateNotiStatus(notiId: string){
