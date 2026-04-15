@@ -21,6 +21,7 @@ export const ShowtimeValidation = [
             where: {
                 screenId: currentScreenId,
                 startTime: startTime,
+                isCancelled: false,
                 ...ignoreClause 
             }
         })
@@ -31,6 +32,7 @@ export const ShowtimeValidation = [
         const showtimeData = await prisma.showtime.findMany({
             where: {
                 screenId: currentScreenId,
+                isCancelled: false,
                 ...ignoreClause 
             },
             include: { movie: true }
@@ -81,6 +83,7 @@ export const updateShowTimeValidation = [
             where: {
                 screenId: currentScreenId,
                 startTime: startTime,
+                isCancelled: false,
                 ...ignoreClause 
             }
         })
@@ -91,6 +94,7 @@ export const updateShowTimeValidation = [
         const showtimeData = await prisma.showtime.findMany({
             where: {
                 screenId: currentScreenId,
+                isCancelled: false,
                 ...ignoreClause 
             },
             include: { movie: true }

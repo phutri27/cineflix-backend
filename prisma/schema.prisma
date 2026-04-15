@@ -144,7 +144,6 @@ model Showtime {
 
   bookings  Booking[]
 
-  @@unique(name:"showtime_unique", fields: [startTime, screenId])
 }
 
 model Notifications{

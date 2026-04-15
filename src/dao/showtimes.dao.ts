@@ -18,7 +18,6 @@ class Showtime {
                 movieId: data.movieId,
                 screenId: data.screenId
             })),
-            skipDuplicates: true
         })
     }
 
@@ -91,7 +90,9 @@ class Showtime {
         today.setHours(0, 0, 0, 0)
         
         if (today.getTime() === date.getTime()){
-            date = new Date()
+            const now = new Date()
+            now.setMinutes(now.getMinutes() - 15)
+            date = now 
         }
         const showtimes = await prisma.movie.findUnique({
             where: {

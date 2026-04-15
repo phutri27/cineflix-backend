@@ -151,7 +151,9 @@ class Cinema{
         today.setHours(0, 0, 0, 0)
         
         if (today.getTime() === date.getTime()){
-            date = new Date()
+            const now = new Date()
+            now.setMinutes(now.getMinutes() - 15)
+            date = now 
         }
         const response = await prisma.cinema.findUnique({
             where:{
