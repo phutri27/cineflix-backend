@@ -157,8 +157,9 @@ class Cinema{
                             some:{
                                 startTime:{
                                     gte: new Date(date),
-                                    lte: endOfDay
-                                }
+                                    lte: endOfDay,
+                                },
+                                isCancelled: false
                             }
                         }
                     },
@@ -175,7 +176,8 @@ class Cinema{
                                 startTime:{
                                     gte: new Date(date),
                                     lte: endOfDay
-                                }
+                                },
+                                isCancelled: false
                             },
                             select:{
                                 id: true,
@@ -206,6 +208,9 @@ class Cinema{
                 }
             }
         })
+
+        const filteredMovies = response?.movies.filter((movie) => movie.showtimes.length > 0)
+        Object.assign(response!, {movies: filteredMovies})
         return response
     }
 }
