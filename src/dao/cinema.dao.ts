@@ -146,6 +146,13 @@ class Cinema{
     async getCinemaSpecific(id: string, date: Date){
         const endOfDay = new Date(date.setHours(date.getHours()))
         endOfDay.setHours(23, 59, 59, 999);
+
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        
+        if (today.getTime() === date.getTime()){
+            date = new Date()
+        }
         const response = await prisma.cinema.findUnique({
             where:{
                 id: id

@@ -86,6 +86,13 @@ class Showtime {
     async getShowtimeByDate(movieId: string, date: Date, cityId: number){
         const endOfDay = new Date(date.setHours(date.getHours()))
         endOfDay.setHours(23, 59, 59, 999);
+
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        
+        if (today.getTime() === date.getTime()){
+            date = new Date()
+        }
         const showtimes = await prisma.movie.findUnique({
             where: {
                 id: movieId,
