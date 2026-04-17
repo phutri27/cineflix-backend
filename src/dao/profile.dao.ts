@@ -95,6 +95,17 @@ class Profile{
                     select:{
                         amount: true
                     }
+                },
+                tickets:{
+                    select:{
+                        ticketUrl: true,
+                        seat:{
+                            select:{
+                                row: true,
+                                number: true
+                            }
+                        }
+                    }
                 }
             }
         })

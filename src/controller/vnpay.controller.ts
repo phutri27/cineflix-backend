@@ -98,10 +98,7 @@ export const ipnUrlProccess = async (req: any, res: Response, next: NextFunction
             return res.status(400).json(IpnUnknownError)
         }
 
-        // Tìm đơn hàng trong cơ sở dữ liệu
-        const data = await transactionObj.getTransactionInfo(verify.vnp_TxnRef); // Phương thức tìm đơn hàng theo id, bạn cần tự triển khai
-
-        // Nếu không tìm thấy đơn hàng hoặc mã đơn hàng không khớp
+        const data = await transactionObj.getTransactionInfo(verify.vnp_TxnRef); 
         if (!data || verify.vnp_TxnRef !== data.id) {
             return res.status(400).json(IpnOrderNotFound);
         }
@@ -110,13 +107,11 @@ export const ipnUrlProccess = async (req: any, res: Response, next: NextFunction
             return res.status(400).json(InpOrderAlreadyConfirmed)
         }
 
-        // Nếu số tiền thanh toán không khớp
         if (verify.vnp_Amount !== data.amount.toNumber()) {
             await transactionObj.updateTransactionStatus(data.id, 'FAILED')
             return res.status(400).json(IpnInvalidAmount);
         }
 
-        // Nếu đơn hàng đã được xác nhận trước đó
         if (data.status === 'SUCCESS') {
             return res.status(200).json(InpOrderAlreadyConfirmed);
         }
