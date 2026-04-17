@@ -44,6 +44,8 @@ model Profile {
   
   userId         String  @id
   user           User    @relation(fields: [userId], references: [id])
+
+  vouchers        ProfileVoucher[]
 }
 
 model Movie {
@@ -197,8 +199,10 @@ model Voucher {
   startAt        DateTime
   expireAt       DateTime
   activationCode String   @unique
+  maxUsed        Int      
 
   bookings       BookingVoucher[]
+  profiles       ProfileVoucher[]
 }
 
 model BookingVoucher {
@@ -210,6 +214,17 @@ model BookingVoucher {
 
   quantity  Int     @default(1)
   @@id([bookingId, voucherId])
+}
+
+model ProfileVoucher{
+  userId         String
+  user           Profile     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  voucherId      String
+  voucher        Voucher  @relation(fields: [voucherId], references: [id], onDelete: Cascade)
+
+  quantity        Int      @default(1)
+  @@id([userId, voucherId])
 }
 
 model SeatTypeDetail{

@@ -12,8 +12,9 @@ export const validateVoucher = [
     body("reduceAmount")
     .notEmpty()
     .withMessage(`Reduce amount ${emptyMsg}`)
-    .isNumeric()
-    .withMessage(`Reduce amount must only be number`),
+    .isInt({ gt: 0 })
+    .withMessage(`Reduce amount must only be number and greater than 0`),
+
 
     body("startAt")
     .notEmpty()
@@ -39,7 +40,13 @@ export const validateVoucher = [
     .notEmpty()
     .withMessage(`Quantity ${emptyMsg}`)
     .isNumeric()
-    .withMessage(`Quantity must only be number`)
+    .withMessage(`Quantity must only be number`),
+
+    body("maxUsed")
+    .notEmpty()
+    .withMessage(`Maximum time used ${emptyMsg}`)
+    .isInt({ gt: 0})
+    .withMessage(`Maximum time used must only be number and greater than 0`)
 ]
 
 export const validateVoucherActivationCode = [
@@ -48,8 +55,9 @@ export const validateVoucherActivationCode = [
     .withMessage(`Activation code ${emptyMsg}`)
 ]
 
+
 export const validateVoucherCodeUser = [
     body("voucher_code").trim()
     .notEmpty()
-    .withMessage(`Voucher code ${emptyMsg}`)
+    .withMessage(`Voucher code ${emptyMsg}`),
 ]

@@ -5,6 +5,6 @@ import { validateVoucherCodeUser } from '../validate/voucher.validate'
 
 const router = express.Router()
 
-router.post("/", validateVoucherCodeUser, handleValidationErrors, activateVouchers)
+router.post("/", validateVoucherCodeUser,handleValidationErrors, activateVouchers)
 
 export default router

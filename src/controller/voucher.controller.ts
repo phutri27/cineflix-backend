@@ -14,16 +14,22 @@ export const getAllVouchers =async (req: Request, res: Response, next: NextFunct
 
 export const activateVouchers = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { voucher_code } = matchedData(req)
+        const userId = String(req.user?.id)
+        const { voucher_code }: {voucher_code: string} = matchedData(req)
+        const voucherIds: {id: string, quantity: number}[]  = req.body.voucherIds
         const hashed_code = crypto.createHash('sha256').update(voucher_code).digest('hex')
         const voucher = await voucherObj.compareVoucher(hashed_code)
         if (voucher){
-            await voucherObj.reduceQuantity(voucher.id)
+            if (voucherIds){
+                const foundVoucher = voucherIds.find((voucher) => voucher.id === voucher.id)
+                if (foundVoucher && (foundVoucher?.quantity >= voucher.maxUsed)){
+                    return res.status(400).json({message: "Limit exceeded"})
+                }
+            }
             return res.status(200).json(voucher)
+
         } 
-        return res.status(401).json({
-            message: "No voucher with that activate code exists"
-        })
+        return res.status(400).json({ message: "Incorrect voucher code" })
     } catch (error) {
         return next(error)
     }

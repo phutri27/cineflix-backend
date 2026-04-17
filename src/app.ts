@@ -1,4 +1,4 @@
-import express from "express"
+  import express from "express"
 import "dotenv/config"
 import cors from "cors"
 import passport from 'passport'
@@ -41,6 +41,7 @@ io.on("connection", (socket) => {
   socket.on("leave-room", (userId) => {
     socket.leave(userId)
   })
+
 })
 
 app.use(helmet())

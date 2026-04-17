@@ -3,9 +3,10 @@ import { prisma } from "../lib/prisma";
 export interface VoucherData{
     name: string,
     reduceAmount: number,
-    quantity: number,
+    quantity: number 
     startAt: Date,
     expireAt: Date,
+    maxUsed: number
 }
 
 export interface VoucherProp extends VoucherData{
@@ -41,7 +42,8 @@ class Vouchers{
             select:{
                 id: true,
                 name: true,
-                reduceAmount: true
+                reduceAmount: true,
+                maxUsed: true
             }
         })
         return voucherCode
@@ -68,7 +70,8 @@ class Vouchers{
                 startAt: new Date(data.startAt),
                 expireAt: new Date(data.expireAt),
                 quantity: Number(data.quantity),
-                activationCode: data.activationCode
+                activationCode: data.activationCode,
+                maxUsed: Number(data.maxUsed)
             }
         })
     }
@@ -81,6 +84,7 @@ class Vouchers{
                 startAt: new Date(data.startAt),
                 expireAt: new Date(data.expireAt),
                 quantity: Number(data.quantity),
+                maxUsed: data.maxUsed
             },
             where:{
                 id: id
@@ -94,6 +98,54 @@ class Vouchers{
                 id: id
             }
         })
+    }   
+
+    async addVoucherToProfile(userId: string, voucherId: string){
+        await prisma.$transaction([
+            prisma.profileVoucher.upsert({
+                where:{
+                    userId_voucherId:{
+                        userId: userId,
+                        voucherId: voucherId
+                    }
+                },
+                update:{
+                    quantity:{
+                        increment: 1
+                    }
+                },
+                create:{
+                    userId: userId,
+                    voucherId: voucherId
+                }
+            }),
+            prisma.voucher.update({
+                where:{
+                    id: voucherId
+                },
+                data:{
+                    quantity:{
+                        decrement: 1
+                    }
+                }
+            })
+        ])
+    }
+
+    async getUserVoucherQuantity(userId: string, voucherId: string){
+        const response = await prisma.profileVoucher.findUnique({
+            where:{
+                userId_voucherId: {
+                    userId: userId,
+                    voucherId: voucherId
+                }
+            },
+            select:{
+                quantity: true
+            }
+        })
+
+        return response?.quantity
     }
 }
 

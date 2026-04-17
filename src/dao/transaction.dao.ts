@@ -3,6 +3,7 @@ import { prisma } from "../lib/prisma";
 import { TransactionStatus } from "../../generated/prisma/enums";
 import { paymentObj } from "../redis-query/payment-query";
 import type { PricingDetailProp } from "../controller/transaction.controller";
+import { voucherObj } from "./vouchers.dao";
 
 interface BookingProps{
     id: string,
@@ -65,6 +66,45 @@ class Transaction{
         })
         ])
 
+        if (booking.vouchers?.length){
+            for (const voucher of booking.vouchers){
+                const voucherProfile = await prisma.profileVoucher.findUnique({
+                    where: {
+                        userId_voucherId:{
+                            voucherId: voucher.voucherId,
+                            userId: userId
+                        }
+                    }
+                })
+
+                if (voucherProfile) {
+                    await prisma.profileVoucher.update({
+                        where:{
+                            userId_voucherId:{
+                                userId: userId,
+                                voucherId: voucher.voucherId
+                            }
+                        },
+                        data:{
+                            quantity:{
+                                decrement: voucher.quantity
+                            }
+                        }
+                    })
+                } else {
+                    await prisma.voucher.update({
+                        where:{
+                            id: voucher.voucherId
+                        },
+                        data: {
+                            quantity:{
+                                decrement: voucher.quantity
+                            }
+                        }
+                    })
+                }
+            }
+        }
     }
 
     async createTransaction(transaction: TransactionProps){

@@ -8,14 +8,14 @@ export const validateProfile = [
     .notEmpty()
     .bail()
     .withMessage(`First name ${emptyMsg}`)
-    .isAlpha('en-US', { ignore: ' ' })
+    .matches(/^[\p{L}\s\-]+$/u)
     .withMessage(`First name ${alpha}`),
 
     body("last_name").trim()
     .notEmpty()
     .bail()
     .withMessage(`Last name ${emptyMsg}`)
-    .isAlpha('en-US', { ignore: ' ' })
+    .matches(/^[\p{L}\s\-]+$/u)
     .withMessage(`Last name ${alpha}`),
 
 ]

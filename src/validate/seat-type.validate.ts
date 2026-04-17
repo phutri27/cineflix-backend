@@ -6,7 +6,7 @@ export const seatTypeValidate = [
     body("price")
     .notEmpty()
     .withMessage(`Price ${emptyMsg}`)
-    .isNumeric()
+    .isInt({ gt: 0 })
     .withMessage(`Price must only be numbers`),
 
     body("seat_type")

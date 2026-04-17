@@ -108,6 +108,49 @@ class Profile{
         }
     }
 
+    async getProfileVouchers(userId: string, page: number = 1, limit: number = 5){
+        const skipAmount = (page - 1) * limit
+
+        const totalBookings = await prisma.profileVoucher.count({
+            where:{
+                userId: userId,
+            }
+        })
+
+        const vouchers = await prisma.profileVoucher.findMany({
+            where:{
+                userId: userId,
+                quantity: {
+                    gt: 0
+                }
+            },
+            take: limit,
+            skip: skipAmount,
+            select:{
+                quantity: true,
+                voucher:{
+                    select:{
+                        id: true,
+                        name: true,
+                        reduceAmount: true,
+                        startAt: true,
+                        expireAt: true,
+                        maxUsed: true
+                    }
+                }
+            }
+        })
+
+        return {
+            data: vouchers,
+            meta:{
+                currentPage: page,
+                totalPages: Math.ceil(totalBookings / limit),
+                totalItems: totalBookings
+            }
+        }
+    }
+
     async createProfile(userId: string){
         await prisma.profile.create({
             data:{
