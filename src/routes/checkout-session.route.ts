@@ -4,12 +4,14 @@ import { vnpayCheckout, ipnUrlProccess, getUrlReturn } from '../controller/vnpay
 import { createNoti } from '../controller/notifications.controller'
 import { seatLock } from '../controller/seat-lock.controller'
 import { calculateAmount } from '../controller/transaction.controller'
+import { handleValidationErrors } from '../middlewares/validateResult'
+import { checkoutValidate } from '../validate/checkout.validate'
 
 const router = express.Router()
 
-router.post("/create-checkout-session",calculateAmount, checkoutSession, seatLock)
+router.post("/create-checkout-session", checkoutValidate, handleValidationErrors,calculateAmount, checkoutSession, seatLock)
 
-router.post("/vnpay-checkout", calculateAmount, vnpayCheckout, seatLock)
+router.post("/vnpay-checkout", checkoutValidate, handleValidationErrors, calculateAmount, vnpayCheckout, seatLock)
 router.delete("/:sessionId", cancelCheckout)
 
 router.get("/vnpay-ipn", ipnUrlProccess, createNoti)

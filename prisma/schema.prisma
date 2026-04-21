@@ -130,6 +130,8 @@ model Seat {
   screen          Screen @relation(fields: [screenId], references: [id])
   tickets         Ticket[]
   bookings        Booking[]
+
+  @@unique([screenId, row, number])
 }
 
 model Showtime {
@@ -248,7 +250,7 @@ model Ticket {
   booking    Booking  @relation(fields: [bookingId], references: [id])
   
   seatId     String
-  seat       Seat     @relation(fields: [seatId], references: [id])
+  seat       Seat     @relation(fields: [seatId], references: [id], onUpdate: Cascade)
 
   ticketUrl  String? 
 }

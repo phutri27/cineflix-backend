@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { transactionObj } from "../dao/transaction.dao";
 import { ticketObj } from "../dao/ticket.dao";
 import { bookingObj } from "../dao/booking.dao";
+import { matchedData } from "express-validator";
 import "dotenv/config"
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)

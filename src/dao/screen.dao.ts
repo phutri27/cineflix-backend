@@ -110,24 +110,33 @@ class Screen{
     }
 
     async updateScreen(id: string, data: ScreenTypeProp){
-        await prisma.screen.update({
-            data:{
-                name: data.name,
-                seats: {
-                deleteMany: {},
-                createMany: { 
-                    data : data.seats.map(seat => ({
+        await prisma.$transaction([
+            prisma.screen.update({
+                where: { id },
+                data: { name: data.name }
+            }),
+
+            ...data.seats.map(seat =>
+                prisma.seat.upsert({
+                    where: {
+                        screenId_row_number: {
+                            screenId: id,
                             row: seat.row,
-                            number: seat.number,
-                            seat_typeId: seat.seat_typeId
-                    }))
-                }
-                }
-            },
-            where:{
-                id: id
-            }
-        })
+                            number: seat.number
+                        }
+                    },
+                    update: {
+                        seat_typeId: seat.seat_typeId
+                    },
+                    create: {
+                        screenId: id,
+                        row: seat.row,
+                        number: seat.number,
+                        seat_typeId: seat.seat_typeId
+                    }
+                })
+            )
+        ])
     }
 
     async deleteScreen(id: string){
