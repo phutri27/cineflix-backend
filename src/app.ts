@@ -15,6 +15,7 @@ import { Server } from "socket.io"
 import { createServer } from "http"
 import { handleSubcribeInit } from "./pubsub/event-subcribe"
 import bodyParser from 'body-parser'
+import { limiter } from "./service/rate-limit.service"
 
 const allowedOrigins = [
     process.env.FRONTEND_ORIGIN as string, 
@@ -69,7 +70,7 @@ app.use(
       httpOnly:true,
       secure: isProduction, 
       sameSite:isProduction ? 'none' : 'lax',
-      maxAge: 2 * 24 * 60 * 60 * 1000 // ms
+      maxAge: 2 * 24 * 60 * 60 * 1000
     },
     secret: process.env.SECRET_KEY as string,
     resave: false,
@@ -87,11 +88,11 @@ app.use(passport.session())
 import "./config/google-oauth2"
 
 app.use("/payment", routes.checkout)
-app.use("/api/login", routes.login)
-app.use("/api/signup", routes.signup)
+app.use("/api/login", limiter, routes.login)
+app.use("/api/signup", limiter, routes.signup)
 app.use("/api/movies", routes.movies)
 app.use("/api/customer/profile", authorizeRoles(["USER", "ADMIN"]), routes.profile)
-app.use("/api/password", routes.password)
+app.use("/api/password", limiter, routes.password)
 app.use("/api/admin/dashboard", authorizeRoles(["ADMIN"]),routes.admin)
 app.use("/api/cinema", routes.cinema)
 app.use("/api/showtime", routes.showtime)
