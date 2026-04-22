@@ -1,10 +1,10 @@
 import type { Request, Response, NextFunction} from 'express'
 import { seatLockObj } from '../redis-query/seat-lock-query'
-import type { BookingObj } from './transaction.controller'
+import type { BookingInfo } from '../types/booking-types'
 
 export const seatLock = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { datas }: {datas: BookingObj} = req.body
+        const { datas }: {datas: BookingInfo} = req.body
         const bookingId = res.locals.bookingId
         const seatIds = datas.seats.map((seat) => seat.seat_id)
         for (const seatId of seatIds) {

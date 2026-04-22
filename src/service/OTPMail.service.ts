@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 import { OTPobj } from '../redis-query/otp-query'
-import { generateOTP } from './generateOTP'
+import { generateOTP } from '../utils/generateOTP.util'
 
 export const sendEmail = async(userEmail: string, userCred: string) => {
     const testAccount = await nodemailer.createTestAccount()

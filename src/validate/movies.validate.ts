@@ -1,5 +1,4 @@
 import { body } from "express-validator";
-import { moviesObj } from "../dao/movies.dao";
 
 const emptyMsg = "must not be empty"
 

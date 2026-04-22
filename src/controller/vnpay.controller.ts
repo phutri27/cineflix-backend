@@ -1,4 +1,4 @@
-import { vnpay } from "../payment/vnpay";
+import { vnpay } from "../service/vnpay.service";
 import type { Request, Response, NextFunction } from "express";
 import { bookingObj } from "../dao/booking.dao";
 import { ticketObj } from "../dao/ticket.dao";
@@ -15,15 +15,15 @@ import { ProductCode,
 
 dateFormat} from "vnpay";
 import { v4 as uuidv4 } from 'uuid'
-import { sendTicket } from "../service/ticket-mail";
-import type { BookingObj } from "./transaction.controller";
+import { sendTicket } from "../service/ticket-mail.service";
 import { transactionObj } from "../dao/transaction.dao";
 import { paymentObj } from "../redis-query/payment-query";
 import { profileObj } from "../dao/profile.dao";
-import { matchedData } from "express-validator";
+import type { BookingInfo } from "../types/booking-types";
+
 export const vnpayCheckout = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { datas }: {datas: BookingObj} = req.body
+        const { datas }: {datas: BookingInfo} = req.body
 
         if (datas.bookingId){
             const ticketData = await ticketObj.getPaidTicket(datas.bookingId)

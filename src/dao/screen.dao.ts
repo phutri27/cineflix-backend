@@ -1,17 +1,6 @@
-import type { Seat } from "../../generated/prisma/client";
 import { prisma } from "../lib/prisma";
+import type { ScreenTypeProp } from "../types/screen-types";
 
-type SeatType = {
-    row: string
-    number: number
-    seat_typeId: string
-}
-
-export interface ScreenTypeProp {
-    name: string
-    cinema_id: string
-    seats: SeatType[]
-}
 class Screen{
     async getScreenByCinema(cinemaId: string){
         const screens = await prisma.screen.findMany({

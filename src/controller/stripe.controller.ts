@@ -1,20 +1,19 @@
 import type { Request, Response, NextFunction } from "express";
 import Stripe from "stripe"
 import { moviesObj } from "../dao/movies.dao";
-import { fulfillCheckout } from "../payment/stripe";
+import { fulfillCheckout } from "../service/stripe.service";
 import { paymentObj } from "../redis-query/payment-query";
-import type { BookingObj } from "./transaction.controller";
+import type { BookingInfo } from "../types/booking-types";
 import { v4 as uuidv4 } from 'uuid';
 import { transactionObj } from "../dao/transaction.dao";
 import { ticketObj } from "../dao/ticket.dao";
 import { bookingObj } from "../dao/booking.dao";
-import { matchedData } from "express-validator";
 import "dotenv/config"
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 export const checkoutSession = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { datas }: {datas: BookingObj} = req.body
+      const { datas }: {datas: BookingInfo} = req.body
       if (datas.bookingId){
         const tickets = await ticketObj.getPaidTicket(datas.bookingId!)
         if (tickets > 0){

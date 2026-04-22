@@ -1,15 +1,7 @@
-import { response } from "express";
 import { prisma } from "../lib/prisma";
 import { format} from 'date-fns'
+import type { TicketResponse } from "../types/ticket-types";
 
-export interface TicketResponse{
-    id: string
-    seat: string
-    movie: string
-    showtime: string | null
-    screen: string
-    cinema: string
-}
 class Ticket{
     async createTicket(seatsId: string[], bookingId: string){
         await prisma.ticket.createMany({

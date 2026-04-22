@@ -2,16 +2,7 @@ import type { Decimal } from "@prisma/client/runtime/client";
 import { prisma } from "../lib/prisma";
 import { TransactionStatus } from "../../generated/prisma/enums";
 import { paymentObj } from "../redis-query/payment-query";
-import type { PricingDetailProp } from "../controller/transaction.controller";
-import { voucherObj } from "./vouchers.dao";
-
-interface BookingProps{
-    id: string,
-    showtimeId: string
-    seats: PricingDetailProp[]
-    snacks?: {snackId: string, quantity: number}[] 
-    vouchers?: {voucherId: string, quantity: number}[]
-}
+import type { BookingProps } from "../types/booking-types";
 
 interface TransactionProps{
     id: string

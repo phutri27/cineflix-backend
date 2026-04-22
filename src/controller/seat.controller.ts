@@ -1,7 +1,8 @@
 import { seatObj } from "../dao/seat.dao";
 import { matchedData } from "express-validator";
 import type { Request, Response, NextFunction } from "express";
-import { type SeatsProp } from "../dao/seat.dao";
+import type { SeatsProp } from "../types/seats-types";
+
 export const getAllSeatOfScreen = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const {screen_id} = req.params

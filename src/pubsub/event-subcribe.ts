@@ -2,7 +2,6 @@ import { type RedisClientType } from "redis"
 import { Server } from "socket.io" 
 import { stripe } from "../controller/stripe.controller"
 import { bookingObj } from "../dao/booking.dao"
-import { seatLockObj } from "../redis-query/seat-lock-query"
 import { transactionObj } from "../dao/transaction.dao"
 
 export const handleSubcribeInit = async (redisClient: RedisClientType, io: Server) => {
@@ -15,7 +14,7 @@ export const handleSubcribeInit = async (redisClient: RedisClientType, io: Serve
         const expiredChannel = '__keyevent@0__:expired';
         const delChannel = '__keyevent@0__:del';
 
-        const handleSubcribe = async (message: string, channel: string) => {
+        const handleSubscribe = async (message: string, channel: string) => {
             if (message.startsWith(`lock:showTime`) && channel.startsWith('__keyevent@0__:expired')){
                 const parts = message.split(':')
                 const showtimeId = parts[2]
@@ -46,8 +45,8 @@ export const handleSubcribeInit = async (redisClient: RedisClientType, io: Serve
             }
         }
         
-        await subClient.subscribe(expiredChannel, handleSubcribe)
-        await subClient.subscribe(delChannel, handleSubcribe)
+        await subClient.subscribe(expiredChannel, handleSubscribe)
+        await subClient.subscribe(delChannel, handleSubscribe)
     } catch (error) {
         console.error(error)
     }

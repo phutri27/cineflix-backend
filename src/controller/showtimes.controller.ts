@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { matchedData } from "express-validator";
-import { showtimeObj, type CreateShowtimeProp, type ShowtimeProp } from "../dao/showtimes.dao";
-
+import { showtimeObj } from "../dao/showtimes.dao";
+import type { CreateShowtimeProp, ShowtimeProp } from "../types/showtime-types";
 export const createShowtime = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { data } = matchedData(req)

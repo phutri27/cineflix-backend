@@ -1,7 +1,7 @@
 import { matchedData } from "express-validator";
 import { screenObj } from "../dao/screen.dao";
 import type { Request, Response, NextFunction } from "express";
-import type { ScreenTypeProp } from "../dao/screen.dao";
+import type { ScreenTypeProp } from "../types/screen-types";
 export const getScreenByCinema = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { cinema_id, screen_id, movie_id }= req.query

@@ -1,12 +1,5 @@
 import { prisma } from "../lib/prisma";
-
-export interface SnackType {
-    name: string
-    price: number
-    imageUrl: string
-    imagePublicId: string
-}
-
+import type { SnackType } from "../types/snack-types";
 class Snack{
     async getAllSnacks(){
         const snacks = await prisma.snack.findMany({

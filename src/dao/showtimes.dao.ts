@@ -1,15 +1,5 @@
 import { prisma } from "../lib/prisma";
-
-export interface ShowtimeProp{
-    startTime: Date
-    screenId: string
-    movieId: string;
-}
-
-export interface CreateShowtimeProp extends ShowtimeProp{
-    movieId: string;
-}
-
+import type { CreateShowtimeProp, ShowtimeProp } from "../types/showtime-types";
 class Showtime {
     async createShowtime(datas: CreateShowtimeProp[]) {
         await prisma.showtime.createMany({

@@ -1,11 +1,5 @@
 import { prisma } from "../lib/prisma";
-
-export interface SeatsProp {
-    row: string
-    number: number
-    seat_typeId: string
-    screenId: string,
-}
+import type { SeatsProp } from "../types/seats-types";
 class Seat{
     async getAllSeatOfScreen(screenId: string){
         const seats = await prisma.seat.findMany({

@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
-import { voucherObj, type VoucherProp, type VoucherData } from "../dao/vouchers.dao";
+import { voucherObj } from "../dao/vouchers.dao";
+import type { VoucherProp, VoucherData } from "../types/voucher-types";
 import { matchedData } from "express-validator";
 import crypto from "crypto"
 

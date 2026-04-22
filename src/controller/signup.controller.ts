@@ -4,14 +4,8 @@ import { userObj } from "../dao/user.dao";
 import { matchedData } from "express-validator";
 import { profileObj } from "../dao/profile.dao";
 import { signupObj } from "../redis-query/signup-query";
-import { sendEmail } from "../service/OTPMail";
+import { sendEmail } from "../service/OTPMail.service";
 import { OTPobj } from "../redis-query/otp-query";
-
-interface SignupInfo{
-    pw: string
-    first_name: string
-    last_name: string
-}
 
 export const signupPost = async (req: Request, res: Response, next: NextFunction) => {
     try {

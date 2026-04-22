@@ -1,7 +1,7 @@
 import { paymentObj } from "../redis-query/payment-query";
 import { bookingObj } from "../dao/booking.dao";
 import { ticketObj } from "../dao/ticket.dao";
-import { sendTicket } from "../service/ticket-mail";
+import { sendTicket } from "./ticket-mail.service";
 import { stripe  } from "../controller/stripe.controller";
 import "dotenv/config"
 import { transactionObj } from "../dao/transaction.dao";

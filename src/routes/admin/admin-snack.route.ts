@@ -1,6 +1,6 @@
 import express from 'express'
 import * as snacks from "../../controller/snacks.controller"
-import { upload } from '../../utils/fileupload'
+import { upload } from '../../utils/cloudinary-file.util'
 import { validateFile } from '../../validate/files.validate'
 import { validateSnack } from '../../validate/snack.validate'
 import { handleValidationErrors } from '../../middlewares/validateResult'

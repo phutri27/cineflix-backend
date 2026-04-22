@@ -1,17 +1,5 @@
 import { prisma } from "../lib/prisma";
-
-export interface VoucherData{
-    name: string,
-    reduceAmount: number,
-    quantity: number 
-    startAt: Date,
-    expireAt: Date,
-    maxUsed: number
-}
-
-export interface VoucherProp extends VoucherData{
-    activationCode: string
-}
+import type { VoucherData, VoucherProp } from "../types/voucher-types";
 class Vouchers{
     async getAllVouchers(){
         const vouchers = await prisma.voucher.findMany({

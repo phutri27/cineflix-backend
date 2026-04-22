@@ -1,10 +1,5 @@
 import { prisma } from "../lib/prisma";
-
-export interface SeatTypeProp{
-    price: number,
-    seat_type: string,
-    cinemaId: string
-}
+import type { SeatTypeProp } from "../types/seatType-types";
 
 class SeatType{
     async getSeatDetails(cinemaId: string){

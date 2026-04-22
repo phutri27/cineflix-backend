@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 import QRCode from 'qrcode'
-import { type TicketResponse } from '../dao/ticket.dao'
-import { uploadBufferFile } from '../utils/fileupload'
+import type { TicketResponse } from '../types/ticket-types'
+import { uploadBufferFile } from '../utils/cloudinary-file.util'
 import { ticketObj } from '../dao/ticket.dao'
 export const sendTicket = async (userEmail: string, tickets: TicketResponse[], bookingId: string) => {
     const testAccount = await nodemailer.createTestAccount()

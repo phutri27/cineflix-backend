@@ -1,12 +1,5 @@
-import type { deleteMovie } from "../controller/movies.controller";
 import { prisma } from "../lib/prisma";
-
-export interface CinemaTypeProp  {
-    name: string
-    cityId: number
-    address: string
-    hotline: string
-}
+import type { CinemaTypeProp } from "../types/cinema-types";
 
 class Cinema{
     async getCinemaByCity(cityId: number){
