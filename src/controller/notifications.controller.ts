@@ -8,6 +8,7 @@ export const createNoti = async (req: Request, res: Response, next: NextFunction
         const showTimeId = res.locals.showTimeId
         const userId = res.locals.userId
         const transactionId = res.locals.transactionId
+        const bookingId =  res.locals.bookingId
 
         const showTimeInfo = await showtimeObj.getSpecificShowtime(showTimeId)
         const transactioninfo = await transactionObj.getTransactionInfo(transactionId)
@@ -19,6 +20,7 @@ export const createNoti = async (req: Request, res: Response, next: NextFunction
 
         const io = req.app.get("socketio")
         io.to(userId).emit("new-notification", noti)
+        io.to(userId).emit("PAYMENT_SUCCESS", bookingId)
 
         if (res.locals.IpnSuccess){
             const IpnSuccess = res.locals.IpnSuccess

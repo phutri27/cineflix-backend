@@ -129,6 +129,7 @@ export const ipnUrlProccess = async (req: any, res: Response, next: NextFunction
         res.locals.userId = data.booking.user.id
         res.locals.transactionId = data.id
         res.locals.IpnSuccess = IpnSuccess
+        res.locals.bookingId = data.bookingId
         return next()
     } catch (error) {
         return res.status(500).json(IpnUnknownError);

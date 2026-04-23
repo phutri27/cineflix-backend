@@ -108,6 +108,7 @@ export const checkoutPost = async (req: Request, res: Response, next: NextFuncti
             res.locals.showTimeId = session?.showTimeId as string
             res.locals.transactionId = session?.transactionId as string
             res.locals.userId = session?.userId as string 
+            res.locals.bookingId = session?.bookingId as string
             return next()
           }
 
