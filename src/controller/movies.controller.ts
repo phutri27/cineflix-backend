@@ -16,7 +16,7 @@ export const getSpecificMovie = async (req: Request, res: Response, next:NextFun
 
 export const getAllMovies = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { status, title, genre } = req.query
+        const { status, title, unActive } = req.query
         if (status){
             if (status === "coming"){
                 const movies = await moviesObj.getAllComingMovies()
@@ -30,8 +30,8 @@ export const getAllMovies = async (req: Request, res: Response, next: NextFuncti
             const movies = await moviesObj.getMoviesByTitle(title as string)
             return res.status(200).json(movies)
         }
-        if (genre){
-            const movies = await moviesObj.getMoviesByGenre(genre as string)
+        if (unActive){
+            const movies = await moviesObj.getUnactiveMovies()
             return res.status(200).json(movies)
         }
         const movies = await moviesObj.getAllMovies()
@@ -58,7 +58,6 @@ export const insertMovies = async (req: Request, res: Response, next: NextFuncti
 export const updateMovies = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string
     const data = matchedData(req)
-    console.log(data)
     const filePath = req.file?.path as string 
     const oldMovie = await moviesObj.getSpecificMovie(id)
     let imageUrl:any
@@ -88,5 +87,18 @@ export const deleteMovie = async (req: Request, res: Response, next: NextFunctio
         })
     } catch (error) {
         return next(error)
+    }
+}
+
+export const movieStatus = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = req.params.id as string
+        const { isActive } = req.body
+        await moviesObj.movieStatus(id, isActive)
+        return res.status(200).json({
+            message: "Unactive movie successfully"
+        })
+    } catch (error) {
+        next(error)
     }
 }

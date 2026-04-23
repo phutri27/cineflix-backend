@@ -11,6 +11,7 @@ router.get("/", movies.getAllMovies)
 router.get("/:id", movies.getSpecificMovie)
 router.post("/",upload.single('filename'), validateFile, validateMovie, handleValidationErrors, movies.insertMovies)
 router.put("/:id", upload.single('filename'), validateMovie, handleValidationErrors, movies.updateMovies)
+router.patch("/:id", movies.movieStatus)
 router.delete("/:id", movies.deleteMovie)
 
 export default router

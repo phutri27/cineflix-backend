@@ -21,6 +21,9 @@ class Cinema{
             },
             include:{
                 movies:{
+                    where:{
+                        isActive: true
+                    },
                     select:{
                         title: true,
                         posterUrl: true,
@@ -49,6 +52,9 @@ class Cinema{
             },
             include:{
                 movies: {
+                    where:{
+                        isActive: true
+                    },
                     select:{
                         id: true,
                         title: true,

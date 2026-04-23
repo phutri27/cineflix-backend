@@ -26,10 +26,24 @@ export const movieWithDetailsInclude = {
 class Movies {
     async getAllMovies(){
         const movies = await prisma.movie.findMany({
+            where:{
+                isActive: true
+            },
             orderBy:{
                 premiereDate: "desc"
             },
-            include: movieWithDetailsInclude
+            include: {
+                ...movieWithDetailsInclude,
+                showtimes:{
+                    select:{
+                        bookings:{
+                            where:{
+                                status: "PAID"
+                            }
+                        }
+                    }
+                }
+            }
         })
 
         return movies
@@ -41,7 +55,8 @@ class Movies {
             where:{
                 premiereDate: {
                     gt: currentDate
-                }
+                },
+                isActive: true
             },
             orderBy:{
                 premiereDate: 'asc'
@@ -57,21 +72,18 @@ class Movies {
             where: {
                 premiereDate: {
                     lte: currentDate
-                }
+                },
+                isActive: true
             },
             include: movieWithDetailsInclude
         })
         return movies
     }
 
-    async getMoviesByGenre(genre: string){
+    async getUnactiveMovies(){
         const movies = await prisma.movie.findMany({
             where:{
-                genres:{
-                    some:{
-                        name: genre
-                    }
-                }
+                isActive: false
             },
             include: movieWithDetailsInclude
         })
@@ -84,7 +96,8 @@ class Movies {
                 title:{
                     contains: title,
                     mode: 'insensitive'
-                }
+                },
+                isActive:true
             },
             include: movieWithDetailsInclude
         })
@@ -94,7 +107,8 @@ class Movies {
     async getSpecificMovie(movieId: string){
         const movie = await prisma.movie.findUnique({
             where:{
-                id: movieId
+                id: movieId,
+                isActive: true
             },
             include: movieWithDetailsInclude
         })
@@ -165,6 +179,16 @@ class Movies {
         return movie
     }
 
+    async movieStatus(id: string, isActive: boolean){
+        await prisma.movie.update({
+            where:{
+                id: id
+            },
+            data:{
+                isActive: isActive
+            }
+        })
+    }
 }
 
 export const moviesObj = new Movies()

@@ -57,7 +57,8 @@ model Movie {
   durationMin    Int
   premiereDate   DateTime
   rated          String
-  trailerUrl      String?
+  trailerUrl     String?
+  isActive      Boolean  @default(true)
 
   cinemas      Cinema[]
   genres       Genre[]
