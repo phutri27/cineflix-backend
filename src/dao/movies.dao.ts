@@ -35,10 +35,10 @@ class Movies {
             include: {
                 ...movieWithDetailsInclude,
                 showtimes:{
-                    select:{
-                        bookings:{
-                            where:{
-                                status: "PAID"
+                    include:{
+                        _count:{
+                            select:{
+                                bookings: true
                             }
                         }
                     }
