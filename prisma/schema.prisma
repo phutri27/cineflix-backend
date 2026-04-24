@@ -35,6 +35,7 @@ model ThirdParty{
 
   user                User         @relation(fields: [userId], references: [id])
   @@unique([providerAccountId, provider])
+  @@index([userId])
 }
 
 
@@ -106,6 +107,8 @@ model Cinema {
   seatType SeatTypeDetail[]
   movies  Movie[]
   screens Screen[]
+
+  @@index([cityId])
 }
 
 model Screen {
@@ -117,6 +120,8 @@ model Screen {
   
   seats     Seat[]
   showtimes Showtime[]
+
+  @@index([cinemaId])
 }
 
 model Seat {
@@ -149,6 +154,8 @@ model Showtime {
 
   bookings  Booking[]
 
+  @@index([screenId])
+  @@index([movieId, startTime])
 }
 
 model Notifications{
@@ -160,6 +167,8 @@ model Notifications{
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Booking {
@@ -177,6 +186,8 @@ model Booking {
   tickets       Ticket[]
   snacks        BookingSnack[]
   transaction   Transaction[]
+
+  @@index([userId, showtimeId])
 }
 
 model Transaction {
@@ -191,6 +202,8 @@ model Transaction {
 
   status        TransactionStatus @default(PENDING)
   transactionAt DateTime @default(now())
+
+  @@index([bookingId])
 }
 
 model Voucher {
@@ -254,6 +267,8 @@ model Ticket {
   seat       Seat     @relation(fields: [seatId], references: [id], onUpdate: Cascade)
 
   ticketUrl  String? 
+
+  @@index([bookingId])
 }
 
 model Snack {
