@@ -1,6 +1,6 @@
 import { type RedisClientType } from "redis"
 import { Server } from "socket.io" 
-import { stripe } from "../controller/stripe.controller"
+import { stripe } from "../config/stripe"
 import { bookingObj } from "../dao/booking.dao"
 import { transactionObj } from "../dao/transaction.dao"
 

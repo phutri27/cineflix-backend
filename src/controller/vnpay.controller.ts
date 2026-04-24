@@ -123,7 +123,7 @@ export const ipnUrlProccess = async (req: any, res: Response, next: NextFunction
         await sendTicket(userEmail, tickets, data.bookingId)
 
         await transactionObj.updateTransactionSuccess(data.id, data.bookingId)
-        await profileObj.updateProfileSpending(Number(data.amount), data.booking.user.id)
+        await profileObj.updateProfileSpending(data.amount.toNumber(), data.booking.user.id)
 
         res.locals.showTimeId = data.booking.showtimeId
         res.locals.userId = data.booking.user.id

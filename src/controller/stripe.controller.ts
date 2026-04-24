@@ -1,5 +1,4 @@
 import type { Request, Response, NextFunction } from "express";
-import Stripe from "stripe"
 import { moviesObj } from "../dao/movies.dao";
 import { fulfillCheckout } from "../service/stripe.service";
 import { paymentObj } from "../redis-query/payment-query";
@@ -9,8 +8,7 @@ import { transactionObj } from "../dao/transaction.dao";
 import { ticketObj } from "../dao/ticket.dao";
 import { bookingObj } from "../dao/booking.dao";
 import "dotenv/config"
-
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
+import { stripe } from "../config/stripe";
 export const checkoutSession = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { datas }: {datas: BookingInfo} = req.body
@@ -98,17 +96,24 @@ export const checkoutPost = async (req: Request, res: Response, next: NextFuncti
 
         if (event.type === 'checkout.session.completed' || event.type === 'checkout.session.async_payment_succeeded') {
             const session = event.data.object.metadata
-            await fulfillCheckout(event.data.object.id, 
-              session?.bookingId as string, 
-              session?.userId as string, 
-              session?.userEmail as string,
-              session?.transactionId as string,
-              Number(session?.totalAmount))
-              
-            res.locals.showTimeId = session?.showTimeId as string
-            res.locals.transactionId = session?.transactionId as string
-            res.locals.userId = session?.userId as string 
-            res.locals.bookingId = session?.bookingId as string
+            if (session 
+              && session.bookingId 
+              && session.userId 
+              && session.userEmail 
+              && session.transactionId 
+              && session.totalAmount){
+                await fulfillCheckout(event.data.object.id, 
+                  session.bookingId, 
+                  session.userId, 
+                  session.userEmail,
+                  session.transactionId,
+                  Number(session.totalAmount))
+
+              res.locals.showTimeId = session?.showTimeId 
+              res.locals.transactionId = session?.transactionId 
+              res.locals.userId = session?.userId 
+              res.locals.bookingId = session?.bookingId 
+            }
             return next()
           }
 
