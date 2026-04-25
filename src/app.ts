@@ -3,7 +3,6 @@ import "dotenv/config"
 import cors from "cors"
 import passport from 'passport'
 import expressSession  from 'express-session'
-import "./config/session"
 import routes from './routes/index.route'
 import { errorHandler } from "./error/error"
 import { RedisStore } from "connect-redis"
@@ -85,6 +84,7 @@ app.use(
 app.use(passport.initialize())
 app.use(passport.session())
 
+import "./config/session"
 import "./config/google-oauth2"
 
 app.use("/payment", routes.checkout)

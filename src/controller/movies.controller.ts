@@ -30,7 +30,7 @@ export const getAllMovies = async (req: Request, res: Response, next: NextFuncti
             const movies = await moviesObj.getMoviesByTitle(title as string)
             return res.status(200).json(movies)
         }
-        if (unActive){
+        if (unActive == "true"){
             const movies = await moviesObj.getUnactiveMovies()
             return res.status(200).json(movies)
         }

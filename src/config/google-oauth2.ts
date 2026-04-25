@@ -1,8 +1,8 @@
 import passport from 'passport'
 import { Strategy as GoogleStrategy  } from 'passport-google-oauth2'
-import { prisma } from '../lib/prisma.js';
+import { prisma } from '../lib/prisma';
 import "dotenv/config"
-import { profileObj } from '../dao/profile.dao.js';
+import { profileObj } from '../dao/profile.dao';
 
 const verifyCallback = async (accessToken: any, refreshToken: any, profile: any, cb: any) =>{
     try {

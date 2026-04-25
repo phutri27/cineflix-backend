@@ -1,5 +1,3 @@
-// tests/controllers/seat-lock.controller.test.ts
-
 import request from "supertest";
 import express, { Request, Response, NextFunction } from "express";
 import { describe, it, expect, beforeEach, vi } from "vitest";

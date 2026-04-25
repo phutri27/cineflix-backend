@@ -4,7 +4,7 @@ import { redisClient } from '../lib/redis'
 
 export const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    limit: 15,
+    limit: 25,
     store: new RedisStore({
         sendCommand: (...args: string[]) => redisClient.sendCommand(args)
     }),

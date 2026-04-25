@@ -2,7 +2,7 @@
   "name": "back-end",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
+  "type": "wwww",
   "scripts": {
     "dev": "nodemon src/app.ts",
     "dev:debug": "npx tsx watch --inspect src/app.ts",

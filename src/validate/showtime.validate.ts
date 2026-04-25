@@ -40,11 +40,15 @@ export const ShowtimeValidation = [
 
         const newMovie = await prisma.movie.findUnique({ 
             where: { id: currentMovieId },
-            select: { durationMin: true } 
+            select: { durationMin: true, premiereDate: true } 
         });
 
         if (!newMovie) {
             throw new Error(`Movie with ID ${currentMovieId} not found`);
+        }
+
+        if (startTime <= new Date(newMovie.premiereDate)){
+            throw new Error(`Showtime must not be before premiere date`)
         }
 
         const overlappingShowtime = showtimeData.some((showtime) => {
@@ -102,11 +106,15 @@ export const updateShowTimeValidation = [
 
         const newMovie = await prisma.movie.findUnique({ 
             where: { id: currentMovieId },
-            select: { durationMin: true } 
+            select: { durationMin: true, premiereDate: true } 
         });
 
         if (!newMovie) {
             throw new Error(`Movie with ID ${currentMovieId} not found`);
+        }
+
+        if (startTime <= new Date(newMovie.premiereDate)){
+            throw new Error(`Showtime must not be before premiere date`)
         }
 
         const overlappingShowtime = showtimeData.some((showtime) => {

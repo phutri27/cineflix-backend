@@ -1,9 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
 import { matchedData } from "express-validator";
-import { profileObj } from "../dao/profile.dao.js";
-import { isValid } from "../utils/password.util.js";
+import { profileObj } from "../dao/profile.dao";
+import { isValid } from "../utils/password.util";
 import crypto from 'crypto'
-import { voucherObj } from "../dao/vouchers.dao.js";
+import { voucherObj } from "../dao/vouchers.dao";
 export const getCustomerProfile = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = req.user?.id as string

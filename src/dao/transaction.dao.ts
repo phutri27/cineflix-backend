@@ -1,6 +1,6 @@
 import type { Decimal } from "@prisma/client/runtime/client";
 import { prisma } from "../lib/prisma";
-import { TransactionStatus } from "../../generated/prisma/enums";
+import { TransactionStatus } from "../generated/prisma/enums";
 import { paymentObj } from "../redis-query/payment-query";
 import type { BookingProps } from "../types/booking-types";
 

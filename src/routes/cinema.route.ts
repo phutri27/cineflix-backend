@@ -1,5 +1,5 @@
 import express from 'express'
-import * as cinemas from "../controller/cinema.controller.js"
+import * as cinemas from "../controller/cinema.controller"
 
 const router = express.Router()
 

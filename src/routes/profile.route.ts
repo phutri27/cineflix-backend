@@ -1,8 +1,8 @@
 import express from 'express'
-import * as profile from "../controller/profile.controller.js"
-import { handleValidationErrors } from '../middlewares/validateResult.js'
-import { validateProfile, changingPasswordValidate } from '../validate/profile.validate.js'
-import { validateVoucherCodeUser } from '../validate/voucher.validate.js'
+import * as profile from "../controller/profile.controller"
+import { handleValidationErrors } from '../middlewares/validateResult'
+import { validateProfile, changingPasswordValidate } from '../validate/profile.validate'
+import { validateVoucherCodeUser } from '../validate/voucher.validate'
 
 const router = express.Router()
 

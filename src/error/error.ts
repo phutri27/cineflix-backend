@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express"
-import { Prisma } from "../../generated/prisma/client"
+import { Prisma } from "../generated/prisma/client"
 export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
     console.error(err)
     let statusCode = err.statusCode || 500

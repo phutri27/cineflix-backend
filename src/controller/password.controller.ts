@@ -1,12 +1,12 @@
 import type { Request, Response, NextFunction } from "express";
 import { matchedData } from "express-validator";
-import { isValid } from "../utils/password.util.js";
-import { userObj } from "../dao/user.dao.js";
-import { sendEmail } from "../service/OTPMail.service.js";
-import { OTPobj } from "../redis-query/otp-query.js";
-import { genPassword } from "../utils/password.util.js";
-import { resetTokenObj } from "../redis-query/reset-token-query.js";
-import { generateSecureToken } from "../utils/generateToken.util.js";
+import { isValid } from "../utils/password.util";
+import { userObj } from "../dao/user.dao";
+import { sendEmail } from "../service/OTPMail.service";
+import { OTPobj } from "../redis-query/otp-query";
+import { genPassword } from "../utils/password.util";
+import { resetTokenObj } from "../redis-query/reset-token-query";
+import { generateSecureToken } from "../utils/generateToken.util";
 
 export const changePassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
