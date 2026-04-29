@@ -17,8 +17,7 @@ import bodyParser from 'body-parser'
 import { limiter } from "./service/rate-limit.service.js"
 
 const allowedOrigins = [
-    process.env.FRONTEND_ORIGIN as string, 
-    process.env.FRONTEND_SUB_ORIGIN as string
+  process.env.FRONTEND_ORIGIN as string, 
 ];
 
 const app = express()
@@ -68,7 +67,7 @@ app.use(
     cookie: {
       httpOnly:true,
       secure: isProduction, 
-      sameSite:isProduction ? 'none' : 'lax',
+      sameSite: 'lax',
       maxAge: 2 * 24 * 60 * 60 * 1000
     },
     secret: process.env.SECRET_KEY as string,
