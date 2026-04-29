@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import type { SeatTypeProp } from "../types/seatType-types";
+import { prisma } from "../lib/prisma.js";
+import type { SeatTypeProp } from "../types/seatType-types.js";
 
 class SeatType{
     async getSeatDetails(cinemaId: string){

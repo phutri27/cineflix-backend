@@ -3,18 +3,18 @@ import "dotenv/config"
 import cors from "cors"
 import passport from 'passport'
 import expressSession  from 'express-session'
-import routes from './routes/index.route'
-import { errorHandler } from "./error/error"
+import routes from './routes/index.route.js'
+import { errorHandler } from "./error/error.js"
 import { RedisStore } from "connect-redis"
-import { redisClient } from "./lib/redis"
+import { redisClient } from "./lib/redis.js"
 import { type RedisClientType } from "redis"
-import { authorizeRoles } from "./middlewares/authorize"
+import { authorizeRoles } from "./middlewares/authorize.js"
 import helmet from "helmet"
 import { Server } from "socket.io"
 import { createServer } from "http"
-import { handleSubcribeInit } from "./pubsub/event-subcribe"
+import { handleSubcribeInit } from "./pubsub/event-subcribe.js"
 import bodyParser from 'body-parser'
-import { limiter } from "./service/rate-limit.service"
+import { limiter } from "./service/rate-limit.service.js"
 
 const allowedOrigins = [
     process.env.FRONTEND_ORIGIN as string, 
@@ -58,7 +58,7 @@ app.use(cors({
     credentials: true,
 }))
 
-app.use("/webhook", bodyParser.raw({type: 'application/json'}), routes.webhook)
+app.use("/api/webhook", bodyParser.raw({type: 'application/json'}), routes.webhook)
 app.use(express.json())
 
 app.use(express.urlencoded({ extended: true })); 
@@ -84,10 +84,10 @@ app.use(
 app.use(passport.initialize())
 app.use(passport.session())
 
-import "./config/session"
-import "./config/google-oauth2"
+import "./config/session.js"
+import "./config/google-oauth2.js"
 
-app.use("/payment", routes.checkout)
+app.use("/api/payment", routes.checkout)
 app.use("/api/login", limiter, routes.login)
 app.use("/api/signup", limiter, routes.signup)
 app.use("/api/movies", routes.movies)

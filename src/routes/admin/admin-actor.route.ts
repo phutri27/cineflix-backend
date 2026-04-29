@@ -1,7 +1,7 @@
 import express from 'express'
-import { movieOptionsValidate } from '../../validate/movie-options.validate'
-import { handleValidationErrors } from '../../middlewares/validateResult'
-import * as actors from "../../controller/actor.controller"
+import { movieOptionsValidate } from '../../validate/movie-options.validate.js'
+import { handleValidationErrors } from '../../middlewares/validateResult.js'
+import * as actors from "../../controller/actor.controller.js"
 const router = express.Router()
 
 router.get("/", actors.getAllActor)

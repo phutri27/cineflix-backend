@@ -1,14 +1,14 @@
 import type { Request, Response, NextFunction } from "express";
-import { moviesObj } from "../dao/movies.dao";
-import { fulfillCheckout } from "../service/stripe.service";
-import { paymentObj } from "../redis-query/payment-query";
-import type { BookingInfo } from "../types/booking-types";
+import { moviesObj } from "../dao/movies.dao.js";
+import { fulfillCheckout } from "../service/stripe.service.js";
+import { paymentObj } from "../redis-query/payment-query.js";
+import type { BookingInfo } from "../types/booking-types.js";
 import { v4 as uuidv4 } from 'uuid';
-import { transactionObj } from "../dao/transaction.dao";
-import { ticketObj } from "../dao/ticket.dao";
-import { bookingObj } from "../dao/booking.dao";
+import { transactionObj } from "../dao/transaction.dao.js";
+import { ticketObj } from "../dao/ticket.dao.js";
+import { bookingObj } from "../dao/booking.dao.js";
 import "dotenv/config"
-import { stripe } from "../config/stripe";
+import { stripe } from "../config/stripe.js";
 export const checkoutSession = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { datas }: {datas: BookingInfo} = req.body

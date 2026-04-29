@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import type { CreateShowtimeProp, ShowtimeProp } from "../types/showtime-types";
+import { prisma } from "../lib/prisma.js";
+import type { CreateShowtimeProp, ShowtimeProp } from "../types/showtime-types.js";
 class Showtime {
     async createShowtime(datas: CreateShowtimeProp[]) {
         await prisma.showtime.createMany({

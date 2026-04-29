@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import type { SnackType } from "../types/snack-types";
+import { prisma } from "../lib/prisma.js";
+import type { SnackType } from "../types/snack-types.js";
 class Snack{
     async getAllSnacks(){
         const snacks = await prisma.snack.findMany({

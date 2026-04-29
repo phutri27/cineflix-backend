@@ -2,13 +2,13 @@ import request from "supertest";
 import express, { Request, Response, NextFunction } from "express";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
-vi.mock("../../src/service/vnpay.service", () => ({
+vi.mock("../../src/service/vnpay.service.js", () => ({
   vnpay: {
     verifyIpnCall: vi.fn(),
   },
 }));
 
-vi.mock("../../src/dao/transaction.dao", () => ({
+vi.mock("../../src/dao/transaction.dao.js", () => ({
   transactionObj: {
     updateTransactionStatus: vi.fn(),
     getTransactionInfo: vi.fn(),
@@ -16,30 +16,30 @@ vi.mock("../../src/dao/transaction.dao", () => ({
   },
 }));
 
-vi.mock("../../src/dao/ticket.dao", () => ({
+vi.mock("../../src/dao/ticket.dao.js", () => ({
   ticketObj: {
     createTicket: vi.fn(),
     getTicketInfo: vi.fn(),
   },
 }));
 
-vi.mock("../../src/dao/profile.dao", () => ({
+vi.mock("../../src/dao/profile.dao.js", () => ({
   profileObj: {
     updateProfileSpending: vi.fn(),
   },
 }));
 
-vi.mock("../../src/service/ticket-mail.service", () => ({
+vi.mock("../../src/service/ticket-mail.service.js", () => ({
   sendTicket: vi.fn(),
 }));
 
-import { vnpay } from "../../src/service/vnpay.service";
-import { transactionObj } from "../../src/dao/transaction.dao";
-import { ticketObj } from "../../src/dao/ticket.dao";
-import { profileObj } from "../../src/dao/profile.dao";
-import { sendTicket } from "../../src/service/ticket-mail.service";
+import { vnpay } from "../../src/service/vnpay.service.js";
+import { transactionObj } from "../../src/dao/transaction.dao.js";
+import { ticketObj } from "../../src/dao/ticket.dao.js";
+import { profileObj } from "../../src/dao/profile.dao.js";
+import { sendTicket } from "../../src/service/ticket-mail.service.js";
 
-import { ipnUrlProccess } from "../../src/controller/vnpay.controller";
+import { ipnUrlProccess } from "../../src/controller/vnpay.controller.js";
 
 describe("ipnUrlProccess VNPay webhook", () => {
   let app: express.Express;

@@ -2,7 +2,7 @@ import request from "supertest";
 import express, { Request, Response } from "express";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
-vi.mock("../../src/config/stripe", () => ({
+vi.mock("../../src/config/stripe.js", () => ({
   stripe: {
     webhooks: {
       constructEvent: vi.fn(),
@@ -16,53 +16,53 @@ vi.mock("../../src/config/stripe", () => ({
   },
 }));
 
-vi.mock("../../src/redis-query/payment-query", () => ({
+vi.mock("../../src/redis-query/payment-query.js", () => ({
   paymentObj: {
     setPaymentSession: vi.fn(),
   },
 }));
 
-vi.mock("../../src/dao/booking.dao", () => ({
+vi.mock("../../src/dao/booking.dao.js", () => ({
   bookingObj: {
     getBookingStatus: vi.fn(),
     getBookingSeats: vi.fn(),
   },
 }));
 
-vi.mock("../../src/dao/ticket.dao", () => ({
+vi.mock("../../src/dao/ticket.dao.js", () => ({
   ticketObj: {
     createTicket: vi.fn(),
     getTicketInfo: vi.fn(),
   },
 }));
 
-vi.mock("../../src/dao/transaction.dao", () => ({
+vi.mock("../../src/dao/transaction.dao.js", () => ({
   transactionObj: {
     getTransactionInfo: vi.fn(),
     updateTransactionSuccess: vi.fn(),
   },
 }));
 
-vi.mock("../../src/dao/profile.dao", () => ({
+vi.mock("../../src/dao/profile.dao.js", () => ({
   profileObj: {
     updateProfileSpending: vi.fn(),
   },
 }));
 
-vi.mock("../../src/service/ticket-mail.service", () => ({
+vi.mock("../../src/service/ticket-mail.service.js", () => ({
   sendTicket: vi.fn(),
 }));
 
-import { stripe } from "../../src/config/stripe";
-import { paymentObj } from "../../src/redis-query/payment-query";
-import { bookingObj } from "../../src/dao/booking.dao";
-import { ticketObj } from "../../src/dao/ticket.dao";
-import { transactionObj } from "../../src/dao/transaction.dao";
-import { profileObj } from "../../src/dao/profile.dao";
-import { sendTicket } from "../../src/service/ticket-mail.service";
+import { stripe } from "../../src/config/stripe.js";
+import { paymentObj } from "../../src/redis-query/payment-query.js";
+import { bookingObj } from "../../src/dao/booking.dao.js";
+import { ticketObj } from "../../src/dao/ticket.dao.js";
+import { transactionObj } from "../../src/dao/transaction.dao.js";
+import { profileObj } from "../../src/dao/profile.dao.js";
+import { sendTicket } from "../../src/service/ticket-mail.service.js";
 
-import { checkoutPost } from "../../src/controller/stripe.controller";
-import { fulfillCheckout } from "../../src/service/stripe.service";
+import { checkoutPost } from "../../src/controller/stripe.controller.js";
+import { fulfillCheckout } from "../../src/service/stripe.service.js";
 
 describe("Stripe webhook checkoutPost", () => {
   let app: express.Express;

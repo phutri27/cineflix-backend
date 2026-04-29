@@ -1,7 +1,7 @@
 import express from 'express'
-import * as cinemas from "../../controller/cinema.controller"
-import { validateCinema, validateMovieInCinema } from '../../validate/cinema.validate'
-import { handleValidationErrors } from '../../middlewares/validateResult'
+import * as cinemas from "../../controller/cinema.controller.js"
+import { validateCinema, validateMovieInCinema } from '../../validate/cinema.validate.js'
+import { handleValidationErrors } from '../../middlewares/validateResult.js'
 
 const router = express.Router()
 

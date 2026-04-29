@@ -1,7 +1,7 @@
-import { vnpay } from "../service/vnpay.service";
+import { vnpay } from "../service/vnpay.service.js";
 import type { Request, Response, NextFunction } from "express";
-import { bookingObj } from "../dao/booking.dao";
-import { ticketObj } from "../dao/ticket.dao";
+import { bookingObj } from "../dao/booking.dao.js";
+import { ticketObj } from "../dao/ticket.dao.js";
 import { ProductCode, 
     VnpLocale, 
     type VerifyIpnCall, 
@@ -15,11 +15,11 @@ import { ProductCode,
 
 dateFormat} from "vnpay";
 import { v4 as uuidv4 } from 'uuid'
-import { sendTicket } from "../service/ticket-mail.service";
-import { transactionObj } from "../dao/transaction.dao";
-import { paymentObj } from "../redis-query/payment-query";
-import { profileObj } from "../dao/profile.dao";
-import type { BookingInfo } from "../types/booking-types";
+import { sendTicket } from "../service/ticket-mail.service.js";
+import { transactionObj } from "../dao/transaction.dao.js";
+import { paymentObj } from "../redis-query/payment-query.js";
+import { profileObj } from "../dao/profile.dao.js";
+import type { BookingInfo } from "../types/booking-types.js";
 
 export const vnpayCheckout = async (req: Request, res: Response, next: NextFunction) => {
     try {

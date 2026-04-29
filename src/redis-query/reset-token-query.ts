@@ -1,4 +1,4 @@
-import { redisClient } from "../lib/redis"
+import { redisClient } from "../lib/redis.js"
 
 class ResetToken {
     async saveResetToken(userId: string, resetToken: string){

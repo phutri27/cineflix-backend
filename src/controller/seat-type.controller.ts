@@ -1,7 +1,7 @@
 import { matchedData } from "express-validator";
-import { seatTypeObj } from "../dao/seat-type.dao";
+import { seatTypeObj } from "../dao/seat-type.dao.js";
 import type { Request, Response, NextFunction } from "express";
-import type { SeatTypeProp } from "../types/seatType-types";
+import type { SeatTypeProp } from "../types/seatType-types.js";
 export const getAllSeatType = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { cinema_id } = req.query

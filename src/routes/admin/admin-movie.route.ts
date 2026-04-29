@@ -1,9 +1,9 @@
 import express from "express"
-import * as movies from "../../controller/movies.controller"
-import { upload } from "../../utils/cloudinary-file.util"
-import { validateFile } from "../../validate/files.validate"
-import { validateMovie } from "../../validate/movies.validate"
-import { handleValidationErrors } from "../../middlewares/validateResult"
+import * as movies from "../../controller/movies.controller.js"
+import { upload } from "../../utils/cloudinary-file.util.js"
+import { validateFile } from "../../validate/files.validate.js"
+import { validateMovie } from "../../validate/movies.validate.js"
+import { handleValidationErrors } from "../../middlewares/validateResult.js"
 
 const router = express.Router()
 

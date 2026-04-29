@@ -1,11 +1,11 @@
-import { paymentObj } from "../redis-query/payment-query";
-import { bookingObj } from "../dao/booking.dao";
-import { ticketObj } from "../dao/ticket.dao";
-import { sendTicket } from "./ticket-mail.service";
-import { stripe } from "../config/stripe";
+import { paymentObj } from "../redis-query/payment-query.js";
+import { bookingObj } from "../dao/booking.dao.js";
+import { ticketObj } from "../dao/ticket.dao.js";
+import { sendTicket } from "./ticket-mail.service.js";
+import { stripe } from "../config/stripe.js";
 import "dotenv/config"
-import { transactionObj } from "../dao/transaction.dao";
-import { profileObj } from "../dao/profile.dao";
+import { transactionObj } from "../dao/transaction.dao.js";
+import { profileObj } from "../dao/profile.dao.js";
 export async function fulfillCheckout(sessionId: string, 
     bookingId: string, 
     userId: string,  

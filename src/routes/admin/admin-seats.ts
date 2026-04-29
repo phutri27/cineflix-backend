@@ -1,7 +1,7 @@
 import express from 'express'
-import * as seats from "../../controller/seat.controller"
-import { seatValidate } from '../../validate/seat.validate'
-import { handleValidationErrors } from "../../middlewares/validateResult"
+import * as seats from "../../controller/seat.controller.js"
+import { seatValidate } from '../../validate/seat.validate.js'
+import { handleValidationErrors } from "../../middlewares/validateResult.js"
 
 const router = express.Router()
 

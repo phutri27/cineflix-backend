@@ -1,7 +1,7 @@
 import express from 'express'
-import { validateVoucher, validateVoucherActivationCode } from '../../validate/voucher.validate'
-import { handleValidationErrors } from '../../middlewares/validateResult'
-import * as vouchers from "../../controller/voucher.controller"
+import { validateVoucher, validateVoucherActivationCode } from '../../validate/voucher.validate.js'
+import { handleValidationErrors } from '../../middlewares/validateResult.js'
+import * as vouchers from "../../controller/voucher.controller.js"
 
 const router = express.Router()
 

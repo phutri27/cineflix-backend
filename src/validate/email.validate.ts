@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { userObj } from "../dao/user.dao";
+import { userObj } from "../dao/user.dao.js";
 const emptyMsg = "must not be empty"
 
 export const emailValidate = [

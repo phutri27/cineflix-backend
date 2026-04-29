@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import type { ScreenTypeProp } from "../types/screen-types";
+import { prisma } from "../lib/prisma.js";
+import type { ScreenTypeProp } from "../types/screen-types.js";
 
 class Screen{
     async getScreenByCinema(cinemaId: string){

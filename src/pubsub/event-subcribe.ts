@@ -1,8 +1,8 @@
 import { type RedisClientType } from "redis"
 import { Server } from "socket.io" 
-import { stripe } from "../config/stripe"
-import { bookingObj } from "../dao/booking.dao"
-import { transactionObj } from "../dao/transaction.dao"
+import { stripe } from "../config/stripe.js"
+import { bookingObj } from "../dao/booking.dao.js"
+import { transactionObj } from "../dao/transaction.dao.js"
 
 export const handleSubcribeInit = async (redisClient: RedisClientType, io: Server) => {
     try {

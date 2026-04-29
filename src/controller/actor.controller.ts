@@ -1,4 +1,4 @@
-import { actorObj } from "../dao/actors.dao";
+import { actorObj } from "../dao/actors.dao.js";
 import type { Request, Response, NextFunction } from "express";
 import { matchedData } from "express-validator";
 

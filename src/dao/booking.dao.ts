@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import { BookingStatus } from "../generated/prisma/enums";
+import { prisma } from "../lib/prisma.js";
+import { BookingStatus } from "../generated/prisma/enums.js";
 
 interface BookingProps{
     showtimeId: string

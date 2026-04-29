@@ -1,5 +1,5 @@
 import express from 'express'
-import * as notis from '../controller/notifications.controller'
+import * as notis from '../controller/notifications.controller.js'
 
 const router = express.Router()
 

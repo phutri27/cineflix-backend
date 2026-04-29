@@ -1,10 +1,10 @@
 import express from 'express'
-import { handleValidationErrors } from '../middlewares/validateResult'
-import { changingPasswordValidate, otpValidate } from '../validate/profile.validate'
-import { passwordValidate } from '../validate/password.validate'
-import * as password from "../controller/password.controller"
-import { emailValidate } from '../validate/email.validate'
-import { authorizeRoles } from '../middlewares/authorize'
+import { handleValidationErrors } from '../middlewares/validateResult.js'
+import { changingPasswordValidate, otpValidate } from '../validate/profile.validate.js'
+import { passwordValidate } from '../validate/password.validate.js'
+import * as password from "../controller/password.controller.js"
+import { emailValidate } from '../validate/email.validate.js'
+import { authorizeRoles } from '../middlewares/authorize.js'
 
 const router = express.Router()
 

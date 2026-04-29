@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
-import { transactionObj } from "../dao/transaction.dao";
-import type { BookingInfo } from "../types/booking-types";
+import { transactionObj } from "../dao/transaction.dao.js";
+import type { BookingInfo } from "../types/booking-types.js";
 export const calculateAmount = async (req: Request, res: Response, next: NextFunction) => {
     const { datas }: {datas: BookingInfo} = req.body
     const totalSeatAmount = datas.seats.reduce((total, seat) => total + parseInt(seat.price), 0)

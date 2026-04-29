@@ -1,4 +1,4 @@
-import { getShowtimeByDateAndCity, getSpecificShowtime } from "../controller/showtimes.controller";
+import { getShowtimeByDateAndCity, getSpecificShowtime } from "../controller/showtimes.controller.js";
 import express from 'express'
 
 const router = express.Router()

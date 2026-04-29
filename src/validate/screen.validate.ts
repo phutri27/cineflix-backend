@@ -1,4 +1,3 @@
-import { empty } from "@prisma/client/runtime/client";
 import { body } from "express-validator";
 
 const emptyMsg = "must not be empty"

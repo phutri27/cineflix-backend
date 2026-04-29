@@ -1,4 +1,4 @@
-import { redisClient } from "../lib/redis";
+import { redisClient } from "../lib/redis.js";
 
 class Payment{
     async setPaymentSession(sessionId: string, userId: string): Promise<boolean> {

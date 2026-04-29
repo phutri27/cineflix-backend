@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction} from 'express'
-import { seatLockObj } from '../redis-query/seat-lock-query'
-import type { BookingInfo } from '../types/booking-types'
+import { seatLockObj } from '../redis-query/seat-lock-query.js'
+import type { BookingInfo } from '../types/booking-types.js'
 
 export const seatLock = async (req: Request, res: Response, next: NextFunction) => {
     try {

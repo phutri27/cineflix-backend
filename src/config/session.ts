@@ -1,7 +1,7 @@
 import passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
-import { prisma } from '../lib/prisma';
-import { isValid } from '../utils/password.util';
+import { prisma } from '../lib/prisma.js';
+import { isValid } from '../utils/password.util.js';
 
 const customFields = {
     usernameField: 'email',

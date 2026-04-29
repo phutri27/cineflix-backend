@@ -1,8 +1,8 @@
-import { notiObj } from "../dao/notifications.dao";
+import { notiObj } from "../dao/notifications.dao.js";
 import type { Request, Response, NextFunction } from "express";
 import { format } from 'date-fns'
-import { showtimeObj } from "../dao/showtimes.dao";
-import { transactionObj } from "../dao/transaction.dao";
+import { showtimeObj } from "../dao/showtimes.dao.js";
+import { transactionObj } from "../dao/transaction.dao.js";
 export const createNoti = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const showTimeId = res.locals.showTimeId

@@ -1,5 +1,5 @@
-import { redisClient } from "../lib/redis";
-import { prisma } from "../lib/prisma";
+import { redisClient } from "../lib/redis.js";
+import { prisma } from "../lib/prisma.js";
 
 class SeatLock {
     async lockSeat(showTimeId: string, seatId: string, bookingId: string): Promise<boolean> {

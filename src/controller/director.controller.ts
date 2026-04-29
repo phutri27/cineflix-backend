@@ -1,4 +1,4 @@
-import { directorObj } from "../dao/directors.dao";
+import { directorObj } from "../dao/directors.dao.js";
 import type { Request, Response, NextFunction } from "express";
 import { matchedData } from "express-validator";
 

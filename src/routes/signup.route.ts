@@ -1,9 +1,9 @@
 import express from 'express'
-import * as signup from "../controller/signup.controller"
-import { handleValidationErrors } from '../middlewares/validateResult'
-import { validateSignup } from '../validate/signup.validate'
-import { passwordValidate } from '../validate/password.validate'
-import { otpValidate } from '../validate/profile.validate'
+import * as signup from "../controller/signup.controller.js"
+import { handleValidationErrors } from '../middlewares/validateResult.js'
+import { validateSignup } from '../validate/signup.validate.js'
+import { passwordValidate } from '../validate/password.validate.js'
+import { otpValidate } from '../validate/profile.validate.js'
 
 const router = express.Router()
 

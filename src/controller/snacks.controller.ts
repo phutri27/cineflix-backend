@@ -1,8 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
-import { snackObj } from "../dao/snacks.dao";
+import { snackObj } from "../dao/snacks.dao.js";
 import { matchedData } from "express-validator";
-import { uploadFile, deleteFile } from "../utils/cloudinary-file.util";
-import type { SnackType } from "../types/snack-types";
+import { uploadFile, deleteFile } from "../utils/cloudinary-file.util.js";
+import type { SnackType } from "../types/snack-types.js";
 
 export const getAllSnacks = async (req: Request, res: Response, next: NextFunction) => {
     try {

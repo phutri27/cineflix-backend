@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import type { movie } from "../types/movie-types";
+import { prisma } from "../lib/prisma.js";
+import type { movie } from "../types/movie-types.js";
 
 export const movieWithDetailsInclude = {
     genres:{

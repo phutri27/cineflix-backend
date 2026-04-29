@@ -1,11 +1,11 @@
 import type { NextFunction, Request, Response } from "express";
-import { genPassword } from "../utils/password.util";
-import { userObj } from "../dao/user.dao";
+import { genPassword } from "../utils/password.util.js";
+import { userObj } from "../dao/user.dao.js";
 import { matchedData } from "express-validator";
-import { profileObj } from "../dao/profile.dao";
-import { signupObj } from "../redis-query/signup-query";
-import { sendEmail } from "../service/OTPMail.service";
-import { OTPobj } from "../redis-query/otp-query";
+import { profileObj } from "../dao/profile.dao.js";
+import { signupObj } from "../redis-query/signup-query.js";
+import { sendEmail } from "../service/OTPMail.service.js";
+import { OTPobj } from "../redis-query/otp-query.js";
 
 export const signupPost = async (req: Request, res: Response, next: NextFunction) => {
     try {

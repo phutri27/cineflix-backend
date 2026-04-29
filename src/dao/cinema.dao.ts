@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import type { CinemaTypeProp } from "../types/cinema-types";
+import { prisma } from "../lib/prisma.js";
+import type { CinemaTypeProp } from "../types/cinema-types.js";
 
 class Cinema{
     async getCinemaByCity(cityId: number){

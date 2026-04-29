@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { prisma } from "../lib/prisma";
+import { prisma } from "../lib/prisma.js";
 
 export const ShowtimeValidation = [
     body("data").isArray({ min: 1 }).withMessage("Data must be an array with at least one showtime"),

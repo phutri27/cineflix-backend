@@ -1,5 +1,5 @@
 import express from 'express'
-import * as login from "../controller/login.controller"
+import * as login from "../controller/login.controller.js"
 import passport from 'passport'
 
 

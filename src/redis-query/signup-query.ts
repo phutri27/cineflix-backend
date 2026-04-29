@@ -1,4 +1,4 @@
-import { redisClient } from "../lib/redis";
+import { redisClient } from "../lib/redis.js";
 
 class Signup{
     async saveSignupInfo(email: string, hashed_password: string, first_name: string, last_name: string){

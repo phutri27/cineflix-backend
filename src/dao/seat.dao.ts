@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import type { SeatsProp } from "../types/seats-types";
+import { prisma } from "../lib/prisma.js";
+import type { SeatsProp } from "../types/seats-types.js";
 class Seat{
     async getAllSeatOfScreen(screenId: string){
         const seats = await prisma.seat.findMany({

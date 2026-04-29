@@ -1,7 +1,7 @@
 import express from 'express'
-import * as directors from "../../controller/director.controller"
-import { handleValidationErrors } from '../../middlewares/validateResult'
-import { movieOptionsValidate } from '../../validate/movie-options.validate'
+import * as directors from "../../controller/director.controller.js"
+import { handleValidationErrors } from '../../middlewares/validateResult.js'
+import { movieOptionsValidate } from '../../validate/movie-options.validate.js'
 
 const router = express.Router()
 

@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma";
+import { prisma } from "../lib/prisma.js";
 
 class Notification{
     async createNoti(title: string, content: string, userId: string){

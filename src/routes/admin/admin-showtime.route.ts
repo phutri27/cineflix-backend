@@ -1,7 +1,7 @@
 import express from 'express'
-import * as showtimes from '../../controller/showtimes.controller'
-import { handleValidationErrors } from '../../middlewares/validateResult'
-import { ShowtimeValidation, movieIdValidation, updateShowTimeValidation } from '../../validate/showtime.validate'
+import * as showtimes from '../../controller/showtimes.controller.js'
+import { handleValidationErrors } from '../../middlewares/validateResult.js'
+import { ShowtimeValidation, movieIdValidation, updateShowTimeValidation } from '../../validate/showtime.validate.js'
 
 const router = express.Router()
 

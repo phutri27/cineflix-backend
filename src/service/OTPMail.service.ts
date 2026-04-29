@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
-import { OTPobj } from '../redis-query/otp-query'
-import { generateOTP } from '../utils/generateOTP.util'
+import { OTPobj } from '../redis-query/otp-query.js'
+import { generateOTP } from '../utils/generateOTP.util.js'
 import "dotenv/config"
 export const sendEmail = async(userEmail: string, userCred: string) => {
     const transporter = nodemailer.createTransport({

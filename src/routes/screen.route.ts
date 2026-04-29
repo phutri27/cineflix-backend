@@ -1,5 +1,5 @@
 import express from 'express'
-import * as screens from "../controller/screen.controller"
+import * as screens from "../controller/screen.controller.js"
 
 const router = express.Router()
 

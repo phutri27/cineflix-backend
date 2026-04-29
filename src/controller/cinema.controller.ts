@@ -1,6 +1,6 @@
 import { matchedData } from "express-validator";
-import { cinemaObj } from "../dao/cinema.dao";
-import type { CinemaTypeProp } from "../types/cinema-types";
+import { cinemaObj } from "../dao/cinema.dao.js";
+import type { CinemaTypeProp } from "../types/cinema-types.js";
 import type { Request, Response, NextFunction } from "express";
 export const getMovieByCinema = async (req: Request, res: Response, next: NextFunction) => {
     try {

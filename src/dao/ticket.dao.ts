@@ -1,6 +1,6 @@
-import { prisma } from "../lib/prisma";
+import { prisma } from "../lib/prisma.js";
 import { format} from 'date-fns'
-import type { TicketResponse } from "../types/ticket-types";
+import type { TicketResponse } from "../types/ticket-types.js";
 
 class Ticket{
     async createTicket(seatsId: string[], bookingId: string){

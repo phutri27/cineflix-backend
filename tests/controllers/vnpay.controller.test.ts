@@ -2,13 +2,13 @@ import request from "supertest";
 import express, { Request, Response, NextFunction } from "express";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
-vi.mock("../../src/dao/ticket.dao", () => ({
+vi.mock("../../src/dao/ticket.dao.js", () => ({
   ticketObj: {
     getPaidTicket: vi.fn(),
   },
 }));
 
-vi.mock("../../src/dao/transaction.dao", () => ({
+vi.mock("../../src/dao/transaction.dao.js", () => ({
   transactionObj: {
     getTransactionMethod: vi.fn(),
     createTransaction: vi.fn(),
@@ -16,13 +16,13 @@ vi.mock("../../src/dao/transaction.dao", () => ({
   },
 }));
 
-vi.mock("../../src/dao/booking.dao", () => ({
+vi.mock("../../src/dao/booking.dao.js", () => ({
   bookingObj: {
     getBookingStatus: vi.fn(),
   },
 }));
 
-vi.mock("../../src/redis-query/payment-query", () => ({
+vi.mock("../../src/redis-query/payment-query.js", () => ({
   paymentObj: {
     setCheckoutSession: vi.fn(),
   },
@@ -41,21 +41,21 @@ vi.mock("vnpay", async (importOriginal) => {
   };
 });
 
-vi.mock("../../src/service/vnpay.service", () => ({
+vi.mock("../../src/service/vnpay.service.js", () => ({
   vnpay: {
     buildPaymentUrl: vi.fn(),
   },
 }));
 
-import { ticketObj } from "../../src/dao/ticket.dao";
-import { transactionObj } from "../../src/dao/transaction.dao";
-import { bookingObj } from "../../src/dao/booking.dao";
-import { paymentObj } from "../../src/redis-query/payment-query";
+import { ticketObj } from "../../src/dao/ticket.dao.js";
+import { transactionObj } from "../../src/dao/transaction.dao.js";
+import { bookingObj } from "../../src/dao/booking.dao.js";
+import { paymentObj } from "../../src/redis-query/payment-query.js";
 import { v4 as uuidv4 } from "uuid";
-import { vnpay } from "../../src/service/vnpay.service";
+import { vnpay } from "../../src/service/vnpay.service.js";
 import { dateFormat } from "vnpay";
 
-import { vnpayCheckout } from "../../src/controller/vnpay.controller"
+import { vnpayCheckout } from "../../src/controller/vnpay.controller.js"
 
 describe("vnpayCheckout", () => {
   let app: express.Express;

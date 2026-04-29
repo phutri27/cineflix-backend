@@ -1,5 +1,5 @@
 import express from 'express'
-import { revenueByCinema, revenueByMovie, revenueByUser } from '../controller/transaction.controller'
+import { revenueByCinema, revenueByMovie, revenueByUser } from '../controller/transaction.controller.js'
 
 const router = express.Router()
 

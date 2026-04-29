@@ -1,5 +1,5 @@
 import type {Request, Response, NextFunction} from 'express';
-import { cityObj } from '../dao/city.dao';
+import { cityObj } from '../dao/city.dao.js';
 
 export const getAllCities = async (req: Request, res: Response, next: NextFunction) => {
     try {

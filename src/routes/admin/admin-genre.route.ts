@@ -1,7 +1,7 @@
 import express from 'express'
-import * as genres from "../../controller/genre.controller"
-import { handleValidationErrors } from '../../middlewares/validateResult'
-import { movieOptionsValidate } from '../../validate/movie-options.validate'
+import * as genres from "../../controller/genre.controller.js"
+import { handleValidationErrors } from '../../middlewares/validateResult.js'
+import { movieOptionsValidate } from '../../validate/movie-options.validate.js'
 
 const router = express.Router()
 

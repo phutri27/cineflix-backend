@@ -1,11 +1,11 @@
 import express from 'express'
-import { checkoutSession, cancelCheckout } from '../controller/stripe.controller'
-import { vnpayCheckout, ipnUrlProccess, getUrlReturn } from '../controller/vnpay.controller'
-import { createNoti } from '../controller/notifications.controller'
-import { seatLock } from '../controller/seat-lock.controller'
-import { calculateAmount } from '../controller/transaction.controller'
-import { handleValidationErrors } from '../middlewares/validateResult'
-import { checkoutValidate } from '../validate/checkout.validate'
+import { checkoutSession, cancelCheckout } from '../controller/stripe.controller.js'
+import { vnpayCheckout, ipnUrlProccess, getUrlReturn } from '../controller/vnpay.controller.js'
+import { createNoti } from '../controller/notifications.controller.js'
+import { seatLock } from '../controller/seat-lock.controller.js'
+import { calculateAmount } from '../controller/transaction.controller.js'
+import { handleValidationErrors } from '../middlewares/validateResult.js'
+import { checkoutValidate } from '../validate/checkout.validate.js'
 
 const router = express.Router()
 

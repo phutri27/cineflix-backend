@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import type { VoucherData, VoucherProp } from "../types/voucher-types";
+import { prisma } from "../lib/prisma.js";
+import type { VoucherData, VoucherProp } from "../types/voucher-types.js";
 class Vouchers{
     async getAllVouchers(){
         const vouchers = await prisma.voucher.findMany({

@@ -1,9 +1,9 @@
-import { moviesObj } from "../dao/movies.dao";
+import { moviesObj } from "../dao/movies.dao.js";
 import type { NextFunction, Request, Response } from "express";
 import { matchedData } from "express-validator";
-import { uploadFile } from "../utils/cloudinary-file.util";
-import { deleteFile } from "../utils/cloudinary-file.util";
-import type { movie } from "../types/movie-types";
+import { uploadFile } from "../utils/cloudinary-file.util.js";
+import { deleteFile } from "../utils/cloudinary-file.util.js";
+import type { movie } from "../types/movie-types.js";
 export const getSpecificMovie = async (req: Request, res: Response, next:NextFunction) => {
     try {
         const id = req.params.id as string

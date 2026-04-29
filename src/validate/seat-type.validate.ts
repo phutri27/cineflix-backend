@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { prisma } from "../lib/prisma";
+import { prisma } from "../lib/prisma.js";
 const emptyMsg = "must not be empty"
 
 export const seatTypeValidate = [

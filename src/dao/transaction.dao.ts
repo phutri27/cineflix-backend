@@ -1,8 +1,8 @@
-import type { Decimal } from "@prisma/client/runtime/client";
-import { prisma } from "../lib/prisma";
-import { TransactionStatus } from "../generated/prisma/enums";
-import { paymentObj } from "../redis-query/payment-query";
-import type { BookingProps } from "../types/booking-types";
+import type { Decimal } from "@prisma/client/runtime/client.js";
+import { prisma } from "../lib/prisma.js";
+import { TransactionStatus } from "../generated/prisma/enums.js";
+import { paymentObj } from "../redis-query/payment-query.js";
+import type { BookingProps } from "../types/booking-types.js";
 
 interface TransactionProps{
     id: string

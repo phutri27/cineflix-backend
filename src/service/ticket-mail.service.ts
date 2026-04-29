@@ -1,8 +1,8 @@
 import nodemailer from 'nodemailer'
 import QRCode from 'qrcode'
-import type { TicketResponse } from '../types/ticket-types'
-import { uploadBufferFile } from '../utils/cloudinary-file.util'
-import { ticketObj } from '../dao/ticket.dao'
+import type { TicketResponse } from '../types/ticket-types.js'
+import { uploadBufferFile } from '../utils/cloudinary-file.util.js'
+import { ticketObj } from '../dao/ticket.dao.js'
 import "dotenv/config"
 const generateTicketHTML = (tickets: TicketResponse[], bookingId: string) => {
     const ticketRows = tickets.map((ticket) => `

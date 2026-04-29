@@ -2,16 +2,16 @@ import request from "supertest";
 import express, { Request, Response, NextFunction } from "express";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
-vi.mock("../../src/redis-query/seat-lock-query", () => ({
+vi.mock("../../src/redis-query/seat-lock-query.js", () => ({
   seatLockObj: {
     lockSeat: vi.fn(),
     getLockSeatValue: vi.fn(),
   },
 }));
 
-import { seatLockObj } from "../../src/redis-query/seat-lock-query";
+import { seatLockObj } from "../../src/redis-query/seat-lock-query.js";
 
-import { seatLock } from "../../src/controller/seat-lock.controller";
+import { seatLock } from "../../src/controller/seat-lock.controller.js";
 
 describe("seatLock controller", () => {
   let app: express.Express;

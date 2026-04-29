@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { bookingObj } from "../dao/booking.dao";
+import { bookingObj } from "../dao/booking.dao.js";
 
 export const getBookingInfo = async (req: Request, res: Response, next: NextFunction) => {
     try {
