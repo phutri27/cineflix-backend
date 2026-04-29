@@ -1,7 +1,6 @@
 node_modules
 # Keep environment variables out of version control
 .env
-.env.docker
+.env.prod
 .env.test
 src/generated
-.env.docker
