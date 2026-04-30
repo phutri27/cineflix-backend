@@ -60,8 +60,8 @@ export const checkoutSession = async (req: Request, res: Response, next: NextFun
           totalAmount:amountIncents
         },
         mode: 'payment',
-        success_url: `http://localhost:5173/payment/complete?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `http://localhost:5173/payment/cancel?session_id={CHECKOUT_SESSION_ID}`
+        success_url: `https://hotriphu.fit/payment/complete?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `https://hotriphu.fit/payment/cancel?session_id={CHECKOUT_SESSION_ID}`
       }); 
 
       await paymentObj.setCheckoutSession(session.id, userId)

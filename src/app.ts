@@ -56,17 +56,16 @@ app.use(cors({
     },
     credentials: true,
 }))
-
+app.set('trust proxy', 1)
 app.use("/api/webhook", bodyParser.raw({type: 'application/json'}), routes.webhook)
 app.use(express.json())
 
 app.use(express.urlencoded({ extended: true })); 
-const isProduction = process.env.NODE_ENV === 'production';
 app.use(
   expressSession({
     cookie: {
       httpOnly:true,
-      secure: isProduction, 
+      secure: true, 
       sameSite: 'lax',
       maxAge: 2 * 24 * 60 * 60 * 1000
     },

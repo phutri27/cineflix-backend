@@ -43,7 +43,7 @@ export const vnpayCheckout = async (req: Request, res: Response, next: NextFunct
 
         const userId = req.user?.id as string
         const amount = res.locals.amount
-        const returnUrl = 'http://localhost:5173/payment/vnpay  '
+        const returnUrl = 'https://hotriphu.fit/payment/vnpay  '
         const expireDate = new Date()
         expireDate.setMinutes(expireDate.getMinutes() + 5)
         const transactionId = uuidv4()
