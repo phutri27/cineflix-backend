@@ -1,25 +1,15 @@
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 import { OTPobj } from '../redis-query/otp-query.js'
 import { generateOTP } from '../utils/generateOTP.util.js'
 import "dotenv/config"
-export const sendEmail = async(userEmail: string, userCred: string) => {
-    const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-            type: "OAuth2",
-            user: process.env.GOOGLE_USER,
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
-            accessToken: process.env.GOOGLE_ACCESS_TOKEN,
-        },
-    });
 
+const resend = new Resend(process.env.RESEND_API)
+const from = process.env.EMAIL_USER || "ticket@cineflix.com" 
+
+export const sendEmail = async(userEmail: string, userCred: string) => {
     const otp = generateOTP()
     
-    const info = await transporter.sendMail({
+    const {data, error} = await resend.emails.send({
     from: `"Cineflix" <${process.env.GOOGLE_USER}>`,
     to: userEmail,
     subject: "Your Cineflix OTP Code",
@@ -81,4 +71,12 @@ export const sendEmail = async(userEmail: string, userCred: string) => {
     });
 
     await OTPobj.saveOTP(otp, userCred)
+
+    if (error) {
+        console.error("Error sending email:", error);
+        process.exit(1);
+    }
+
+    console.log("Email with attachment sent successfully!");
+    console.log("Email ID:", data?.id)
 }

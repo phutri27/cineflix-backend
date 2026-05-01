@@ -6,6 +6,7 @@ import { stripe } from "../config/stripe.js";
 import "dotenv/config"
 import { transactionObj } from "../dao/transaction.dao.js";
 import { profileObj } from "../dao/profile.dao.js";
+
 export async function fulfillCheckout(sessionId: string, 
     bookingId: string, 
     userId: string,  

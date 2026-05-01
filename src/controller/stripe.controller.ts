@@ -60,8 +60,8 @@ export const checkoutSession = async (req: Request, res: Response, next: NextFun
           totalAmount:amountIncents
         },
         mode: 'payment',
-        success_url: `https://hotriphu.fit/payment/complete?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `https://hotriphu.fit/payment/cancel?session_id={CHECKOUT_SESSION_ID}`
+        success_url: process.env.STRIPE_SUCCESS_URL as string,
+        cancel_url: process.env.STRIPE_CANCEL_URL as string
       }); 
 
       await paymentObj.setCheckoutSession(session.id, userId)
@@ -102,12 +102,12 @@ export const checkoutPost = async (req: Request, res: Response, next: NextFuncti
               && session.userEmail 
               && session.transactionId 
               && session.totalAmount){
-                await fulfillCheckout(event.data.object.id, 
+                fulfillCheckout(event.data.object.id, 
                   session.bookingId, 
                   session.userId, 
                   session.userEmail,
-                  session.transactionId,
-                  Number(session.totalAmount))
+                  session.transactionId,  
+                  Number(session.totalAmount)).catch((error) => console.error(error))
 
               res.locals.showTimeId = session?.showTimeId 
               res.locals.transactionId = session?.transactionId 
@@ -116,8 +116,7 @@ export const checkoutPost = async (req: Request, res: Response, next: NextFuncti
             }
             return next()
           }
-
-        return res.status(200).end();
+          res.status(200).json({received: true});
     } catch(error) {
         next(error)
     }

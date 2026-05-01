@@ -1,9 +1,13 @@
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 import QRCode from 'qrcode'
 import type { TicketResponse } from '../types/ticket-types.js'
 import { uploadBufferFile } from '../utils/cloudinary-file.util.js'
 import { ticketObj } from '../dao/ticket.dao.js'
 import "dotenv/config"
+
+const resend = new Resend(process.env.RESEND_API)
+const from = process.env.EMAIL_USER || "ticket@cineflix.com" 
+
 const generateTicketHTML = (tickets: TicketResponse[], bookingId: string) => {
     const ticketRows = tickets.map((ticket) => `
         <tr>
@@ -143,20 +147,6 @@ const generateTicketHTML = (tickets: TicketResponse[], bookingId: string) => {
 }
 
 export const sendTicket = async (userEmail: string, tickets: TicketResponse[], bookingId: string) => {
-    const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-            type: "OAuth2",
-            user: process.env.GOOGLE_USER,
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
-            accessToken: process.env.GOOGLE_ACCESS_TOKEN,
-        },
-    });
-
     const attach = await Promise.all(tickets.map(async (ticket) => {
         const qrData = `Ticket ID: ${ticket.id}\nMovie: ${ticket.movie}\nShowtime: ${ticket.showtime}\nSeat: ${ticket.seat}\nScreen: ${ticket.screen}\nCinema: ${ticket.cinema}`
         const qrCodeImage = await QRCode.toBuffer(qrData)
@@ -170,12 +160,20 @@ export const sendTicket = async (userEmail: string, tickets: TicketResponse[], b
         }
     }))
 
-    const ticketMessage = await transporter.sendMail({
-        from: `Cineflix <${process.env.GOOGLE_USER}>`,
-        to: userEmail,
+    const {data, error} = await resend.emails.send({
+        from,
+        to: [userEmail],
         subject: `Your Tickets for Booking #${bookingId}`,
         text: 'Please find your QR code ticket attached.',
         html: generateTicketHTML(tickets, bookingId),
         attachments: attach
     })
+
+    if (error) {
+        console.error("Error sending email:", error);
+        process.exit(1);
+    }
+
+    console.log("Email with attachment sent successfully!");
+    console.log("Email ID:", data?.id)
 }

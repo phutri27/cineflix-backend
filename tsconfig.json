@@ -16,7 +16,6 @@
     // and npm install -D @types/node
 
     // Other Outputs
-    // "esModuleInterop": false,
     "sourceMap": true,
     // "declaration": false,
     // "declarationMap": false,
