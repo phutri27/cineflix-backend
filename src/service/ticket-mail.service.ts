@@ -6,7 +6,7 @@ import { ticketObj } from '../dao/ticket.dao.js'
 import "dotenv/config"
 
 const resend = new Resend(process.env.RESEND_API)
-const from = process.env.EMAIL_USER || "ticket@cineflix.com" 
+const from = process.env.EMAIL_USER || "cineflix@hotriphu.fit" 
 
 const generateTicketHTML = (tickets: TicketResponse[], bookingId: string) => {
     const ticketRows = tickets.map((ticket) => `

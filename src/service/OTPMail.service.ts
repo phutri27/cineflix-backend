@@ -4,13 +4,13 @@ import { generateOTP } from '../utils/generateOTP.util.js'
 import "dotenv/config"
 
 const resend = new Resend(process.env.RESEND_API)
-const from = process.env.EMAIL_USER || "ticket@cineflix.com" 
+const from = process.env.EMAIL_USER || "cineflix@hotriphu.fit" 
 
 export const sendEmail = async(userEmail: string, userCred: string) => {
     const otp = generateOTP()
     
     const {data, error} = await resend.emails.send({
-    from: `"Cineflix" <${process.env.GOOGLE_USER}>`,
+    from,
     to: userEmail,
     subject: "Your Cineflix OTP Code",
     text: `Your OTP code is ${otp}. It will expire in 15 minutes.`,
