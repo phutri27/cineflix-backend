@@ -29,15 +29,15 @@ vi.mock("../../src/dao/profile.dao.js", () => ({
   },
 }));
 
-vi.mock("../../src/service/ticket-mail.service.js", () => ({
-  sendTicket: vi.fn(),
+vi.mock("../../src/service/email-queue.service.js", () => ({
+  queueTicketEmail: vi.fn(),
 }));
 
 import { vnpay } from "../../src/service/vnpay.service.js";
 import { transactionObj } from "../../src/dao/transaction.dao.js";
 import { ticketObj } from "../../src/dao/ticket.dao.js";
 import { profileObj } from "../../src/dao/profile.dao.js";
-import { sendTicket } from "../../src/service/ticket-mail.service.js";
+import { queueTicketEmail } from "../../src/service/email-queue.service.js";
 
 import { ipnUrlProccess } from "../../src/controller/vnpay.controller.js";
 
@@ -269,7 +269,7 @@ describe("ipnUrlProccess VNPay webhook", () => {
     expect(response.status).toBe(200);
 
     expect(ticketObj.createTicket).not.toHaveBeenCalled();
-    expect(sendTicket).not.toHaveBeenCalled();
+    expect(queueTicketEmail).not.toHaveBeenCalled();
     expect(transactionObj.updateTransactionSuccess).not.toHaveBeenCalled();
   });
 
@@ -322,7 +322,7 @@ describe("ipnUrlProccess VNPay webhook", () => {
       },
     ] as any);
 
-    vi.mocked(sendTicket).mockResolvedValue(undefined as any);
+    vi.mocked(queueTicketEmail).mockResolvedValue(undefined as any);
 
     vi.mocked(transactionObj.updateTransactionSuccess).mockResolvedValue(
       undefined as any
@@ -352,7 +352,7 @@ describe("ipnUrlProccess VNPay webhook", () => {
 
     expect(ticketObj.getTicketInfo).toHaveBeenCalledWith("booking_123");
 
-    expect(sendTicket).toHaveBeenCalledWith(
+    expect(queueTicketEmail).toHaveBeenCalledWith(
       "test@example.com",
       [
         {

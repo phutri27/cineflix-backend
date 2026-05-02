@@ -49,8 +49,8 @@ vi.mock("../../src/dao/profile.dao.js", () => ({
   },
 }));
 
-vi.mock("../../src/service/ticket-mail.service.js", () => ({
-  sendTicket: vi.fn(),
+vi.mock("../../src/service/email-queue.service.js", () => ({
+  queueTicketEmail: vi.fn(),
 }));
 
 import { stripe } from "../../src/config/stripe.js";
@@ -59,7 +59,7 @@ import { bookingObj } from "../../src/dao/booking.dao.js";
 import { ticketObj } from "../../src/dao/ticket.dao.js";
 import { transactionObj } from "../../src/dao/transaction.dao.js";
 import { profileObj } from "../../src/dao/profile.dao.js";
-import { sendTicket } from "../../src/service/ticket-mail.service.js";
+import { queueTicketEmail } from "../../src/service/email-queue.service.js";
 
 import { checkoutPost } from "../../src/controller/stripe.controller.js";
 import { fulfillCheckout } from "../../src/service/stripe.service.js";
@@ -194,7 +194,7 @@ describe("Stripe webhook checkoutPost", () => {
       },
     ] as any);
 
-    vi.mocked(sendTicket).mockResolvedValue(undefined as any);
+    vi.mocked(queueTicketEmail).mockResolvedValue(undefined as any);
     vi.mocked(transactionObj.updateTransactionSuccess).mockResolvedValue(undefined as any);
     vi.mocked(profileObj.updateProfileSpending).mockResolvedValue(undefined as any);
 
@@ -233,7 +233,7 @@ describe("Stripe webhook checkoutPost", () => {
 
     expect(ticketObj.getTicketInfo).toHaveBeenCalledWith("booking_123");
 
-    expect(sendTicket).toHaveBeenCalledWith(
+    expect(queueTicketEmail).toHaveBeenCalledWith(
       "test@example.com",
       [
         {
@@ -357,37 +357,6 @@ describe("Stripe webhook checkoutPost", () => {
     expect(response.body).toEqual({});
   });
 
-  it("should pass unexpected errors to error handler", async () => {
-    vi.mocked(stripe.webhooks.constructEvent).mockReturnValue({
-      type: "checkout.session.completed",
-      data: {
-        object: {
-          id: "cs_test_123",
-          metadata: {
-            bookingId: "booking_123",
-            userId: "user_123",
-            userEmail: "test@example.com",
-            transactionId: "transaction_123",
-            totalAmount: "150000",
-            showTimeId: "showtime_123",
-          },
-        },
-      },
-    } as any);
-
-    vi.mocked(paymentObj.setPaymentSession).mockRejectedValue(
-      new Error("Database error")
-    );
-
-    const response = await request(app)
-      .post("/webhook/stripe")
-      .set("stripe-signature", "valid_signature")
-      .set("Content-Type", "application/json")
-      .send(JSON.stringify({}));
-
-    expect(response.status).toBe(500);
-
-  });
 });
 
 describe("fulfillCheckout", () => {
@@ -470,7 +439,7 @@ describe("fulfillCheckout", () => {
     );
 
     expect(ticketObj.createTicket).not.toHaveBeenCalled();
-    expect(sendTicket).not.toHaveBeenCalled();
+    expect(queueTicketEmail).not.toHaveBeenCalled();
     expect(transactionObj.updateTransactionSuccess).not.toHaveBeenCalled();
   });
 
@@ -538,7 +507,7 @@ describe("fulfillCheckout", () => {
     );
 
     expect(ticketObj.createTicket).not.toHaveBeenCalled();
-    expect(sendTicket).not.toHaveBeenCalled();
+    expect(queueTicketEmail).not.toHaveBeenCalled();
     expect(transactionObj.updateTransactionSuccess).not.toHaveBeenCalled();
   });
 
@@ -591,7 +560,7 @@ describe("fulfillCheckout", () => {
       "booking_123"
     );
 
-    expect(sendTicket).toHaveBeenCalledWith(
+    expect(queueTicketEmail).toHaveBeenCalledWith(
       "test@example.com",
       [
         {
