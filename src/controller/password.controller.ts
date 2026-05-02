@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import { matchedData } from "express-validator";
 import { isValid } from "../utils/password.util.js";
 import { userObj } from "../dao/user.dao.js";
-import { sendEmail } from "../service/OTPMail.service.js";
+import { queueOTPEmail } from "../service/email-queue.service.js";
 import { OTPobj } from "../redis-query/otp-query.js";
 import { genPassword } from "../utils/password.util.js";
 import { resetTokenObj } from "../redis-query/reset-token-query.js";
@@ -16,7 +16,7 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
         const user = await userObj.findUserById(userCred)
         const valid = await isValid(password, user?.hashed_password as string)
         if (valid){
-            await sendEmail(user?.email as string, userCred)
+            await queueOTPEmail(user?.email as string, userCred)
             return res.status(200).json({
                 message: "The OTP has been send to your email. Please check your email!"
             })
@@ -68,7 +68,7 @@ export const confirmOtp = async (req: Request, res: Response, next: NextFunction
 export const forgotPassword = async (req: Request, res:Response, next: NextFunction) => {
     try {
         const { email } = matchedData(req)
-        await sendEmail(email, email)
+        await queueOTPEmail(email, email)
         return res.status(200).json({ 
             message: "The OTP has been send to your email. Please check your email!"
         })
@@ -82,7 +82,6 @@ export const newPasswordForForgotPassword = async (req: Request, res:Response, n
         const { email, resetToken } = req.body
         const { pw } = matchedData(req)
         const savedToken = await resetTokenObj.getResetToken(email)
-        console.log(savedToken)
         if (!savedToken || resetToken !== savedToken){
             return res.status(401).json({
                 message: "Not authorized to do this action"

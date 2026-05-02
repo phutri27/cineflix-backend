@@ -4,7 +4,7 @@ import { userObj } from "../dao/user.dao.js";
 import { matchedData } from "express-validator";
 import { profileObj } from "../dao/profile.dao.js";
 import { signupObj } from "../redis-query/signup-query.js";
-import { sendEmail } from "../service/OTPMail.service.js";
+import { queueOTPEmail } from "../service/email-queue.service.js";
 import { OTPobj } from "../redis-query/otp-query.js";
 
 export const signupPost = async (req: Request, res: Response, next: NextFunction) => {
@@ -12,7 +12,7 @@ export const signupPost = async (req: Request, res: Response, next: NextFunction
         const { email, pw, first_name, last_name } = matchedData(req)
         const hashed_password = await genPassword(pw) as string
         await signupObj.saveSignupInfo(email, hashed_password, first_name, last_name)
-        await sendEmail(email, email)
+        await queueOTPEmail(email, email)
         return res.status(200).json({
             message: "Please check your email, an OTP is need to complete the signup"
         })

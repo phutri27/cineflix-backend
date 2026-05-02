@@ -6,7 +6,7 @@ import "dotenv/config"
 const resend = new Resend(process.env.RESEND_API)
 const from = process.env.EMAIL_USER || "cineflix@hotriphu.fit" 
 
-export const sendEmail = async(userEmail: string, userCred: string) => {
+export const sendOTPEmail = async({userEmail, userCred}: {userEmail: string, userCred: string}) => {
     const otp = generateOTP()
     
     const {data, error} = await resend.emails.send({
@@ -74,7 +74,7 @@ export const sendEmail = async(userEmail: string, userCred: string) => {
 
     if (error) {
         console.error("Error sending email:", error);
-        process.exit(1);
+        throw error
     }
 
     console.log("Email with attachment sent successfully!");

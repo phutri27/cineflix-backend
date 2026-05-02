@@ -15,7 +15,7 @@ import { ProductCode,
 
 dateFormat} from "vnpay";
 import { v4 as uuidv4 } from 'uuid'
-import { sendTicket } from "../service/ticket-mail.service.js";
+import { queueTicketEmail } from "../service/email-queue.service.js";
 import { transactionObj } from "../dao/transaction.dao.js";
 import { paymentObj } from "../redis-query/payment-query.js";
 import { profileObj } from "../dao/profile.dao.js";
@@ -120,7 +120,7 @@ export const ipnUrlProccess = async (req: any, res: Response, next: NextFunction
         const seatsId = data.booking.seats.map(seat => seat.id)
         await ticketObj.createTicket(seatsId, data.bookingId)
         const tickets = await ticketObj.getTicketInfo(data.bookingId)
-        await sendTicket(userEmail, tickets, data.bookingId)
+        await queueTicketEmail(userEmail, tickets, data.bookingId)
 
         await transactionObj.updateTransactionSuccess(data.id, data.bookingId)
         await profileObj.updateProfileSpending(data.amount.toNumber(), data.booking.user.id)

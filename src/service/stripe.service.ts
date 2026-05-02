@@ -1,7 +1,7 @@
 import { paymentObj } from "../redis-query/payment-query.js";
 import { bookingObj } from "../dao/booking.dao.js";
 import { ticketObj } from "../dao/ticket.dao.js";
-import { sendTicket } from "./ticket-mail.service.js";
+import { queueTicketEmail } from "./email-queue.service.js";
 import { stripe } from "../config/stripe.js";
 import "dotenv/config"
 import { transactionObj } from "../dao/transaction.dao.js";
@@ -47,7 +47,7 @@ export async function fulfillCheckout(sessionId: string,
       await ticketObj.createTicket(seatIdsArr!, bookingId)
       const tickets = await ticketObj.getTicketInfo(bookingId)
       
-      await sendTicket(userEmail, tickets, bookingId)
+      await queueTicketEmail(userEmail, tickets, bookingId)
       await transactionObj.updateTransactionSuccess(transactionId, bookingId)
       await profileObj.updateProfileSpending(amount, userId)
     }

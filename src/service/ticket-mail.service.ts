@@ -5,6 +5,12 @@ import { uploadBufferFile } from '../utils/cloudinary-file.util.js'
 import { ticketObj } from '../dao/ticket.dao.js'
 import "dotenv/config"
 
+interface sendTicketEmailProps {
+    userEmail: string, 
+    tickets: TicketResponse[], 
+    bookingId: string
+}
+
 const resend = new Resend(process.env.RESEND_API)
 const from = process.env.EMAIL_USER || "cineflix@hotriphu.fit" 
 
@@ -146,7 +152,7 @@ const generateTicketHTML = (tickets: TicketResponse[], bookingId: string) => {
     `
 }
 
-export const sendTicket = async (userEmail: string, tickets: TicketResponse[], bookingId: string) => {
+export const sendTicketEmail = async ({userEmail, tickets, bookingId}: sendTicketEmailProps) => {
     const attach = await Promise.all(tickets.map(async (ticket) => {
         const qrData = `Ticket ID: ${ticket.id}\nMovie: ${ticket.movie}\nShowtime: ${ticket.showtime}\nSeat: ${ticket.seat}\nScreen: ${ticket.screen}\nCinema: ${ticket.cinema}`
         const qrCodeImage = await QRCode.toBuffer(qrData)
@@ -171,7 +177,7 @@ export const sendTicket = async (userEmail: string, tickets: TicketResponse[], b
 
     if (error) {
         console.error("Error sending email:", error);
-        process.exit(1);
+        throw error
     }
 
     console.log("Email with attachment sent successfully!");
