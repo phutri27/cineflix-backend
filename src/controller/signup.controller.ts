@@ -4,7 +4,7 @@ import { userObj } from "../dao/user.dao.js";
 import { matchedData } from "express-validator";
 import { profileObj } from "../dao/profile.dao.js";
 import { signupObj } from "../redis-query/signup-query.js";
-import { queueOTPEmail } from "../service/email-queue.service.js";
+import { queueOTPEmail } from "../queue/email.queue.js";
 import { OTPobj } from "../redis-query/otp-query.js";
 
 export const signupPost = async (req: Request, res: Response, next: NextFunction) => {

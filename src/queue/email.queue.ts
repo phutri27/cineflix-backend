@@ -1,6 +1,6 @@
 import { Queue, Worker, type Job } from "bullmq"
-import { sendTicketEmail } from "./ticket-mail.service.js"
-import { sendOTPEmail } from "./OTPMail.service.js"
+import { sendTicketEmail } from "../service/ticket-mail.service.js"
+import { sendOTPEmail } from "../service/OTPMail.service.js"
 import { type TicketResponse } from "../types/ticket-types.js"
 import "dotenv/config"
 

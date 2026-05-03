@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import { matchedData } from "express-validator";
 import { isValid } from "../utils/password.util.js";
 import { userObj } from "../dao/user.dao.js";
-import { queueOTPEmail } from "../service/email-queue.service.js";
+import { queueOTPEmail } from "../queue/email.queue.js";
 import { OTPobj } from "../redis-query/otp-query.js";
 import { genPassword } from "../utils/password.util.js";
 import { resetTokenObj } from "../redis-query/reset-token-query.js";

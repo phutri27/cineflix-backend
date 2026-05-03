@@ -15,7 +15,7 @@ import { ProductCode,
 
 dateFormat} from "vnpay";
 import { v4 as uuidv4 } from 'uuid'
-import { queueTicketEmail } from "../service/email-queue.service.js";
+import { queueTicketEmail } from "../queue/email.queue.js";
 import { transactionObj } from "../dao/transaction.dao.js";
 import { paymentObj } from "../redis-query/payment-query.js";
 import { profileObj } from "../dao/profile.dao.js";

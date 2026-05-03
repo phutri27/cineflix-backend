@@ -15,6 +15,7 @@ import { createServer } from "http"
 import { handleSubcribeInit } from "./pubsub/event-subcribe.js"
 import bodyParser from 'body-parser'
 import { limiter } from "./service/rate-limit.service.js"
+import { initShowtime } from "./queue/showtime-schedule.queue.js"
 
 const allowedOrigins = [
   process.env.FRONTEND_ORIGIN as string, 
@@ -110,8 +111,9 @@ app.use(errorHandler)
 await handleSubcribeInit(redisClient as RedisClientType, io)
 
 const PORT = process.env.PORT || 3000
-const server = httpServer.listen(PORT, () => {
+const server = httpServer.listen(PORT, async () => {
   console.log(`Server successfully running on http://localhost:${PORT}`);
+  await initShowtime()
 })
 
 server.on('error', (err: any) => {
