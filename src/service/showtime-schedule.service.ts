@@ -17,7 +17,7 @@ export const generateShowtime = async () => {
         }
     })
     const date = new Date()
-    date.setDate(date.getDate() + 7)
+    date.setDate(date.getDate() + 8)
     date.setHours(9, 0, 0, 0)
     let time = 7
     
