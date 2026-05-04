@@ -3,12 +3,6 @@ import { prisma } from "../lib/prisma.js";
 const emptyMsg = "must not be empty"
 
 export const seatTypeValidate = [
-    body("price")
-    .notEmpty()
-    .withMessage(`Price ${emptyMsg}`)
-    .isInt({ gt: -1 })
-    .withMessage(`Price must only be numbers`),
-
     body("seat_type")
     .notEmpty()
     .withMessage(`Seat type ${emptyMsg}`)
@@ -31,4 +25,12 @@ export const seatTypeValidate = [
     body("cinemaId")
     .notEmpty()
     .withMessage(`Cinema ${emptyMsg}`)
+]
+
+export const seatTypePriceValidate = [
+    body("price")
+    .notEmpty()
+    .withMessage(`Price ${emptyMsg}`)
+    .isInt({ gt: -1 })
+    .withMessage(`Price must only be numbers`),
 ]
