@@ -1,9 +1,9 @@
 import { Queue} from "bullmq"
 import { type TicketResponse } from "../types/ticket-types.js"
-import { redisConnection } from "../config/redis-connection.js"
+import { redisQueueConnection } from "../config/redis-queue-connection.js"
 
 const emailQueue = new Queue('emails', {
-    connection: redisConnection,
+    connection: redisQueueConnection,
     defaultJobOptions: {
         attempts: 3,
         backoff: {

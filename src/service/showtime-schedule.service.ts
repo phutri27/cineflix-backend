@@ -19,7 +19,7 @@ export const generateShowtime = async () => {
     })
 
     const date = new Date()
-    date.setDate(date.getDate() + 15)
+    date.setDate(date.getDate() + 14)
     date.setHours(9, 0, 0, 0)
     
     for (const cinema of cinemas){

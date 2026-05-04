@@ -1,15 +1,15 @@
 import { Queue } from "bullmq";
-import { redisConnection } from "../config/redis-connection.js";
+import { redisQueueConnection } from "../config/redis-queue-connection.js";
 
 const showtimeQueue = new Queue("showtime-schedule", {
-    connection: redisConnection
+    connection: redisQueueConnection
 })
 
 export const initShowtime = async () => {
     await showtimeQueue.upsertJobScheduler(
         'sunday-weekly-showtime-cronjob',
         {
-            pattern: "0 0 0 * * *",
+            pattern: "0 0 3 * * *",
         },
         {
             name: 'showtime-schedule-cron-job',

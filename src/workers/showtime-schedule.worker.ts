@@ -1,4 +1,4 @@
-import { redisConnection } from "../config/redis-connection.js"
+import { redisWorkerConnection } from "../config/redis-worker-connection.js"
 import { generateShowtime } from "../service/showtime-schedule.service.js"
 import { Worker } from "bullmq"
 
@@ -7,7 +7,7 @@ const showtimeWorker = new Worker("showtime-schedule", async (job) => {
     await generateShowtime()
     console.log('[Worker] Showtimes generated')
 }, {
-    connection: redisConnection
+    connection: redisWorkerConnection
 })
 
 showtimeWorker.on('failed', (job, err) => {

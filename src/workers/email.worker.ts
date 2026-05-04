@@ -1,8 +1,7 @@
 import { sendTicketEmail } from "../service/ticket-mail.service.js"
 import { sendOTPEmail } from "../service/OTPMail.service.js"
 import { Worker, type Job } from "bullmq"
-import { redisConnection } from "../config/redis-connection.js"
-
+import { redisWorkerConnection } from "../config/redis-worker-connection.js"
 const emailWorker = new Worker('emails', async (job: Job) => {
     switch (job.name) {
         case 'ticket':
@@ -15,7 +14,7 @@ const emailWorker = new Worker('emails', async (job: Job) => {
             throw new Error(`Unknown email type: ${job.name}`)
     }
 }, {
-    connection: redisConnection,
+    connection: redisWorkerConnection,
     concurrency: 3,
 })
 
