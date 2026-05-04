@@ -32,10 +32,10 @@ export const sendOTPEmail = async({userEmail, userCred}: {userEmail: string, use
                         <tr>
                             <td style="padding:40px 32px;">
                                 <h2 style="margin:0 0 8px;color:#ffffff;font-size:20px;font-weight:700;">
-                                    Password Reset
+                                    OTP
                                 </h2>
                                 <p style="margin:0 0 28px;color:#737373;font-size:14px;line-height:1.6;">
-                                    Use the code below to reset your password. This code will expire in <strong style="color:#a3a3a3;">15 minutes</strong>.
+                                    Use the code below to finish your task. This code will expire in <strong style="color:#a3a3a3;">15 minutes</strong>.
                                 </p>
                                 <table width="100%" cellpadding="0" cellspacing="0">
                                     <tr>

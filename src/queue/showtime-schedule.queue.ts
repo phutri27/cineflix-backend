@@ -9,8 +9,7 @@ export const initShowtime = async () => {
     await showtimeQueue.upsertJobScheduler(
         'sunday-weekly-showtime-cronjob',
         {
-            pattern: "0 0 0 * * 7",
-            startDate: new Date(2026, 5, 9)
+            pattern: "0 0 0 * * *",
         },
         {
             name: 'showtime-schedule-cron-job',
