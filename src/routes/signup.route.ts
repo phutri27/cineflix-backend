@@ -9,5 +9,6 @@ const router = express.Router()
 
 router.post("/",validateSignup, passwordValidate, handleValidationErrors, signup.signupPost)
 router.post("/otp", otpValidate, handleValidationErrors, signup.confirmOtpForSignup)
+router.post("/otp-resend", signup.resendSignUpOtp)
 
 export default router

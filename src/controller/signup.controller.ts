@@ -21,6 +21,18 @@ export const signupPost = async (req: Request, res: Response, next: NextFunction
     }
 }
 
+export const resendSignUpOtp = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const email = req.body.email
+        await queueOTPEmail(email, email)
+        return res.status(200).json({
+            message: "Please check your email, an OTP is resend to your email"
+        })
+    } catch (error){
+        next(error)
+    }
+}
+
 export const confirmOtpForSignup = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userCred = req.body.email
