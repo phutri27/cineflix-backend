@@ -63,13 +63,15 @@ export const insertVoucherIntoProfile = async (req: Request, res: Response, next
         const { voucher_code } = matchedData(req)
         const hashed_code = crypto.createHash('sha256').update(voucher_code).digest('hex')
         const voucher = await voucherObj.compareVoucher(hashed_code)
-        const voucherQuantity = await voucherObj.getUserVoucherQuantity(userId, voucher?.id!) || 0
-        if (voucher && voucherQuantity < voucher.maxUsed){
-            await voucherObj.addVoucherToProfile(userId, voucher.id)
-            return res.status(200).json(voucher)
-        }
-        if (voucherQuantity >= Number(voucher?.maxUsed) ){
-            return res.status(400).json({ message: "Limit exceeded" })
+        if (voucher){
+            const voucherQuantity = await voucherObj.getUserVoucherQuantity(userId, voucher.id) || 0
+            if (voucher && voucherQuantity < voucher.maxUsed){
+                await voucherObj.addVoucherToProfile(userId, voucher.id)
+                return res.status(200).json(voucher)
+            }
+            if (voucherQuantity >= Number(voucher.maxUsed) ){
+                return res.status(400).json({ message: "Limit exceeded" })
+            }
         }
         return res.status(400).json({ message: "Incorect code" })
     } catch (error) {
