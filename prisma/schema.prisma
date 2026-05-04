@@ -103,7 +103,7 @@ model Cinema {
   address   String
   hotline   String
   createdAt DateTime @default(now())
-  city      City     @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  city      City     @relation(fields: [cityId], references: [id], onDelete: NoAction)
   
   seatType SeatTypeDetail[]
   movies  Movie[]
@@ -131,7 +131,7 @@ model Seat {
   number          Int
 
   seat_typeId     String
-  seatTypeDetail  SeatTypeDetail @relation(fields: [seat_typeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  seatTypeDetail  SeatTypeDetail @relation(fields: [seat_typeId], references: [id], onDelete: Cascade)
   
   screenId        String
   screen          Screen @relation(fields: [screenId], references: [id])
@@ -149,7 +149,7 @@ model Showtime {
   movie     Movie    @relation(fields: [movieId], references: [id], onDelete: NoAction)
   
   screenId  String
-  screen    Screen   @relation(fields: [screenId], references: [id], onDelete: Cascade)
+  screen    Screen   @relation(fields: [screenId], references: [id], onDelete: NoAction)
 
   isCancelled Boolean @default(false)
 
@@ -157,6 +157,7 @@ model Showtime {
 
   @@index([screenId])
   @@index([movieId, startTime])
+  @@unique(name: "showtimeUnique",[screenId, startTime])
 }
 
 model Notifications{
@@ -288,7 +289,7 @@ model BookingSnack {
   booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   
   snackId   String
-  snack     Snack   @relation(fields: [snackId], references: [id], onDelete: Cascade)
+  snack     Snack   @relation(fields: [snackId], references: [id], onDelete: NoAction)
   
   quantity  Int     @default(1)
 
