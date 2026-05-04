@@ -23,21 +23,26 @@ export const generateShowtime = async () => {
     
     while (time > 0) {
         for (const cinema of cinemas){
+            const showtimeData = []
             for (const screen of cinema.screens){
                 const currentScreenDate = new Date(date);
-                for (let i = 0; i < cinema.movies.length; i++){
-                    const randomMovieIndex = Math.floor(Math.random() * cinema.movies.length)
-                    const movie = cinema.movies[randomMovieIndex]
-                    await prisma.showtime.create({
-                        data:{
-                            movieId: movie?.id!,
-                            screenId: screen.id,
-                            startTime: new Date(currentScreenDate)
-                        }
+                const shuffleMovies = [...cinema.movies].sort(() => Math.random() - 0.5)
+                for (const movie of shuffleMovies){
+                    if (!movie){
+                        continue
+                    }
+                    showtimeData.push({
+                        movieId: movie.id,
+                        screenId: screen.id,
+                        startTime: new Date(currentScreenDate)
                     })
                     currentScreenDate.setMinutes(currentScreenDate.getMinutes() + movie?.durationMin! + 20)
                 }
             }
+            await prisma.showtime.createMany({
+                data: showtimeData,
+                skipDuplicates: true
+            })
         }
         date.setDate(date.getDate() + 1)
         time--

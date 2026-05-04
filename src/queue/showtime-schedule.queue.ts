@@ -1,11 +1,5 @@
-import { generateShowtime } from "../service/showtime-schedule.service.js";
-import { Queue, Worker } from "bullmq";
-import "dotenv/config"
-
-const redisConnection = {
-    host: process.env.REDIS_HOST || 'localhost',
-    port: Number(process.env.REDIS_PORT) || 6379,
-}
+import { Queue } from "bullmq";
+import { redisConnection } from "../config/redis-connection.js";
 
 const showtimeQueue = new Queue("showtime-schedule", {
     connection: redisConnection
@@ -24,15 +18,3 @@ export const initShowtime = async () => {
         }
     )
 }
-
-const showtimeWorker = new Worker("showtime-schedule", async (job) => {
-    console.log('[Worker] Generating showtimes...')
-    await generateShowtime()
-    console.log('[Worker] Showtimes generated')
-}, {
-    connection: redisConnection
-})
-
-showtimeWorker.on('failed', (job, err) => {
-    console.error('[Worker] Showtime generation failed:', err.message)
-})
