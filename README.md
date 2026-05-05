@@ -31,7 +31,7 @@ A high-performance, real-time cinema ticketing system built to handle concurrent
 * Resend
 * Cloudinary
 
-**Infrastructure & DevOps:**
+**Infrastructure**
 * Hosted on DigitalOcean (Ubuntu VPS)
 * Separate processes for API and Background Worker
 * Nginx Reverse Proxy
