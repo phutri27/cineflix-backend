@@ -6,9 +6,9 @@ A high-performance, real-time cinema ticketing system built to handle concurrent
 * **Live Site:** [https://hotriphu.fit](https://hotriphu.fit)
 
 ## Test Account And Resources
-* **Test Account**
-```Account: cineflixvietnamtestadmin@gmail.com```
-```Password: Tkadmin123.```
+* **Test Account** 
+- ```Account: cineflixvietnamtestadmin@gmail.com```
+- ```Password: Tkadmin123@```
 ### Checkout Information
 * **Stripe**
 - Card Number: `4242 4242 4242 4242`
