@@ -29,7 +29,7 @@ vi.mock("../../src/dao/profile.dao.js", () => ({
   },
 }));
 
-vi.mock("../../src/service/email-queue.service.js", () => ({
+vi.mock("../../src/queue/email.queue.js", () => ({
   queueTicketEmail: vi.fn(),
 }));
 
@@ -37,7 +37,7 @@ import { vnpay } from "../../src/service/vnpay.service.js";
 import { transactionObj } from "../../src/dao/transaction.dao.js";
 import { ticketObj } from "../../src/dao/ticket.dao.js";
 import { profileObj } from "../../src/dao/profile.dao.js";
-import { queueTicketEmail } from "../../src/service/email-queue.service.js";
+import { queueTicketEmail } from "../../src/queue/email.queue.js";
 
 import { ipnUrlProccess } from "../../src/controller/vnpay.controller.js";
 

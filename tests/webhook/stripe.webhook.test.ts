@@ -49,7 +49,7 @@ vi.mock("../../src/dao/profile.dao.js", () => ({
   },
 }));
 
-vi.mock("../../src/service/email-queue.service.js", () => ({
+vi.mock("../../src/queue/email.queue.js", () => ({
   queueTicketEmail: vi.fn(),
 }));
 
@@ -59,7 +59,7 @@ import { bookingObj } from "../../src/dao/booking.dao.js";
 import { ticketObj } from "../../src/dao/ticket.dao.js";
 import { transactionObj } from "../../src/dao/transaction.dao.js";
 import { profileObj } from "../../src/dao/profile.dao.js";
-import { queueTicketEmail } from "../../src/service/email-queue.service.js";
+import { queueTicketEmail } from "../../src/queue/email.queue.js";
 
 import { checkoutPost } from "../../src/controller/stripe.controller.js";
 import { fulfillCheckout } from "../../src/service/stripe.service.js";
