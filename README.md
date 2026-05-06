@@ -5,6 +5,41 @@ A high-performance, real-time cinema ticketing system built to handle concurrent
 ## Live Demo
 * **Live Site:** [https://hotriphu.fit](https://hotriphu.fit)
 
+## Test Account And Resources
+* **Test Account**
+```Account: cineflixvietnamtestadmin@gmail.com```
+```Password: Tkadmin123.```
+### Checkout Information
+* **Stripe**
+- Card Number: `4242 4242 4242 4242`
+- MM/YY: `05/28`
+- CVC: `268`
+- Cardholder name: `NGUYEN VAN A`
+- Country or region: `Vietnam`
+* **VNPAY**
+\*Pick "Thẻ nội địa và tài khoản ngân hàng 
+- Ngân hàng: `NCB`
+- Số thẻ: `9704198526191432198`
+- Tên chủ thẻ: `NGUYEN VAN A`
+- Ngày phát hành: `07/15`
+- Mật khẩu OTP: `123456`
+
+The platform has two main types of accounts: Users and Admins.
+
+### 👤 User Features
+* **Login & Signup:** Create an account with an email and password, or log in quickly using Google.
+* **Book Tickets:** Choose your seats, add snacks to your order, and apply discount vouchers.
+* **Easy Checkout:** Pay securely using Stripe or VNPAY.
+* **E-Tickets:** After paying, your tickets are emailed to you instantly and saved in your account's booking history.
+* **Profile Management:** Update your name, change your password, and redeem vouchers directly from your profile page.
+
+### 🛡️ Admin Features
+*Admins can do everything a normal user can do, plus:*
+* **Dashboard & Stats:** View total ticket sales, booking numbers, and revenue across all cinemas combined.
+* **Manage Movies:** Add, edit, or delete Movies, Actors, Directors, and Genres.
+* **Manage Cinemas:** Set up new Cities, Cinema locations, and movie Showtimes.
+* **Manage Extras:** Add or update the list of Snacks and create new discount Vouchers.
+
 ## Key Features
 * **Secure Authentication:** Seamless user onboarding using Google OAuth2 integrated with secure session-based login.
 * **Real-Time Seat Locking:** Implemented concurrency control using WebSockets (Socket.io) and Redis Locks. This instantly reserves seats across all active clients the moment a user enters checkout, completely eliminating double-booking conflicts.
